@@ -1,0 +1,79 @@
+# Croatian translations for hr.from.josipantolis.starfish package.
+# Copyright (C) 2021 THE hr.from.josipantolis.starfish'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the hr.from.josipantolis.starfish package.
+# Automatically generated, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hr.from.josipantolis.starfish\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-09 01:15+0200\n"
+"PO-Revision-Date: 2021-05-12 23:22+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/UI/Window.vala:46 data/starfish.desktop.in:3
+#: data/starfish.appdata.xml.in:7
+msgid "Starfish"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:64
+msgid "Reload"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:65
+msgid "Stop"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:74
+msgid "Go back"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:76
+msgid "Go forward"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:78
+msgid "Go home"
+msgstr ""
+
+#: src/UI/InputView.vala:28
+msgid "Send"
+msgstr ""
+
+#: src/UI/InputView.vala:47
+msgid "Please provide input."
+msgstr ""
+
+#: data/starfish.desktop.in:4
+msgid "Starfish Gemini browser"
+msgstr ""
+
+#: data/starfish.desktop.in:5
+msgid "Browse Gemini sites on the internet"
+msgstr ""
+
+#: data/starfish.desktop.in:8
+msgid "hr.from.josipantolis.starfish"
+msgstr ""
+
+#: data/starfish.desktop.in:11
+msgid "Gemini;Browser;Client;Gemtext;"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:8
+msgid "Browse Geminispace"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:10
+msgid ""
+"A Gemini client for elementary OS. Read personal stories and fictional "
+"tales. Enjoy written words wthout flashy distractions. Stay private and safe "
+"from tracking. Browse the small internet using Gemini protocol."
+msgstr ""

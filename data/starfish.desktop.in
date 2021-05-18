@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Starfish
+GenericName=Starfish Gemini browser
+Comment=Browse Gemini sites on the internet
+Categories=Network;WebBrowser;GTK
+Exec=hr.from.josipantolis.starfish
+Icon=hr.from.josipantolis.starfish
+Terminal=false
+Type=Application
+Keywords=Gemini;Browser;Client;Gemtext;
+

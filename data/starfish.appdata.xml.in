@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021 Josip Antoliš <josip.antolis@protonmail.com> -->
+<component type="desktop">
+  <id>hr.from.josipantolis.starfish</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>Starfish</name>
+  <summary>Browse Geminispace</summary>
+  <description>
+    <p>
+      A Gemini client for elementary OS. Read personal stories and fictional
+      tales. Enjoy written words wthout flashy distractions. Stay private and
+      safe from tracking. Browse the small internet using Gemini protocol.
+    </p>
+  </description>
+
+  <custom>
+    <value key="x-appcenter-color-primary">#603461</value>
+    <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
+    <value key="x-appcenter-suggested-price">5</value>
+  </custom>
+</component>

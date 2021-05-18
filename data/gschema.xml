@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/hr/from/josipantolis/starfish/" id="hr.from.josipantolis.starfish">
+    <key name="homepage" type="s">
+      <default>'gemini://gemini.circumlunar.space/'</default>
+      <summary>User's homepage</summary>
+      <description>URI of the gemini document used as a homepage</description>
+    </key>
+    <key name="max-history" type="i">
+      <default>20</default>
+      <summary>Maximum size of session history</summary>
+      <description>Maximum number of URIs that will be remembered per session (i.e. window or a tab).</description>
+    </key>
+    <key name="sessions" type="a(sias)">
+      <default>[]</default>
+      <summary>Current browsing sessions</summary>
+      <description>Each browsing session is identified by a unique string key and comprised of a history of visited URIs and an index of current URI from the history.</description>
+    </key>
+    <key name="window-position" type="(ii)">
+      <default>(-1, -1)</default>
+      <summary>Window position</summary>
+      <description>Most recent window position (x, y)</description>
+    </key>
+    <key name="window-size" type="(ii)">
+      <default>(600, 400)</default>
+      <summary>Most recent window size</summary>
+      <description>Most recent window size (width, height)</description>
+    </key>
+    <key name="window-maximized" type="b">
+      <default>false</default>
+      <summary>Whether the window was maximized on last run</summary>
+      <description>Whether the window was maximized on last run</description>
+    </key>
+  </schema>
+</schemalist>

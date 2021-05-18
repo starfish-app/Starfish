@@ -1,0 +1,4 @@
+entry progress.pulse {
+    background-color: @selected_bg_color;
+}
+
