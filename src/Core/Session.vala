@@ -11,6 +11,14 @@ public class Starfish.Core.Session : Object {
         owned get { return new Gee.ArrayList<Uri>.wrap (_history); }
     }
 
+    public Theme theme {
+        get { return manager.theme; }
+    }
+
+    public Settings settings {
+        get { return manager.settings; }
+    }
+
     public int history_index { get { return _history_index; } }
     public Uri current_uri {
         get { return _history[_history_index]; }

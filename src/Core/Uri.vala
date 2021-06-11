@@ -294,6 +294,23 @@ public class Starfish.Core.Uri : Object {
         return buff.str;
     }
 
+    public InetAddress[] resolve_host () {
+        if (host == null || host == "") {
+            return {};
+        }
+
+        var resolver = Resolver.get_default ();
+        try {
+            var res_list = resolver.lookup_by_name (host);
+            InetAddress[] res = {};
+            foreach (var addr in res_list) {
+                res += addr;
+                return res;
+            }
+        } catch (Error ignored) {}
+        return {};
+    }
+
     private Uri one_up () {
         if (path == null || path == "") {
             return this;

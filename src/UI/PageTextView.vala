@@ -26,15 +26,11 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
     private const string LIST = "list";
     private const string PREFORMATTED = "preformatted";
 
-    private static Gtk.CssProvider style_provider;
     private static Gee.Map<Core.LineType, string> TYPE_TO_TAG = new Gee.HashMap<Core.LineType, string> ();
 
     public signal void link_event (LinkEvent event);
 
     static construct {
-        style_provider = new Gtk.CssProvider ();
-        style_provider.load_from_resource ("hr/from/josipantolis/starfish/PageTextView.css");
-
         TYPE_TO_TAG[Core.LineType.HEADING_1] = H1;
         TYPE_TO_TAG[Core.LineType.HEADING_2] = H2;
         TYPE_TO_TAG[Core.LineType.HEADING_3] = H3;
@@ -46,9 +42,6 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
     }
 
     construct {
-        unowned Gtk.StyleContext style_ctx = get_style_context ();
-        style_ctx.add_provider (style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-
         cancel = new Cancellable ();
         session.cancel_loading.connect (() => {
             cancel.cancel ();
@@ -76,23 +69,23 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
             LINK,
             underline: Pango.Underline.LOW,
             pixels_below_lines: 4,
-            foreground: "#0064aa",
+            foreground_rgba: session.theme.link_color,
             foreground_set: true
         );
 
-        this.buffer.create_tag (
+        var quote_tag = this.buffer.create_tag (
             QUOTE,
             style: Pango.Style.ITALIC,
             left_margin: 36,
-            paragraph_background: "#e6e6e6",
+            paragraph_background_rgba: session.theme.block_background_color,
             paragraph_background_set: true
         );
 
-        this.buffer.create_tag (
+        var monospace_tag = this.buffer.create_tag (
             PREFORMATTED,
             family: "Monospace",
             wrap_mode: Gtk.WrapMode.NONE,
-            paragraph_background: "#e6e6e6",
+            paragraph_background_rgba: session.theme.block_background_color,
             paragraph_background_set: true
         );
 
@@ -105,6 +98,22 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
             LIST,
             left_margin: 36
         );
+
+        get_style_context ().add_provider (
+            session.theme.get_gemtext_css(),
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        );
+
+        session.theme.notify.connect (() => {
+            link_tag.foreground_rgba = session.theme.link_color;
+            // quote_tag.paragraph_background_rgba = session.theme.block_background_color;
+            // monospace_tag.paragraph_background_rgba = session.theme.block_background_color;
+
+            get_style_context ().add_provider (
+                session.theme.get_gemtext_css(),
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            );
+        });
 
         this.motion_notify_event.connect ((view, event) => on_motion_notify (event));
         this.button_release_event.connect ((view, event) => this.on_button_release (event));

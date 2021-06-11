@@ -13,7 +13,9 @@ public class Starfish.Core.SettingsBackedSessionStorage : Object, SessionStorage
     }
 
     public void save (Variant session) {
-        settings.set_value (SETTING_KEY, session);
+        if (Granite.Services.System.history_is_enabled ()) {
+            settings.set_value (SETTING_KEY, session);
+        }
     }
 }
 

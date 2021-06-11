@@ -8,7 +8,7 @@ A Gemini browser for elementary OS.
 
 ## About
 
-Starfish is a graphical client for the Gemini protocol built with GTK and Vala. The main goal of the project is to provide a native looking elementary OS application for reading Gemini sites. Read more on the project's Gemini page: [Starfish](gemini://josipantolis.from.hr/starfish/).
+Starfish is a graphical client for the Gemini protocol built with GTK and Vala. The main goal of the project is to provide a native looking elementary OS application for reading Gemini sites. Read more on the project's Gemini page: [gemini://josipantolis.from.hr/starfish/](gemini://josipantolis.from.hr/starfish/).
 
 ### Status
 
@@ -18,7 +18,7 @@ One of the missing features is the inclusion in package managers / app stores. C
 
 ## Compile
 
-All prerequisites can be met by installing `elementary-sdk`:
+Starfish is built for elementary OS 6 which is currently in beta. All prerequisites can be met by installing `elementary-sdk`:
 
 ```sh
 sudo apt install elementary-sdk
@@ -53,5 +53,6 @@ ninja hr.from.josipantolis.starfish-update-po
 ## License
 
 [GNU GPLv3](COPYING)
+
 Copyright © 2021 Josip Antoliš, josip.antolis@protonmail.com.
 

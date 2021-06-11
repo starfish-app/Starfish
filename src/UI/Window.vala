@@ -2,6 +2,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
 
     private HeaderBar header;
     private ContentStack content;
+    private PreferencesDialog? preferences_dialog = null;
     private uint configure_id;
 
     public Settings settings { get; construct; }
@@ -18,6 +19,10 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
     public const string ACTION_GO_TO_TOP = "go-to-top";
     public const string ACTION_GO_TO_NEXT = "go-to-next";
     public const string ACTION_GO_TO_PREVIOUS = "go-to-previous";
+    public const string ACTION_ZOOM_OUT = "zoom-out";
+    public const string ACTION_RESET_ZOOM = "reset-zoom";
+    public const string ACTION_ZOOM_IN = "zoom-in";
+    public const string ACTION_OPEN_PREFERENCES = "open-preferences";
 
     public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
 
@@ -26,7 +31,11 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         {ACTION_STOP, on_stop},
         {ACTION_GO_HOME, on_go_home},
         {ACTION_GO_BACK, on_go_back},
-        {ACTION_GO_FORWARD, on_go_forward}
+        {ACTION_GO_FORWARD, on_go_forward},
+        {ACTION_ZOOM_OUT, on_zoom_out},
+        {ACTION_RESET_ZOOM, on_reset_zoom},
+        {ACTION_ZOOM_IN, on_zoom_in},
+        {ACTION_OPEN_PREFERENCES, on_open_preferences}
     };
 
     static construct {
@@ -35,8 +44,11 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         action_accelerators[ACTION_GO_HOME] = "<Control>h";
         action_accelerators[ACTION_GO_BACK] = "<alt>Left";
         action_accelerators[ACTION_GO_FORWARD] = "<alt>Right";
+        action_accelerators[ACTION_ZOOM_OUT] = "<Control>minus";
+        action_accelerators[ACTION_RESET_ZOOM] = "<Control>0";
+        action_accelerators[ACTION_ZOOM_IN] = "<Control>plus";
+        action_accelerators[ACTION_ZOOM_IN] = "<Control>equal";
     }
-
 
     public Window (Starfish.UI.Application application, Core.Session session) {
         Object (
@@ -53,8 +65,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         setup_actions ();
         link_to_settings ();
 
-        header = new HeaderBar (this);
-        header.session = session;
+        header = new HeaderBar (this, session);
 
         var input_view = new InputView (session);
         input_view.submit.connect (on_input_submit);
@@ -204,6 +215,41 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
 
     private void on_go_forward () {
         session.navigate_forward ();
+    }
+
+    private void on_zoom_out () {
+        var key = "font-size";
+        var default_zoom = settings.get_default_value (key).get_double ();
+        var current_zoom = settings.get_double (key);
+        var new_zoom = current_zoom - 0.1 * default_zoom;
+        if (new_zoom < 0.5 * default_zoom) {
+            return;
+        }
+        settings.set_double (key, new_zoom);
+    }
+
+    private void on_reset_zoom () {
+        settings.reset ("font-size");
+    }
+
+    private void on_zoom_in () {
+        var key = "font-size";
+        var default_zoom = settings.get_default_value (key).get_double ();
+        var current_zoom = settings.get_double (key);
+        settings.set_double (key, current_zoom + 0.1 * default_zoom);
+    }
+
+    private void on_open_preferences () {
+        if (preferences_dialog == null) {
+            preferences_dialog = new PreferencesDialog (settings);
+            preferences_dialog.show_all ();
+
+            preferences_dialog.destroy.connect (() => {
+                preferences_dialog = null;
+            });
+        }
+
+        preferences_dialog.present ();
     }
 }
 

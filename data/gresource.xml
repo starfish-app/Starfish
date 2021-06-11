@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/hr/from/josipantolis/starfish">
-    <file compressed="true">PageTextView.css</file>
-  </gresource>
-  <gresource prefix="/hr/from/josipantolis/starfish">
     <file compressed="true">AddressEntry.css</file>
   </gresource>
 </gresources>

@@ -45,6 +45,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Button back_button;
     private Gtk.Button forward_button;
     private Gtk.Button home_button;
+    private Gtk.Button reset_zoom_button;
 
     private uint? timeout_id = null;
 
@@ -52,8 +53,10 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         get { return address.text; }
     }
 
-    public HeaderBar (ActionMap actions) {
+    public HeaderBar (ActionMap actions, Core.Session session) {
         this.actions = actions;
+        this.session = session;
+        hook_reset_zoom_button_to_settings (session.settings);
     }
 
     construct {
@@ -77,6 +80,9 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         pack_start (forward_button);
         home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
         pack_start (home_button);
+
+        var menu_button = setup_menu ();
+        pack_end (menu_button);
     }
 
     private void disable_buttons () {
@@ -144,11 +150,58 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         return address;
     }
 
-    private Gtk.Button setup_button (string icon, string name, string action) {
-        return new Gtk.Button.from_icon_name (
-            icon,
-            Gtk.IconSize.LARGE_TOOLBAR
-        ) {
+    private Gtk.MenuButton setup_menu () {
+        var zoom_out_button = setup_button ("zoom-out-symbolic", _("Zoom out"), Window.ACTION_ZOOM_OUT, Gtk.IconSize.MENU);
+        var zoom_in_button = setup_button ("zoom-in-symbolic", _("Zoom in"), Window.ACTION_ZOOM_IN, Gtk.IconSize.MENU);
+        reset_zoom_button = new Gtk.Button.with_label ("100%") {
+            action_name = full_name (Window.ACTION_RESET_ZOOM),
+            tooltip_markup = Granite.markup_accel_tooltip (
+                Window.action_accelerators[Window.ACTION_RESET_ZOOM].to_array (),
+                _("Reset zoom level")
+            )
+        };
+
+        var font_size_grid = new Gtk.Grid () {
+            column_homogeneous = true,
+            hexpand = true,
+            margin = 12
+        };
+
+        font_size_grid.get_style_context ().add_class (Gtk.STYLE_CLASS_LINKED);
+        font_size_grid.add (zoom_out_button);
+        font_size_grid.add (reset_zoom_button);
+        font_size_grid.add (zoom_in_button);
+
+        var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+
+        var preferences_button = new Gtk.ModelButton () {
+            text = _("Preferences"),
+            action_name = full_name (Window.ACTION_OPEN_PREFERENCES)
+        };
+
+        var menu_grid = new Gtk.Grid () {
+            margin_bottom = 3,
+            orientation = Gtk.Orientation.VERTICAL,
+            width_request = 200
+        };
+
+        menu_grid.attach (font_size_grid, 0, 0, 3, 1);
+        menu_grid.attach (separator, 0, 1, 3, 1);
+        menu_grid.attach (preferences_button, 0, 2, 3);
+        menu_grid.show_all ();
+
+        var menu = new Gtk.Popover (null);
+        menu.add (menu_grid);
+
+        return new Gtk.MenuButton () {
+            image = new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR),
+            tooltip_text = _("Menu"),
+            popover = menu
+        };
+    }
+
+    private Gtk.Button setup_button (string icon, string name, string action, Gtk.IconSize size = Gtk.IconSize.LARGE_TOOLBAR) {
+        return new Gtk.Button.from_icon_name (icon, size) {
             action_name = full_name (action),
             tooltip_markup = Granite.markup_accel_tooltip (
                 Window.action_accelerators[action].to_array (),
@@ -159,6 +212,21 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
     private string full_name (string local_action_name) {
         return Window.ACTION_PREFIX + local_action_name;
+    }
+
+    private void hook_reset_zoom_button_to_settings (Settings settings) {
+        reset_zoom_button.label = current_zoom_percent (settings);
+        settings.changed.connect ((key) => {
+            if (key == "font-size") {
+                reset_zoom_button.label = current_zoom_percent (settings);
+            }
+        });
+    }
+
+    private string current_zoom_percent (Settings settings) {
+        var default_zoom = settings.get_default_value ("font-size").get_double ();
+        var zoom_percent = (settings.get_double ("font-size") / default_zoom) * 100;
+        return "%.0f%%".printf (zoom_percent);
     }
 }
 

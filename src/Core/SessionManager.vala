@@ -3,6 +3,7 @@ public class Starfish.Core.SessionManager : Object {
     public Settings settings { get; construct; }
     public SessionStorage storage { get; construct; }
     public Client client { get; construct; }
+    public Theme theme { get; construct; }
 
     private Variant sessions;
 
@@ -10,19 +11,22 @@ public class Starfish.Core.SessionManager : Object {
         this (
             settings,
             new SettingsBackedSessionStorage (settings),
-            new Client ()
+            new Client (),
+            new Theme.os (settings)
         );
     }
 
     public SessionManager (
         Settings settings,
         SessionStorage storage,
-        Client client
+        Client client,
+        Theme theme
     ) {
         Object (
             settings: settings,
             storage: storage,
-            client: client
+            client: client,
+            theme: theme
         );
     }
 

@@ -27,6 +27,7 @@ sources = gresource + files(
     'src/UI/Application.vala',
     'src/UI/Window.vala',
     'src/UI/HeaderBar.vala',
+    'src/UI/PreferencesDialog.vala',
     'src/UI/ContentStack.vala',
     'src/UI/InputView.vala',
     'src/UI/ResponseView.vala',
@@ -46,7 +47,8 @@ sources = gresource + files(
     'src/Core/SessionStorage.vala',
     'src/Core/SettingsBackedSessionStorage.vala',
     'src/Core/SessionManager.vala',
-    'src/Core/Session.vala'
+    'src/Core/Session.vala',
+    'src/Core/Theme.vala'
 )
 
 # Test build

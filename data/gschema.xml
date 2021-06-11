@@ -2,7 +2,7 @@
 <schemalist>
   <schema path="/hr/from/josipantolis/starfish/" id="hr.from.josipantolis.starfish">
     <key name="homepage" type="s">
-      <default>'gemini://gemini.circumlunar.space/'</default>
+      <default>'gemini://josipantolis.from.hr/starfish/'</default>
       <summary>User's homepage</summary>
       <description>URI of the gemini document used as a homepage</description>
     </key>
@@ -22,7 +22,7 @@
       <description>Most recent window position (x, y)</description>
     </key>
     <key name="window-size" type="(ii)">
-      <default>(600, 400)</default>
+      <default>(900, 700)</default>
       <summary>Most recent window size</summary>
       <description>Most recent window size (width, height)</description>
     </key>
@@ -30,6 +30,11 @@
       <default>false</default>
       <summary>Whether the window was maximized on last run</summary>
       <description>Whether the window was maximized on last run</description>
+    </key>
+    <key name="font-size" type="d">
+      <default>1.2</default>
+      <summary>Base gemtext font size in em</summary>
+      <description>Base size of text in TextView used to render gemtext. Headdings, monospace, etc may use relativelly larger or smaller size. Value expressed in em.</description>
     </key>
   </schema>
 </schemalist>
