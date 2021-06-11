@@ -29,7 +29,7 @@ public class Starfish.Core.TextBody : Object {
         }
 
         this.body = new DataInputStream (in_stream) {
-            newline_type = DataStreamNewlineType.LF,
+            newline_type = DataStreamNewlineType.ANY,
             close_base_stream = true
         };
 
@@ -61,13 +61,17 @@ public class Starfish.Core.TextBody : Object {
         try {
             var row = yield body.read_line_utf8_async (Priority.HIGH, cancel);
             if (row == null) {
-                yield connection.close_async (Priority.DEFAULT);
+                yield try_to_close_connection ();
                 return null;
             }
 
             return new Line (row, guess_type (row));
         } catch (Error e) {
             yield try_to_close_connection ();
+            if (body.get_available() > 0) {
+                return yield try_to_read_the_final_line (cancel);
+            }
+
             return null;
         }
     }
@@ -81,6 +85,24 @@ public class Starfish.Core.TextBody : Object {
             yield connection.close_async (Priority.DEFAULT);
         } catch (IOError e) {
             warning ("Could not close connection, might leak resources! Error: %s", e.message);
+        }
+    }
+
+    private async Line? try_to_read_the_final_line (Cancellable cancel) {
+        try {
+            var buff = new uint8[body.get_available ()];
+            size_t read;
+            yield body.read_all_async (buff, Priority.HIGH, cancel, out read);
+            var builder = new StringBuilder ();
+            foreach (var c in buff) {
+                builder.append_c ((char) c);
+            }
+
+            var row = builder.str;
+            return new Line (row, guess_type (row));
+        } catch (Error e) {
+            warning ("Failed to read the final line. Page might be incomplete. Error: %s", e.message);
+            return null;
         }
     }
 }
