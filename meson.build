@@ -108,19 +108,18 @@ i18n.merge_file(
 )
 
 # Install icons
-# icon_sizes = ['16', '32', '64', '128']
-icon_sizes = ['128']
+icon_sizes = ['16', '32', '64', '128']
 
 foreach i : icon_sizes
     install_data(
-        join_paths('data', 'icons', i + '.svg'),
+        join_paths('data', 'icons', i + '.png'),
         install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i, 'apps'),
-        rename: meson.project_name() + '.svg'
+        rename: meson.project_name() + '.png'
     )
     install_data(
-        join_paths('data', 'icons', i + '.svg'),
+        join_paths('data', 'icons', i + '.png'),
         install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i + '@2', 'apps'),
-        rename: meson.project_name() + '.svg'
+        rename: meson.project_name() + '.png'
     )
 endforeach
 

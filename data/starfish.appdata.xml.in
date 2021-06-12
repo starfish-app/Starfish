@@ -19,4 +19,13 @@
     <value key="x-appcenter-color-primary-text">rgb(255, 255, 255)</value>
     <value key="x-appcenter-suggested-price">5</value>
   </custom>
+  <developer_name>Josip Antoliš</developer_name>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style-screenshot.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/dark-style-screenshot.png</image>
+    </screenshot>
+  </screenshots>
 </component>
