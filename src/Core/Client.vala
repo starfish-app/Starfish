@@ -35,12 +35,12 @@ public class Starfish.Core.Client : Object {
                 yield resp_stream.close_async (Priority.DEFAULT, cancel);
             }
 
-            if (resp.is_redirect) {
+            if (resp.is_redirect && follow_redirects) {
                 var new_uri = Uri.parse (resp.meta, uri);
                 if (new_uri.scheme != "gemini") {
                     return new Response (uri, "-1 Received a redirect to non Gemini protocol. If you wish you can manually visit %s.".printf (new_uri.to_string ()), conn);
                 }
-                if (follow_redirects && redirect_count <= max_redirects) {
+                if (redirect_count <= max_redirects) {
                     return yield load_redirected (new_uri, cancel, follow_redirects, redirect_count + 1);
                 } else {
                     return new Response (uri, "-1 Reached maximum number of redirects. If you wish you can manually visit %s to continue following redirects.".printf (new_uri.to_string ()), conn);

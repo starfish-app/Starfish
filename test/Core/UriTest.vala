@@ -11,6 +11,7 @@ public class Starfish.Core.UriTest : Starfish.TestBase, Object {
         tests["should-parse-relative-urls"] = should_parse_relative_urls;
         tests["should-url-encode"] = should_url_encode;
         tests["should-go-up-in-path"] = should_go_up_in_path;
+        tests["should-go-to-root"] = should_go_to_root;
         return tests;
     }
 
@@ -167,6 +168,41 @@ public class Starfish.Core.UriTest : Starfish.TestBase, Object {
         assert_uri_eq (
             new Uri ("gemini", null, "domain", 1965, "/", "query", "fragment").one_up (),
             new Uri ("gemini", null, "domain", 1965)
+        );
+    }
+
+    public static void should_go_to_root () {
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965).root (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/").root (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo").root (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/~barman").root (),
+            new Uri ("gemini", null, "domain", 1965, "/~barman")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo/~barman").root (),
+            new Uri ("gemini", null, "domain", 1965, "/foo/~barman")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/not~a~user").root (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo/~barman/").root (),
+            new Uri ("gemini", null, "domain", 1965, "/foo/~barman")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo/~barman/bazz").root (),
+            new Uri ("gemini", null, "domain", 1965, "/foo/~barman")
         );
     }
 

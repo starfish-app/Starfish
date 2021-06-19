@@ -330,7 +330,19 @@ public class Starfish.Core.Uri : Object {
     }
 
     public Uri root () {
-        return new Uri (scheme, userinfo, host, port);
+        if (!path.contains ("/~")) {
+            return new Uri (scheme, userinfo, host, port);
+        } else {
+            var tldi = path.index_of_char ('~');
+            var base_path = path[0:tldi];
+            var user_path = path[tldi:path.length];
+            if (!user_path.contains ("/")) {
+                return this;
+            }
+            var username = user_path[0:user_path.index_of_char ('/')];
+            var new_path = base_path + username;
+            return new Uri (scheme, userinfo, host, port, new_path);
+        }
     }
 }
 

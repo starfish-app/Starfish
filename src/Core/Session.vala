@@ -174,9 +174,19 @@ public class Starfish.Core.Session : Object {
             } else {
                 response.close ();
                 var new_uri = response.uri.one_up ();
-                if (new_uri == uri) {
-                    update_history_on_response (response);
-                    response_received (response);
+                if (new_uri.to_string () == uri.to_string ()) {
+                    if (response.is_redirect) {
+                        try {
+                            new_uri = Uri.parse (response.meta, uri);
+                            navigate_one_level_up_from (new_uri);
+                        } catch (Core.UriError err) {
+                            update_history_on_response (response);
+                            response_received (response);
+                        }
+                    } else {
+                        update_history_on_response (response);
+                        response_received (response);
+                    }
                 } else {
                     navigate_one_level_up_from (new_uri);
                 }
