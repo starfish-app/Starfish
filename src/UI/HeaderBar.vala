@@ -40,10 +40,13 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
     private Gtk.Grid title_widget;
     private Gtk.Entry address;
-    private Gtk.Button reload_button;
-    private Gtk.Button stop_button;
+    private Gtk.Button stop_reload_button;
+    private Gtk.Image reload_icon;
+    private Gtk.Image stop_icon;
     private Gtk.Button back_button;
     private Gtk.Button forward_button;
+    private Gtk.Button up_button;
+    private Gtk.Button root_button;
     private Gtk.Button home_button;
     private Gtk.Button reset_zoom_button;
 
@@ -63,52 +66,65 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         show_close_button = true;
         hexpand = true;
 
+        reload_icon = new Gtk.Image.from_icon_name ("go-jump", Gtk.IconSize.LARGE_TOOLBAR);
+        stop_icon = new Gtk.Image.from_icon_name ("media-playback-stop", Gtk.IconSize.LARGE_TOOLBAR);
+        stop_reload_button = setup_button ("go-jump", _("Reload"), Window.ACTION_RELOAD);
+        back_button = setup_button ("edit-undo", _("Go back"), Window.ACTION_GO_BACK);
+        forward_button = setup_button ("edit-redo", _("Go forward"), Window.ACTION_GO_FORWARD);
+        up_button = setup_button ("go-up", _("Go up"), Window.ACTION_GO_UP);
+        root_button = setup_button ("go-top", _("Go to root"), Window.ACTION_GO_TO_ROOT);
+        home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
+
         address = setup_address ();
-        reload_button = setup_button ("go-jump", _("Reload"), Window.ACTION_RELOAD);
-        stop_button = setup_button ("media-playback-stop", _("Stop"), Window.ACTION_STOP);
         title_widget = new Gtk.Grid () {
             column_spacing = 8
         };
-
         title_widget.attach (address, 0, 0);
-        show_reload_button ();
+        title_widget.attach (stop_reload_button, 1, 0);
+        title_widget.attach (home_button, 2, 0);
         custom_title = title_widget;
 
-        back_button = setup_button ("edit-undo", _("Go back"), Window.ACTION_GO_BACK);
+        pack_start (up_button);
+        pack_start (root_button);
+        pack_start (new Gtk.Separator (Gtk.Orientation.VERTICAL));
         pack_start (back_button);
-        forward_button = setup_button ("edit-redo", _("Go forward"), Window.ACTION_GO_FORWARD);
         pack_start (forward_button);
-        home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
-        pack_start (home_button);
-
         var menu_button = setup_menu ();
         pack_end (menu_button);
     }
 
     private void disable_buttons () {
-        reload_button.sensitive = false;
         back_button.sensitive = false;
         forward_button.sensitive = false;
         home_button.sensitive = false;
+        up_button.sensitive = false;
+        root_button.sensitive = false;
     }
 
     private void enable_buttons () {
-        reload_button.sensitive = true;
         back_button.sensitive = true;
         forward_button.sensitive = true;
         home_button.sensitive = true;
+        up_button.sensitive = true;
+        root_button.sensitive = true;
     }
 
     private void show_reload_button () {
-        title_widget.remove_column (1);
-        title_widget.attach_next_to (reload_button, address, Gtk.PositionType.RIGHT);
-        title_widget.show_all ();
+        stop_reload_button.set_image (reload_icon);
+        stop_reload_button.action_name = full_name (Window.ACTION_RELOAD);
+        stop_reload_button.tooltip_markup = Granite.markup_accel_tooltip (
+            Window.action_accelerators[Window.ACTION_RELOAD].to_array (),
+            _("Reload")
+        );
     }
 
     private void show_stop_button () {
-        title_widget.remove_column (1);
-        title_widget.attach_next_to (stop_button, address, Gtk.PositionType.RIGHT);
-        title_widget.show_all ();
+        stop_reload_button.set_image (stop_icon);
+        stop_reload_button.action_name = full_name (Window.ACTION_STOP);
+        stop_reload_button.tooltip_markup = Granite.markup_accel_tooltip (
+            Window.action_accelerators[Window.ACTION_STOP].to_array (),
+            _("Stop")
+        );
     }
 
     private void start_pulsing () {
@@ -202,6 +218,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
     private Gtk.Button setup_button (string icon, string name, string action, Gtk.IconSize size = Gtk.IconSize.LARGE_TOOLBAR) {
         return new Gtk.Button.from_icon_name (icon, size) {
+            focus_on_click = false,
             action_name = full_name (action),
             tooltip_markup = Granite.markup_accel_tooltip (
                 Window.action_accelerators[action].to_array (),

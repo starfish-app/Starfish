@@ -1,11 +1,10 @@
 public class Starfish.Core.Client : Object {
 
     private SocketClient socket_client;
-    public bool follow_redirects { get; construct; }
     public int max_redirects { get; construct; }
 
-    public Client (bool follow_redirects = true, int max_redirects = 5) {
-        Object (follow_redirects: follow_redirects, max_redirects: max_redirects);
+    public Client (int max_redirects = 5) {
+        Object (max_redirects: max_redirects);
     }
 
     construct {
@@ -16,11 +15,11 @@ public class Starfish.Core.Client : Object {
         };
     }
 
-    public async Response load (Uri uri, Cancellable? cancel = null) {
-        return yield load_redirected(uri, cancel);
+    public async Response load (Uri uri, Cancellable? cancel = null, bool follow_redirects = true) {
+        return yield load_redirected(uri, cancel, follow_redirects);
     }
 
-    private async Response load_redirected (Uri uri, Cancellable? cancel, int redirect_count = 0) {
+    private async Response load_redirected (Uri uri, Cancellable? cancel, bool follow_redirects = true, int redirect_count = 0) {
         try {
             var conn = yield socket_client.connect_to_uri_async (uri.to_string (), 1965, cancel);
             var request = (uri.to_string () + "\r\n").data;
@@ -42,7 +41,7 @@ public class Starfish.Core.Client : Object {
                     return new Response (uri, "-1 Received a redirect to non Gemini protocol. If you wish you can manually visit %s.".printf (new_uri.to_string ()), conn);
                 }
                 if (follow_redirects && redirect_count <= max_redirects) {
-                    return yield load_redirected (new_uri, cancel, redirect_count + 1);
+                    return yield load_redirected (new_uri, cancel, follow_redirects, redirect_count + 1);
                 } else {
                     return new Response (uri, "-1 Reached maximum number of redirects. If you wish you can manually visit %s to continue following redirects.".printf (new_uri.to_string ()), conn);
                 }

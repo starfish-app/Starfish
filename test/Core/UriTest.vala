@@ -10,6 +10,7 @@ public class Starfish.Core.UriTest : Starfish.TestBase, Object {
         tests["should-remove-dot-segments"] = should_remove_dot_segments;
         tests["should-parse-relative-urls"] = should_parse_relative_urls;
         tests["should-url-encode"] = should_url_encode;
+        tests["should-go-up-in-path"] = should_go_up_in_path;
         return tests;
     }
 
@@ -116,6 +117,57 @@ public class Starfish.Core.UriTest : Starfish.TestBase, Object {
         assert_str_eq (Uri.encode ("abcdefghijklmnopqrstuvwxyz"), "abcdefghijklmnopqrstuvwxyz");
         assert_str_eq (Uri.encode ("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         assert_str_eq (Uri.encode ("0123456789"), "0123456789");
+    }
+
+    public static void should_go_up_in_path () {
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965).one_up (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/").one_up (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "//").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo/").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/foo")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo/bar").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/foo/")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo//bar").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/foo//")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo", "query").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo", null, "fragment").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/foo", "query", "fragment").one_up (),
+            new Uri ("gemini", null, "domain", 1965, "/")
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "", "query", "fragment").one_up (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
+        assert_uri_eq (
+            new Uri ("gemini", null, "domain", 1965, "/", "query", "fragment").one_up (),
+            new Uri ("gemini", null, "domain", 1965)
+        );
     }
 
     private static void assert_parsed_uri (string given_raw, Uri expected_uri, ...) throws UriError {

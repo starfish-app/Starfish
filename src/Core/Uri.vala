@@ -311,22 +311,26 @@ public class Starfish.Core.Uri : Object {
         return {};
     }
 
-    private Uri one_up () {
-        if (path == null || path == "") {
-            return this;
+    public Uri one_up () {
+        if (path == null || path == "" || path == "/") {
+            return root ();
         }
 
         var path_segments = path.split ("/");
-        var new_path = "/";
-        foreach (var segment in path_segments[0:path_segments.length - 1]) {
-            new_path += segment + "/";
+        var new_path = "";
+        foreach (var segment in path_segments[1:path_segments.length - 1]) {
+                new_path += "/" + segment;
         }
 
-        try {
-            return Uri.parse (new_path, this);
-        } catch (UriError e) {
-            return this;
+        if (!path.has_suffix ("/")) {
+            new_path = new_path + "/";
         }
+
+        return new Uri (scheme, userinfo, host, port, new_path);
+    }
+
+    public Uri root () {
+        return new Uri (scheme, userinfo, host, port);
     }
 }
 

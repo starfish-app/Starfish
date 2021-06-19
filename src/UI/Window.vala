@@ -16,7 +16,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
     public const string ACTION_GO_BACK = "go-back";
     public const string ACTION_GO_FORWARD = "go-forward";
     public const string ACTION_GO_UP = "go-up";
-    public const string ACTION_GO_TO_TOP = "go-to-top";
+    public const string ACTION_GO_TO_ROOT = "go-to-root";
     public const string ACTION_GO_TO_NEXT = "go-to-next";
     public const string ACTION_GO_TO_PREVIOUS = "go-to-previous";
     public const string ACTION_ZOOM_OUT = "zoom-out";
@@ -32,6 +32,8 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         {ACTION_GO_HOME, on_go_home},
         {ACTION_GO_BACK, on_go_back},
         {ACTION_GO_FORWARD, on_go_forward},
+        {ACTION_GO_UP, on_go_up},
+        {ACTION_GO_TO_ROOT, on_go_to_root},
         {ACTION_ZOOM_OUT, on_zoom_out},
         {ACTION_RESET_ZOOM, on_reset_zoom},
         {ACTION_ZOOM_IN, on_zoom_in},
@@ -44,6 +46,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         action_accelerators[ACTION_GO_HOME] = "<Control>h";
         action_accelerators[ACTION_GO_BACK] = "<alt>Left";
         action_accelerators[ACTION_GO_FORWARD] = "<alt>Right";
+        action_accelerators[ACTION_GO_UP] = "<alt>Up";
         action_accelerators[ACTION_ZOOM_OUT] = "<Control>minus";
         action_accelerators[ACTION_RESET_ZOOM] = "<Control>0";
         action_accelerators[ACTION_ZOOM_IN] = "<Control>plus";
@@ -215,6 +218,14 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
 
     private void on_go_forward () {
         session.navigate_forward ();
+    }
+
+    private void on_go_up () {
+        session.navigate_up ();
+    }
+
+    private void on_go_to_root () {
+        session.navigate_to_root ();
     }
 
     private void on_zoom_out () {

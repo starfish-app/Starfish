@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-19 02:50+0200\n"
+"POT-Creation-Date: 2021-06-19 18:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,48 +17,56 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/UI/Window.vala:58 data/starfish.desktop.in:3
+#: src/UI/Window.vala:61 data/starfish.desktop.in:3
 #: data/starfish.appdata.xml.in:7
 msgid "Starfish"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:67
+#: src/UI/HeaderBar.vala:71 src/UI/HeaderBar.vala:117
 msgid "Reload"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:68
-msgid "Stop"
-msgstr ""
-
-#: src/UI/HeaderBar.vala:77
+#: src/UI/HeaderBar.vala:72
 msgid "Go back"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:79
+#: src/UI/HeaderBar.vala:73
 msgid "Go forward"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:81
+#: src/UI/HeaderBar.vala:74
+msgid "Go up"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:75
+msgid "Go to root"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:76
 msgid "Go home"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:154
+#: src/UI/HeaderBar.vala:126
+msgid "Stop"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:170
 msgid "Zoom out"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:155
+#: src/UI/HeaderBar.vala:171
 msgid "Zoom in"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:160
+#: src/UI/HeaderBar.vala:176
 msgid "Reset zoom level"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:178
+#: src/UI/HeaderBar.vala:194
 msgid "Preferences"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:198
+#: src/UI/HeaderBar.vala:214
 msgid "Menu"
 msgstr ""
 

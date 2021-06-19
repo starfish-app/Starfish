@@ -49,7 +49,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var starting_uri = current_uri;
-            manager.client.load.begin (starting_uri, null, (obj, res) => {
+            manager.client.load.begin (starting_uri, null, true, (obj, res) => {
                 var response = manager.client.load.end (res);
                 response_received (response);
             });
@@ -69,7 +69,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index - 1];
-            manager.client.load.begin (uri, null, (obj, res) => {
+            manager.client.load.begin (uri, null, true, (obj, res) => {
                 var response = manager.client.load.end (res);
                 var loaded_uri = response.uri;
                 _history_index--;
@@ -96,7 +96,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index + 1];
-            manager.client.load.begin (uri, null, (obj, res) => {
+            manager.client.load.begin (uri, null, true, (obj, res) => {
                 var response = manager.client.load.end (res);
                 var loaded_uri = response.uri;
                 _history_index++;
@@ -112,7 +112,6 @@ public class Starfish.Core.Session : Object {
     }
 
     public void navigate_to (string raw_uri) {
-        var current_uri = current_uri;
         Uri new_uri;
         try {
             new_uri = Uri.parse (raw_uri, current_uri);
@@ -122,11 +121,27 @@ public class Starfish.Core.Session : Object {
         }
 
         if (new_uri.scheme != "gemini") {
-            try {
-                Gtk.show_uri_on_window (null, new_uri.to_string (), (uint32) Gdk.CURRENT_TIME);
-            } catch (Error e) {
-                warning ("Error launching non-gemini Uri %s! Error: %s", new_uri.to_string (), e.message);
+            delegate_opening_of (new_uri);
+        } else {
+            lock (loading) {
+                if (loading) {
+                    return;
+                } else {
+                    loading = true;
+                }
+
+                manager.client.load.begin (new_uri, null, true, (obj, res) => {
+                    var response = manager.client.load.end (res);
+                    update_history_on_response (response);
+                    response_received (response);
+                });
             }
+        }
+    }
+
+    public void navigate_up () {
+        var new_uri = current_uri.one_up ();
+        if (new_uri == current_uri) {
             return;
         }
 
@@ -137,25 +152,60 @@ public class Starfish.Core.Session : Object {
                 loading = true;
             }
 
-            manager.client.load.begin (new_uri, null, (obj, res) => {
-                var response = manager.client.load.end (res);
-                var loaded_uri = response.uri;
-                var previous_uri = current_uri;
-                if (loaded_uri.to_string () != previous_uri.to_string ()) {
-                    if (_history_index < _history.length - 1) {
-                        _history = _history [0:_history_index + 1];
-                    }
+            navigate_one_level_up_from (new_uri);
+        }
+    }
 
-                    _history += loaded_uri;
-                    if (_history.length > max_history ()) {
-                        _history = _history[1:_history.length];
-                    }
+    public void navigate_to_root () {
+        var new_uri = current_uri.root ();
+        if (new_uri == current_uri) {
+            return;
+        }
 
-                    _history_index = _history.length - 1;
-                    manager.save (this);
-                }
+        navigate_to (new_uri.to_string ());
+    }
+
+    private void navigate_one_level_up_from (Uri uri) {
+        manager.client.load.begin (uri, null, false, (obj, res) => {
+            var response = manager.client.load.end (res);
+            if (response.is_success) {
+                update_history_on_response (response);
                 response_received (response);
-            });
+            } else {
+                response.close ();
+                var new_uri = response.uri.one_up ();
+                if (new_uri == uri) {
+                    update_history_on_response (response);
+                    response_received (response);
+                } else {
+                    navigate_one_level_up_from (new_uri);
+                }
+            }
+        });
+    }
+
+    private void delegate_opening_of (Uri uri) {
+        try {
+            Gtk.show_uri_on_window (null, uri.to_string (), (uint32) Gdk.CURRENT_TIME);
+        } catch (Error e) {
+            warning ("Error launching non-gemini Uri %s! Error: %s", uri.to_string (), e.message);
+        }
+    }
+
+    private void update_history_on_response (Response response) {
+        var loaded_uri = response.uri;
+        if (loaded_uri.to_string () != current_uri.to_string ()) {
+            if (_history_index < _history.length - 1) {
+                _history = _history [0:_history_index + 1];
+            }
+
+            _history += loaded_uri;
+            if (_history.length > max_history ()) {
+                _history = _history[1:_history.length];
+            }
+
+            _history_index = _history.length - 1;
+            manager.save (this);
         }
     }
 
