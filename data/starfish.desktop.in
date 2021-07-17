@@ -8,4 +8,5 @@ Icon=hr.from.josipantolis.starfish
 Terminal=false
 Type=Application
 Keywords=gemini;browser;client;gemtext;geminispace;
+X-GNOME-UsesNotifications=true
 

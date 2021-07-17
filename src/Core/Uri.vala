@@ -312,7 +312,7 @@ public class Starfish.Core.Uri : Object {
     }
 
     public Uri one_up () {
-        if (path == null || path == "" || path == "/") {
+        if (path_is_empty ()) {
             return root ();
         }
 
@@ -343,6 +343,22 @@ public class Starfish.Core.Uri : Object {
             var new_path = base_path + username;
             return new Uri (scheme, userinfo, host, port, new_path);
         }
+    }
+
+    public string? file_name () {
+        if (path_is_empty ()) {
+            return null;
+        }
+
+        if (!path.contains ("/")) {
+            return path;
+        }
+
+        return path[path.last_index_of ("/") + 1:path.length];
+    }
+
+    private bool path_is_empty () {
+        return path == null || path == "" || path == "/";
     }
 }
 

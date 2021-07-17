@@ -99,6 +99,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         home_button.sensitive = false;
         up_button.sensitive = false;
         root_button.sensitive = false;
+        address.sensitive = false;
     }
 
     private void enable_buttons () {
@@ -107,6 +108,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         home_button.sensitive = true;
         up_button.sensitive = true;
         root_button.sensitive = true;
+        address.sensitive = true;
     }
 
     private void show_reload_button () {

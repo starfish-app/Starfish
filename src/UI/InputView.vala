@@ -9,19 +9,25 @@ public class Starfish.UI.InputView : Gtk.Grid, ResponseView {
         Object (
             session: session,
             orientation: Gtk.Orientation.VERTICAL,
-            halign: Gtk.Align.CENTER,
             margin_top: 16,
-            margin_start: 24,
-            margin_end: 24,
+            margin_start: 48,
+            margin_end: 48,
             row_spacing: 16,
             column_spacing: 8
         );
     }
 
     construct {
-        prompt = new Gtk.Label ("");
-        attach (prompt, 0, 0);
-        input = new Gtk.Entry ();
+        prompt = new Gtk.Label ("") {
+            halign = Gtk.Align.CENTER,
+            hexpand = true
+        };
+
+        attach (prompt, 0, 0, 2);
+        input = new Gtk.Entry () {
+            hexpand = true
+        };
+
         input.activate.connect (on_submit);
         input.changed.connect (on_input_change);
         attach (input, 0, 1);

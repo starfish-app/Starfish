@@ -77,11 +77,13 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         var error_view = new PageErrorView (session);
         error_view.link_event.connect (on_link_event);
         var image_view = new PageImageView (session);
+        var download_view = new PageDownloadView (session);
         content = new ContentStack.with_views (
             "text-response", text_view,
             "error-response", error_view,
             "input", input_view,
-            "image", image_view
+            "image", image_view,
+            "download", download_view
         );
 
         var grid = new Gtk.Grid () {
@@ -114,6 +116,8 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
                 action_accelerators[action].to_array ()
             );
         }
+
+        button_release_event.connect (on_mouse_click_event);
     }
 
     private void link_to_settings () {
@@ -261,6 +265,19 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         }
 
         preferences_dialog.present ();
+    }
+
+    private bool on_mouse_click_event (Gtk.Widget self, Gdk.EventButton event) {
+        switch (event.button) {
+            case 8:
+                on_go_back ();
+                return true;
+            case 9:
+                on_go_forward ();
+                return true;
+            default:
+                return false;
+        }
     }
 }
 

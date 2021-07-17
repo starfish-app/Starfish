@@ -13,12 +13,7 @@ public class Starfish.UI.PageErrorView : PageTextView {
             return true;
         }
 
-        var mime = response.mime ();
-        if (mime == null) {
-            return true;
-        }
-
-        return !mime.is_text;
+        return false;
     }
 
     public override void display (Core.Response response) {
