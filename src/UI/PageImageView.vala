@@ -66,7 +66,7 @@ public class Starfish.UI.PageImageView : Gtk.Image, ResponseView {
             uint8 buffer[1000];
             ssize_t size;
             while ((size = yield input.read_async (buffer, Priority.HIGH, cancel)) > 0) {
-                loader.write (buffer);
+                loader.write (buffer[0:size]);
                 if (cancel.is_cancelled ()) {
                     break;
                 }
@@ -89,6 +89,5 @@ public class Starfish.UI.PageImageView : Gtk.Image, ResponseView {
 
         return supported_types;
     }
-
 }
 
