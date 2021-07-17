@@ -24,15 +24,10 @@ public class Starfish.Core.Client : Object {
             var conn = yield socket_client.connect_to_uri_async (uri.to_string (), 1965, cancel);
             var request = (uri.to_string () + "\r\n").data;
             yield conn.output_stream.write_async (request, Priority.DEFAULT, cancel);
-            var resp_stream = new DataInputStream (conn.input_stream) {
-                newline_type = DataStreamNewlineType.LF,
-                close_base_stream = false,
-                buffer_size = 1
-            };
-            var status_line = yield resp_stream.read_line_utf8_async (Priority.DEFAULT, cancel);
+            var status_line = yield read_status_line (conn.input_stream, cancel);
             var resp = new Response (uri, status_line, conn);
             if (!resp.is_success) {
-                yield resp_stream.close_async (Priority.DEFAULT, cancel);
+                yield conn.close_async (Priority.DEFAULT, cancel);
             }
 
             if (resp.is_redirect && follow_redirects) {
@@ -50,6 +45,32 @@ public class Starfish.Core.Client : Object {
             return resp;
         } catch (Error e) {
             return error_response_for (e.message, uri);
+        }
+    }
+
+    private async string read_status_line (InputStream input, Cancellable? cancel) {
+        var line = new uint8[2 + 1 + 1024 + 2];
+        var i = 0;
+        var buff = new uint8[1];
+        var read_cr = false;
+        var read_lf = false;
+        try {
+            while (read_cr == false || read_lf == false) {
+                yield input.read_async (buff, Priority.DEFAULT, cancel);
+                if (buff[0] == 13) {
+                    read_cr = true;
+                } else if (buff[0] == 10) {
+                    read_lf = true;
+                } else {
+                    line[i++] = buff[0];
+                    read_cr = false;
+                    read_lf = false;
+                }
+            }
+            return (string) line;
+        } catch (Error e) {
+            warning ("Failed to read status line, loading page will fail. Error: %s".printf (e.message));
+            return "-1 Failed to read status line";
         }
     }
 
