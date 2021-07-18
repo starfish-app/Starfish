@@ -9,7 +9,7 @@ public class Starfish.UI.Application : Gtk.Application {
     public Application () {
         Object (
             application_id: ID,
-            flags: ApplicationFlags.FLAGS_NONE,
+            flags: ApplicationFlags.HANDLES_OPEN,
             client: new Starfish.Core.Client (),
             settings: new Settings ("hr.from.josipantolis.starfish")
         );
@@ -21,7 +21,17 @@ public class Starfish.UI.Application : Gtk.Application {
 
     protected override void activate () {
         var default_session = manager.load ("default");
-        var main_window = new Window (this, default_session);
+        show_main_window (default_session);
+    }
+
+    protected override void open (File[] files, string hint) {
+        var default_session = manager.load ("default");
+        push_gemini_links (default_session, files);
+        show_main_window (default_session);
+    }
+
+    private void show_main_window (Core.Session session) {
+        var main_window = new Window (this, session);
         link_dark_mode_settings ();
         main_window.show_all ();
     }
@@ -35,6 +45,12 @@ public class Starfish.UI.Application : Gtk.Application {
         granite_settings.notify["prefers-color-scheme"].connect (() => {
             gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
         });
+    }
+
+    private void push_gemini_links (Core.Session session, File[] files) {
+        foreach (File f in files) {
+            session.push_uri_onto_history_before_init (f.get_uri ());
+        }
     }
 }
 

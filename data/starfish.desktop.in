@@ -3,10 +3,11 @@ Name=Starfish
 GenericName=Starfish Gemini browser
 Comment=Browse Gemini sites on the small internet
 Categories=Network;WebBrowser;GTK
-Exec=hr.from.josipantolis.starfish
+Exec=hr.from.josipantolis.starfish %U
 Icon=hr.from.josipantolis.starfish
 Terminal=false
 Type=Application
 Keywords=gemini;browser;client;gemtext;geminispace;
 X-GNOME-UsesNotifications=true
+MimeType=x-scheme-handler/gemini;
 

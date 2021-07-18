@@ -40,6 +40,23 @@ public class Starfish.Core.Session : Object {
     public signal void response_received (Response response);
     public signal void cancel_loading ();
 
+    public bool push_uri_onto_history_before_init (string raw_uri) {
+        Uri uri;
+        try {
+            uri = Uri.parse (raw_uri, new Uri ());
+        } catch (Core.UriError e) {
+            warning ("Error parsing %s, will skip loading! Error: %s", raw_uri, e.message);
+            return false;
+        }
+
+        if (uri.scheme != "gemini") {
+            return false;
+        }
+
+        update_history_with_uri (uri);
+        return true;
+    }
+
     public void init () {
         lock (loading) {
             if (loading) {
@@ -51,6 +68,12 @@ public class Starfish.Core.Session : Object {
             var starting_uri = current_uri;
             manager.client.load.begin (starting_uri, null, true, (obj, res) => {
                 var response = manager.client.load.end (res);
+                var loaded_uri = response.uri;
+                if (current_uri.to_string() != loaded_uri.to_string ()) {
+                    _history[_history_index] = loaded_uri;
+                    current_uri = loaded_uri;
+                    manager.save (this);
+                }
                 response_received (response);
             });
         }
@@ -204,12 +227,16 @@ public class Starfish.Core.Session : Object {
 
     private void update_history_on_response (Response response) {
         var loaded_uri = response.uri;
-        if (loaded_uri.to_string () != current_uri.to_string ()) {
+        update_history_with_uri (loaded_uri);
+    }
+
+    private void update_history_with_uri (Uri uri) {
+        if (uri.to_string () != current_uri.to_string ()) {
             if (_history_index < _history.length - 1) {
                 _history = _history [0:_history_index + 1];
             }
 
-            _history += loaded_uri;
+            _history += uri;
             if (_history.length > max_history ()) {
                 _history = _history[1:_history.length];
             }
