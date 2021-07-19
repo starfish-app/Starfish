@@ -81,11 +81,15 @@ executable(
     install: true
 )
 
-# Install gschema
-install_data (
+# Install gschema and register gemini MIME type
+install_data(
     join_paths('data', 'gschema.xml'),
-    install_dir: join_paths (get_option ('datadir'), 'glib-2.0', 'schemas'),
+    install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas'),
     rename: meson.project_name () + '.gschema.xml'
+)
+install_data(
+    join_paths('data', 'gemini-mime-type.xml'),
+    install_dir: join_paths(get_option('datadir'), 'mime', 'packages')
 )
 meson.add_install_script('meson/post_install.py')
 

@@ -222,7 +222,11 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
             LINE_TO_LINK[end.get_line ()] = details;
             try {
                 var uri = Core.Uri.parse (line.get_url (), session.current_uri);
-                if (uri.scheme != "gemini") {
+                if (uri.scheme == "gemini") {
+                    text = "♊️ " + text;
+                } else if (uri.scheme == "file") {
+                    text = "📄️ " + text;
+                } else {
                     text = "🌐 " + text;
                 }
             } catch (Core.UriError e) {}

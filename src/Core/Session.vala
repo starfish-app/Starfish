@@ -143,7 +143,7 @@ public class Starfish.Core.Session : Object {
             return;
         }
 
-        if (new_uri.scheme != "gemini") {
+        if (!manager.client.supports (new_uri)) {
             delegate_opening_of (new_uri);
         } else {
             lock (loading) {

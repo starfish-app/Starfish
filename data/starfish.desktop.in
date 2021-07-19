@@ -9,5 +9,5 @@ Terminal=false
 Type=Application
 Keywords=gemini;browser;client;gemtext;geminispace;
 X-GNOME-UsesNotifications=true
-MimeType=x-scheme-handler/gemini;
+MimeType=x-scheme-handler/gemini;text/gemini;
 

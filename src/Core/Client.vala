@@ -15,11 +15,45 @@ public class Starfish.Core.Client : Object {
         };
     }
 
-    public async Response load (Uri uri, Cancellable? cancel = null, bool follow_redirects = true) {
-        return yield load_redirected(uri, cancel, follow_redirects);
+    public bool supports (Uri uri) {
+        return uri.scheme == "gemini" || uri.scheme == "file";
     }
 
-    private async Response load_redirected (Uri uri, Cancellable? cancel, bool follow_redirects = true, int redirect_count = 0) {
+    public async Response load (Uri uri, Cancellable? cancel = null, bool follow_redirects = true) {
+        switch (uri.scheme) {
+            case "file":
+                return yield load_file (uri, cancel);
+            case "gemini":
+                return yield load_gemini (uri, cancel, follow_redirects);
+        }
+        return error_response_for ("Unsupported schema %s".printf (uri.scheme), uri);
+    }
+
+    private async Response load_file (Uri uri, Cancellable? cancel) {
+        try {
+            var file = File.new_for_uri (uri.to_string ());
+            var exists = file.query_exists (cancel);
+            if (!exists) {
+                return not_found_response_for (uri);
+            }
+            var file_info = yield file.query_info_async (
+                "standard::*",
+                FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+                Priority.DEFAULT,
+                cancel
+            );
+            var content_type = file_info.get_content_type ();
+            var mime = ContentType.get_mime_type (content_type);
+            var file_in = yield file.read_async (Priority.DEFAULT, cancel);
+            var mock_out = new MemoryOutputStream.resizable ();
+            var io = new SimpleIOStream (file_in, mock_out);
+            return new Response (uri, "20 %s".printf (mime), io);
+        } catch (Error e) {
+            return error_response_for (e.message, uri);
+        }
+    }
+
+    private async Response load_gemini (Uri uri, Cancellable? cancel, bool follow_redirects = true, int redirect_count = 0) {
         try {
             var conn = yield socket_client.connect_to_uri_async (uri.to_string (), 1965, cancel);
             var request = (uri.to_string () + "\r\n").data;
@@ -36,7 +70,7 @@ public class Starfish.Core.Client : Object {
                     return new Response (uri, "-1 Received a redirect to non Gemini protocol. If you wish you can manually visit %s.".printf (new_uri.to_string ()), conn);
                 }
                 if (redirect_count <= max_redirects) {
-                    return yield load_redirected (new_uri, cancel, follow_redirects, redirect_count + 1);
+                    return yield load_gemini (new_uri, cancel, follow_redirects, redirect_count + 1);
                 } else {
                     return new Response (uri, "-1 Reached maximum number of redirects. If you wish you can manually visit %s to continue following redirects.".printf (new_uri.to_string ()), conn);
                 }
@@ -79,6 +113,13 @@ public class Starfish.Core.Client : Object {
         var in_mem_out = new MemoryOutputStream.resizable ();
         var in_mem_conn = new SimpleIOStream (in_mem_in, in_mem_out);
         return new Response (uri, "-1 Loading %s failed with error: %s.".printf (uri.to_string (), error_message), in_mem_conn);
+    }
+
+    private Response not_found_response_for (Uri uri) {
+        var in_mem_in = new MemoryInputStream.from_data("".data);
+        var in_mem_out = new MemoryOutputStream.resizable ();
+        var in_mem_conn = new SimpleIOStream (in_mem_in, in_mem_out);
+        return new Response (uri, "52 Could not find %s.".printf (uri.to_string ()), in_mem_conn);
     }
 
 }
