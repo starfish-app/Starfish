@@ -79,8 +79,13 @@ public class Starfish.Core.Session : Object {
         }
     }
 
+    public bool has_back () {
+        return _history_index > 0;
+    }
+
+
     public void navigate_back () {
-        if (_history_index <= 0) {
+        if (!has_back ()) {
             return;
         }
 
@@ -106,8 +111,12 @@ public class Starfish.Core.Session : Object {
         }
     }
 
+    public bool has_forward () {
+        return _history_index < _history.length - 1;
+    }
+
     public void navigate_forward () {
-        if (_history_index >= _history.length - 1) {
+        if (!has_forward ()) {
             return;
         }
 

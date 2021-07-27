@@ -1,0 +1,38 @@
+# ♊️ Introduction
+
+``` Welcome to Gemini text rendered in ASCII art
+================================================================
+────────╔╗╔╗╔╗──╔╗──────────────╔╗────╔═══╗───────────╔╗────────
+────────║║║║║║──║║─────────────╔╝╚╗───║╔═╗║───────────║║────────
+────────║║║║║╠══╣║╔══╦══╦╗╔╦══╗╚╗╔╬══╗║║─╚╬══╦╗╔╦╦═╗╔╗║║────────
+────────║╚╝╚╝║║═╣║║╔═╣╔╗║╚╝║║═╣─║║║╔╗║║║╔═╣║═╣╚╝╠╣╔╗╬╣╚╝────────
+────────╚╗╔╗╔╣║═╣╚╣╚═╣╚╝║║║║║═╣─║╚╣╚╝║║╚╩═║║═╣║║║║║║║║╔╗────────
+─────────╚╝╚╝╚══╩═╩══╩══╩╩╩╩══╝─╚═╩══╝╚═══╩══╩╩╩╩╩╝╚╩╝╚╝────────
+================================================================
+```
+
+Gemini is a lighter, more focused and more human scaled corner of the Internet. It's different from the World Wide Web that you may be accustomed to in several ways.
+
+
+## 📃️ Focused on text
+
+Gemini pages are text based. There are no ads, popups, auto-playing videos or flashy color schemes. Pages can link to other types of content like images, audio, etc. but they cannot intermingle with them. That makes for distraction free reading experience that's light on interactions.
+
+
+## 🔒️ Privacy respecting
+
+There are no cookies in Gemini, and authors cannot track you as you browse from site to site, or capsule as they are called. Loading of each page is protected with TLS. That is the same technology powering HTTPS sites on the World Wide Web. This means that third parties don't get to see which pages you visit, nor inject content into them. This is one more reason why ads largely absent from Geminispace.
+
+
+## 😏️ Personal
+
+Since there are no ads, and interactivity is limited, Gemini is not interesting to large companies and brands. Instead, it's populated by human beings, sharing their own thoughts, stories and experiences. Blogs, or gemlogs how they are called, are popular format on Gemini. There are also capsules with fictional writing and even shared role-playing.
+
+
+## 🏄‍♂️️ Get surfing!
+
+=> ./discover.gmi Discover Gemini content
+=> ./tools.gmi Find new and familiar tools
+=> ./terminology.gmi Learn the terminology
+
+=> gemini://geminiquickst.art/ Alternative introduction to Gemini

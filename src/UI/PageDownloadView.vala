@@ -155,7 +155,7 @@ public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
         );
 
         dialog.do_overwrite_confirmation = true;
-        dialog.set_current_folder (Environment.get_home_dir ());
+        dialog.set_current_folder (Environment.get_user_special_dir (UserDirectory.DOWNLOAD));
         dialog.set_current_name (file_name);
         return dialog;
     }

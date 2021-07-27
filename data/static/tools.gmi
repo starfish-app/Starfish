@@ -1,0 +1,34 @@
+# 🛠️ Find new and familiar tools
+
+Gemini is more limited than the WWW content on the Big Internet. Despite this, there are useful and fun interactive sites on Gemini too.
+
+
+## 🔍️ Search
+
+Gemini capsules aren't indexed by Google or Bing. Instead, there are search engines built specifically for the Geminispace. However, search is not as important in Geminispace as it is on the rest of the internet. On Gemini you usually don't look for specific information. Regardless, here's a search engine that you can use:
+
+=> gemini://geminispace.info/ Geminispace.info search engine
+
+
+## 🎭️ Mirrors
+
+There are Gemini mirrors of some popular WWW Internet sites. These capsules allow you to access content usually associated with the Big Internet over Gemini. This way you get benefits like light weight textual interface, no tracking etc. Here are some popular options:
+
+=> gemini://vault.transjovian.org Wikipedia mirror
+=> gemini://gemini.bunburya.eu/remini.gmi Reddit mirror
+=> gemini://dioskouroi.xyz/top Hacker news
+=> gemini://gempaper.strangled.net/mirrorlist/ List of other mirrors
+
+
+## 🤖️ Interactive apps
+
+Lastly, there are some applications built specifically for the Gemini protocol. They usually offer highly focused utility, and are limited by short (one line) input that Gemini supports. Nonetheless, it can be nice to have them available inside the Geminispace, saving you the need to switch context. Here are a couple of such apps:
+
+=> gemini://dictionary.gluonspace.com/ English dictionary
+=> gemini://weather.gluonspace.com/ Weather service
+
+
+---
+
+=> ./index.gmi Go back to index
+

@@ -103,12 +103,21 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     }
 
     private void enable_buttons () {
-        back_button.sensitive = true;
-        forward_button.sensitive = true;
         home_button.sensitive = true;
-        up_button.sensitive = true;
-        root_button.sensitive = true;
         address.sensitive = true;
+
+        if (session.has_back ()) {
+            back_button.sensitive = true;
+        }
+
+        if (session.has_forward ()) {
+            forward_button.sensitive = true;
+        }
+
+        if (session.current_uri.scheme == "gemini") {
+            up_button.sensitive = true;
+            root_button.sensitive = true;
+        }
     }
 
     private void show_reload_button () {

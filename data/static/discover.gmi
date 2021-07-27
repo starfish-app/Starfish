@@ -1,0 +1,52 @@
+# 🔭️ Discover Gemini content!
+
+There are several places to go when looking for new content on Gemini.
+
+
+## 📣️ Aggregators
+
+You can think of them as lists of new posts or updated Gemini capsules. There are a few of them, and they each have a slightly different approach. For example CAPCOM picks 100 capsules at random each month and surfaces their content. Spacewalk on the other hand ranks capsules by date of last update.
+
+=> gemini://gemini.circumlunar.space/capcom/ CAPCOM
+=> gemini://rawtext.club/~sloum/spacewalk.gmi Spacewalk
+=> gemini://calcuode.com/gmisub-aggregate.gmi gmisub
+
+
+## 🔖️ Directories
+
+Unlike aggregators which detect and surface new posts automatically, directories are hand crafted and categorized lists of Gemini capsules.
+
+=> gemini://medusae.space/index.gmi Medusae.space
+=> gemini://discovery.geminiprotocol.com/ Gemini Discovery
+
+
+## 🗞️ Zines
+
+Zines are small magazines, usually consisting of a couple of articles, news, columns, links to interesting capsules, etc. This format is not unique to Gemini, but does benefit from Gemini's text oriented nature.
+
+=> gemini://gemini.cyberbot.space/smolzine/ SmolZINE
+=> gemini://bulletpr00f.host/smog/ Smog (now discontinued)
+
+
+## 🎙️Podcasts
+
+Gemini can serve not only text, but all kinds of files. There are a couple of podcasts, sometimes called gemcasts, out there. You can listen to them by downloading the specific episode audio files and opening them in your local audio player.
+
+=> gemini://gem.chriswere.uk/trendytalk/ Trendy Talk
+=> gemini://kwiecien.us/gemcast/ Gemini Radio
+
+
+## 👥️ Multi-user sites
+
+While there are many Gemini capsules that host content from individual authors, there are some with multiple users. They usually form a community of writers with shared interest of theme in their individual writing. If you are looking for a way to publish content on Gemini this might be a good place to start.
+
+=> gemini://midnight.pub/ The MidnightPub
+=> gemini://gemlog.blue/ Gemlog Blue
+=> gemini://cosmic.voyage/ Cosmic Voyage
+=> gemini://rawtext.club/ rawtext.club
+
+
+---
+
+=> ./index.gmi Go back to index
+

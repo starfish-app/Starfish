@@ -89,7 +89,8 @@ install_data(
 )
 install_data(
     join_paths('data', 'gemini-mime-type.xml'),
-    install_dir: join_paths(get_option('datadir'), 'mime', 'packages')
+    install_dir: join_paths(get_option('datadir'), 'mime', 'packages'),
+    rename: meson.project_name () + '.xml'
 )
 meson.add_install_script('meson/post_install.py')
 
@@ -125,6 +126,16 @@ foreach i : icon_sizes
         join_paths('data', 'icons', i + '.png'),
         install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i + '@2', 'apps'),
         rename: meson.project_name() + '.png'
+    )
+endforeach
+
+# Install docs
+doc_files = ['index.gmi', 'discover.gmi', 'tools.gmi', 'terminology.gmi']
+
+foreach doc_file : doc_files
+    install_data(
+        join_paths('data', 'static', doc_file),
+        install_dir: join_paths(get_option('datadir'), 'doc', 'starfish')
     )
 endforeach
 
