@@ -4,7 +4,7 @@ Some geeky terms floating around Gemin sites. Knowing them is completely optiona
 
 ## Gemini protocol
 
-A protocol is an agreement between different computer programs on how they communicate with each other. Gemini is a network protocol detailing communication over internet. It's designed to be simpler than HTTP and to improve on user privacy.
+A protocol is an agreement between different computer programs on how to communicate with each other. Gemini is a network protocol detailing communication over Internet. It's designed to be simpler than HTTP and to improve on user privacy.
 
 => gemini://gemini.circumlunar.space/ Project Gemini
 
@@ -18,7 +18,7 @@ A single site served over Gemini protocol. Usually maintained by a single author
 
 ## Gemtext
 
-Native content type on the Geminispace, what HTML is to HTTP. It's defined in the Gemini specification, has mime type text/gemini. Commonly used file extension is .gmi.
+Native document type on the Geminispace, similar to what HTML pages are for HTTP. It's defined in the Gemini specification, has mime type text/gemini and file extension .gmi.
 
 ## Gemlog
 

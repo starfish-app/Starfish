@@ -25,7 +25,7 @@ Unlike aggregators which detect and surface new posts automatically, directories
 Zines are small magazines, usually consisting of a couple of articles, news, columns, links to interesting capsules, etc. This format is not unique to Gemini, but does benefit from Gemini's text oriented nature.
 
 => gemini://gemini.cyberbot.space/smolzine/ SmolZINE
-=> gemini://bulletpr00f.host/smog/ Smog (now discontinued)
+=> gemini://bulletpr00f.host/smog/ Smog
 
 
 ## 🎙️Podcasts
@@ -38,12 +38,13 @@ Gemini can serve not only text, but all kinds of files. There are a couple of po
 
 ## 👥️ Multi-user sites
 
-While there are many Gemini capsules that host content from individual authors, there are some with multiple users. They usually form a community of writers with shared interest of theme in their individual writing. If you are looking for a way to publish content on Gemini this might be a good place to start.
+While there are many Gemini capsules that host content from individual authors, there are some with multiple users. They usually form a community of writers with shared interests or worldview. If you are looking for a way to publish content on Gemini this might be a good place to start.
 
 => gemini://midnight.pub/ The MidnightPub
 => gemini://gemlog.blue/ Gemlog Blue
 => gemini://cosmic.voyage/ Cosmic Voyage
 => gemini://rawtext.club/ rawtext.club
+=> gemini://tilde.team/ tilde.team
 
 
 ---

@@ -92,7 +92,7 @@ install_data(
     install_dir: join_paths(get_option('datadir'), 'mime', 'packages'),
     rename: meson.project_name () + '.xml'
 )
-meson.add_install_script('meson/post_install.py')
+meson.add_install_script('meson/post_install.py', meson.project_name ())
 
 # Translate and install our .desktop file
 i18n.merge_file(

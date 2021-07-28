@@ -2,7 +2,7 @@
 <schemalist>
   <schema path="/hr/from/josipantolis/starfish/" id="hr.from.josipantolis.starfish">
     <key name="homepage" type="s">
-      <default>'file:///usr/share/doc/starfish/index.gmi'</default>
+      <default>'file://{{MESON_INSTALL_PREFIX}}/share/doc/starfish/index.gmi'</default>
       <summary>User's homepage</summary>
       <description>URI of the gemini document used as a homepage</description>
     </key>

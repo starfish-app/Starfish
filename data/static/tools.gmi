@@ -5,7 +5,7 @@ Gemini is more limited than the WWW content on the Big Internet. Despite this, t
 
 ## 🔍️ Search
 
-Gemini capsules aren't indexed by Google or Bing. Instead, there are search engines built specifically for the Geminispace. However, search is not as important in Geminispace as it is on the rest of the internet. On Gemini you usually don't look for specific information. Regardless, here's a search engine that you can use:
+Gemini capsules aren't indexed by Google or Bing. Instead, there are search engines built specifically for the Geminispace. Here is one that you can use:
 
 => gemini://geminispace.info/ Geminispace.info search engine
 
@@ -26,6 +26,7 @@ Lastly, there are some applications built specifically for the Gemini protocol. 
 
 => gemini://dictionary.gluonspace.com/ English dictionary
 => gemini://weather.gluonspace.com/ Weather service
+=> gemini://going-flying.com/cgi-bin/converter/ Converters and encoders
 
 
 ---

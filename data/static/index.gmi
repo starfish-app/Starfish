@@ -16,12 +16,12 @@ Gemini is a lighter, more focused and more human scaled corner of the Internet. 
 
 ## 📃️ Focused on text
 
-Gemini pages are text based. There are no ads, popups, auto-playing videos or flashy color schemes. Pages can link to other types of content like images, audio, etc. but they cannot intermingle with them. That makes for distraction free reading experience that's light on interactions.
+Gemini pages are text based. There are no ads, popups, auto-playing videos or flashy color schemes. Pages can link to other types of content like images, audio, etc. which are loaded only when you explicitly follow a link. That makes for distraction free reading experience that's light on interactions.
 
 
 ## 🔒️ Privacy respecting
 
-There are no cookies in Gemini, and authors cannot track you as you browse from site to site, or capsule as they are called. Loading of each page is protected with TLS. That is the same technology powering HTTPS sites on the World Wide Web. This means that third parties don't get to see which pages you visit, nor inject content into them. This is one more reason why ads largely absent from Geminispace.
+There are no cookies in Gemini, and authors cannot track you as you browse from site to site, or capsule as they are called. Loading of each page is protected with TLS. That is the same technology powering HTTPS sites on the World Wide Web. This means that third parties don't get to see which pages you visit, nor inject content into them. This is one more reason why ads are largely absent from Geminispace.
 
 
 ## 😏️ Personal
@@ -35,4 +35,7 @@ Since there are no ads, and interactivity is limited, Gemini is not interesting 
 => ./tools.gmi Find new and familiar tools
 => ./terminology.gmi Learn the terminology
 
-=> gemini://geminiquickst.art/ Alternative introduction to Gemini
+If you are interested in alternative Gemini browsers, publishing your own content and more check out:
+
+=> gemini://geminiquickst.art/ Extended introduction to Gemini
+
