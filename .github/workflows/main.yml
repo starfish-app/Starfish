@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  flatpak:
+    name: Flatpak
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/elementary/flatpak-platform/runtime:6
+      options: --privileged
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
+        with:
+          bundle: starfish.flatpak
+          manifest-path: hr.from.josipantolis.starfish.yml
+          run-tests: true
+          repository-name: appcenter
+          repository-url: https://flatpak.elementary.io/repo.flatpakrepo
+          cache-key: "flatpak-builder-${{ github.sha }}"
+
