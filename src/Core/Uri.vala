@@ -275,6 +275,8 @@ public class Starfish.Core.Uri : Object {
                 buff.append (":");
                 buff.append (port.to_string ());
             }
+        } else {
+            buff.append ("//");
         }
 
         if (path != null && path.length > 0) {

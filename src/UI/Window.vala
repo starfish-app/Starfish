@@ -23,6 +23,8 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
     public const string ACTION_RESET_ZOOM = "reset-zoom";
     public const string ACTION_ZOOM_IN = "zoom-in";
     public const string ACTION_OPEN_PREFERENCES = "open-preferences";
+    public const string ACTION_LOAD_URI = "load-uri";
+    public const string ACTION_LOAD_URI_IN_NEW_TAB = "load-uri-in-new-tab";
 
     public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
 
@@ -37,7 +39,9 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         {ACTION_ZOOM_OUT, on_zoom_out},
         {ACTION_RESET_ZOOM, on_reset_zoom},
         {ACTION_ZOOM_IN, on_zoom_in},
-        {ACTION_OPEN_PREFERENCES, on_open_preferences}
+        {ACTION_OPEN_PREFERENCES, on_open_preferences},
+        {ACTION_LOAD_URI, on_load_uri, "s"},
+        {ACTION_LOAD_URI_IN_NEW_TAB, on_load_uri_in_new_tab, "s"},
     };
 
     static construct {
@@ -269,6 +273,29 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         }
 
         preferences_dialog.present ();
+    }
+
+    private void on_load_uri (SimpleAction action, Variant? uri_parameter) {
+        var raw_uri = uri_parameter.get_string ();
+        focused_tab_session ().navigate_to (raw_uri);
+    }
+
+    private void on_load_uri_in_new_tab (SimpleAction action, Variant? uri_parameter) {
+        var raw_relative_uri = uri_parameter.get_string ();
+        try {
+            var base_uri = focused_tab_session ().current_uri;
+            var uri = Core.Uri.parse (raw_relative_uri, base_uri);
+            if (uri.scheme != "gemini" && uri.scheme != "file") {
+                focused_tab_session ().navigate_to (uri.to_string ());
+            } else {
+                var model = tab_manager.new_tab (uri.to_string ());
+                var tab = create_tab (model);
+                notebook.insert_tab (tab, notebook.n_tabs);
+                notebook.current = tab;
+            }
+        } catch (Core.UriError err) {
+            warning ("Received invalid Uri on middle mouse click: `%s`, will skip opening new tab. Error: %s`", raw_relative_uri, err.message);
+        }
     }
 
     private bool on_mouse_click_event (Gtk.Widget self, Gdk.EventButton event) {

@@ -83,8 +83,12 @@ public class Starfish.UI.TabContent : Gtk.Box {
 
                 return;
             case LinkEventType.LEFT_MOUSE_CLICK:
-                var raw_uri = event.link_url;
-                tab_model.session.navigate_to (raw_uri);
+                var uri_parameter = new Variant.string (event.link_url);
+                window.activate_action (Window.ACTION_LOAD_URI, uri_parameter);
+                return;
+            case LinkEventType.MIDDLE_MOUSE_CLICK:
+                var uri_parameter = new Variant.string (event.link_url);
+                window.activate_action (Window.ACTION_LOAD_URI_IN_NEW_TAB, uri_parameter);
                 return;
         }
     }

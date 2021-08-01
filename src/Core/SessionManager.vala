@@ -43,13 +43,13 @@ public class Starfish.Core.SessionManager : Object {
         return res;
     }
 
-    public Session load (string name) {
+    public Session load (string name, string? raw_uri = null) {
         var session = find_session_by_name (name);
         if (session != null) {
             return session;
         }
 
-        session = new_session (name);
+        session = new_session (name, raw_uri);
         save (session);
         return session;
     }
@@ -123,16 +123,16 @@ public class Starfish.Core.SessionManager : Object {
         return null;
     }
 
-    private Session new_session (string name) {
-        var raw_homepage_uri = settings.get_string ("homepage");
-        Uri homepage_uri;
+    private Session new_session (string name, string? raw_uri = null) {
+        var raw_uri_to_load = raw_uri ?? settings.get_string ("homepage");
+        Uri uri_to_load;
         try {
-            homepage_uri = Uri.parse (raw_homepage_uri);
+            uri_to_load = Uri.parse (raw_uri_to_load);
         } catch (UriError e) {
-            warning ("Found and invalid Uri `%s` in serialized homepage, will use gemini://gemini.circumlunar.space/ instead. Error: %s", raw_homepage_uri, e.message);
-            homepage_uri = new Uri ("gemini", null, "gemini.circumlunar.space", -1, "/");
+            warning ("Found and invalid Uri `%s` in serialized homepage, will use gemini://gemini.circumlunar.space/ instead. Error: %s", raw_uri_to_load, e.message);
+            uri_to_load = new Uri ("gemini", null, "gemini.circumlunar.space", -1, "/");
         }
-        Uri[] history = {homepage_uri};
+        Uri[] history = {uri_to_load};
         return new Session (name, history, 0, this);
     }
 

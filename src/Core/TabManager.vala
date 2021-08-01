@@ -26,9 +26,9 @@ public class Starfish.Core.TabManager : Object {
         }
     }
 
-    public Tab new_tab () {
+    public Tab new_tab (string? raw_uri = null) {
         var id = Uuid.string_random ();
-        var session = session_manager.load (id);
+        var session = session_manager.load (id, raw_uri);
         var tab = new Tab (id, session);
         tabs.add (tab);
         store_tabs_into_settings ();

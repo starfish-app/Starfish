@@ -115,6 +115,7 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
 
         this.motion_notify_event.connect ((view, event) => on_motion_notify (event));
         this.button_release_event.connect ((view, event) => this.on_button_release (event));
+        this.populate_popup.connect ((view, menu) => this.on_populate_popup (menu));
     }
 
     private bool on_motion_notify (Gdk.EventMotion event) {
@@ -179,6 +180,56 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
         return false;
     }
 
+    private void on_populate_popup (Gtk.Menu popup_menu) {
+        var link = this.hovering_over_link;
+        Core.Uri uri;
+        try {
+            uri = Core.Uri.parse (link.url, session.current_uri);
+        } catch (Core.UriError err) {
+            warning ("Failed to parse link uri `%s`, will skip popup menu customization. Error: %s", link.url, err.message);
+            return;
+        }
+        if (link != null) {
+            popup_menu.foreach (popup_menu.remove);
+
+            var open_item = new Gtk.MenuItem.with_label (_("Open link"));
+            open_item.show ();
+            popup_menu.append (open_item);
+            open_item.activate.connect (() => {
+                this.link_event (new LinkEvent (link.url, link.desc, LinkEventType.LEFT_MOUSE_CLICK));
+            });
+
+            if (uri.scheme == "gemini" || uri.scheme == "file") {
+                var open_in_new_tab_item = new Gtk.MenuItem.with_label (_("Open link in a new tab"));
+                open_in_new_tab_item.show ();
+                popup_menu.append (open_in_new_tab_item);
+                open_in_new_tab_item.activate.connect (() => {
+                    this.link_event (new LinkEvent (link.url, link.desc, LinkEventType.MIDDLE_MOUSE_CLICK));
+                });
+            }
+
+            var separator_item = new Gtk.SeparatorMenuItem ();
+            separator_item.show ();
+            popup_menu.append (separator_item);
+
+            var clipboard = Gtk.Clipboard.get_default (Gdk.Display.get_default ());
+
+            var copy_uri_item = new Gtk.MenuItem.with_label (_("Copy link"));
+            copy_uri_item.show ();
+            popup_menu.append (copy_uri_item);
+            copy_uri_item.activate.connect (() => {
+                clipboard.set_text (uri.to_string (), -1);
+            });
+
+            var copy_desc_item = new Gtk.MenuItem.with_label (_("Copy description"));
+            copy_desc_item.show ();
+            popup_menu.append (copy_desc_item);
+            copy_desc_item.activate.connect (() => {
+                clipboard.set_text (link.desc, -1);
+            });
+        }
+    }
+
     public virtual bool can_display (Core.Response response) {
         if (!response.is_success) {
             return false;
@@ -220,12 +271,8 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
             LINE_TO_LINK[end.get_line ()] = details;
             try {
                 var uri = Core.Uri.parse (line.get_url (), session.current_uri);
-                if (uri.scheme == "gemini") {
-                    text = "♊️ " + text;
-                } else if (uri.scheme == "file") {
-                    text = "📄️ " + text;
-                } else {
-                    text = "🌐 " + text;
+                if (uri.scheme != "gemini" && uri.scheme != "file") {
+                    text = text[0:text.length-1] + " 🌐️\n";
                 }
             } catch (Core.UriError e) {}
         }
