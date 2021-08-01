@@ -80,6 +80,26 @@ public class Starfish.Core.SessionManager : Object {
         storage.save (sessions);
     }
 
+    public void remove (Session session) {
+        Variant[] new_sessions = {};
+        var idx = find_session_idx_by_name (session.name);
+        var iter = sessions.iterator ();
+        var i = 0;
+        Variant? session_var = iter.next_value ();
+        while (session_var != null) {
+            if (i != idx) {
+                new_sessions += session_var;
+            }
+
+            session_var = iter.next_value ();
+            i++;
+        }
+
+        var element_type = sessions.get_type ().element ();
+        sessions = new Variant.array (element_type, new_sessions);
+        storage.save (sessions);
+    }
+
     private Session? find_session_by_name (string name) {
         var iter = sessions.iterator ();
         string session_name;

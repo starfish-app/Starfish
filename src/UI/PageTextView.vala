@@ -106,8 +106,6 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
 
         session.theme.notify.connect (() => {
             link_tag.foreground_rgba = session.theme.link_color;
-            // quote_tag.paragraph_background_rgba = session.theme.block_background_color;
-            // monospace_tag.paragraph_background_rgba = session.theme.block_background_color;
 
             get_style_context ().add_provider (
                 session.theme.get_gemtext_css(),

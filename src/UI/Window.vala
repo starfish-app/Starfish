@@ -1,12 +1,12 @@
 public class Starfish.UI.Window : Hdy.ApplicationWindow {
 
     private HeaderBar header;
-    private ContentStack content;
+    private Granite.Widgets.DynamicNotebook notebook;
     private PreferencesDialog? preferences_dialog = null;
     private uint configure_id;
 
     public Settings settings { get; construct; }
-    public Core.Session session { get; construct; }
+    public Core.TabManager tab_manager { get; construct; }
 
     public const string ACTION_GROUP_PREFIX = "win";
     public const string ACTION_PREFIX = ACTION_GROUP_PREFIX + ".";
@@ -53,11 +53,11 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         action_accelerators[ACTION_ZOOM_IN] = "<Control>equal";
     }
 
-    public Window (Starfish.UI.Application application, Core.Session session) {
+    public Window (Starfish.UI.Application application, Core.TabManager tab_manager) {
         Object (
             application: application,
             settings: application.settings,
-            session: session,
+            tab_manager: tab_manager,
             title: _("Starfish"),
             height_request: 400,
             width_request: 600
@@ -68,43 +68,20 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         setup_actions ();
         link_to_settings ();
 
-        header = new HeaderBar (this, session);
-
-        var input_view = new InputView (session);
-        input_view.submit.connect (on_input_submit);
-        var text_view = new PageTextView (session);
-        text_view.link_event.connect (on_link_event);
-        var error_view = new PageErrorView (session);
-        error_view.link_event.connect (on_link_event);
-        var image_view = new PageImageView (session);
-        var download_view = new PageDownloadView (session);
-        content = new ContentStack.with_views (
-            "text-response", text_view,
-            "error-response", error_view,
-            "input", input_view,
-            "image", image_view,
-            "download", download_view
-        );
+        notebook = new Granite.Widgets.DynamicNotebook ();
+        notebook.expand = true;
+        notebook.allow_restoring = true;
+        setup_tabs (notebook);
 
         var grid = new Gtk.Grid () {
             orientation = Gtk.Orientation.VERTICAL
         };
 
+        header = new HeaderBar (this, focused_tab_session ());
+
         grid.add (header);
-        grid.add (content);
+        grid.add (notebook);
         this.add (grid);
-
-        session.notify["loading"].connect ((s, p) => {
-            if (session.loading) {
-                content.clear ();
-            }
-        });
-
-        session.response_received.connect (response => {
-            content.display (response);
-        });
-
-        session.init ();
     }
 
     private void setup_actions () {
@@ -164,72 +141,99 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         return base.configure_event (event);
     }
 
-    private void on_input_submit (InputView view, string input) {
-        var query = "?" + Core.Uri.encode (input);
-        session.navigate_to (query);
+    private void setup_tabs (Granite.Widgets.DynamicNotebook notebook) {
+        var i = 0;
+        foreach (var model in tab_manager.tabs) {
+            var tab = create_tab (model);
+            notebook.insert_tab (tab, i++);
+        }
+        var previously_focused_index = tab_manager.focused_tab_index;
+        notebook.current = notebook.get_tab_by_index (previously_focused_index);
+
+        notebook.new_tab_requested.connect (() => {
+            var model = tab_manager.new_tab ();
+            var tab = create_tab (model);
+            notebook.insert_tab (tab, notebook.n_tabs);
+            notebook.current = tab;
+        });
+
+        notebook.close_tab_requested.connect ((tab) => {
+            var model = ((TabContent) tab.page).tab_model;
+            tab_manager.close_tab (model);
+            if (notebook.n_tabs == 1) {
+                application.quit ();
+            }
+
+            return true;
+        });
+
+        notebook.tab_reordered.connect ((moved_tab, new_index) => {
+            var moved_tab_model = ((TabContent) moved_tab.page).tab_model;
+            tab_manager.move_tab (moved_tab_model, new_index);
+        });
+
+        notebook.tab_switched.connect ((old_tab, new_tab) => {
+            var model = ((TabContent) new_tab.page).tab_model;
+            header.session = model.session;
+            var focused_index = notebook.get_tab_position (new_tab);
+            tab_manager.focused_tab_index = focused_index;
+        });
     }
 
-    private void on_link_event (PageTextView page, LinkEvent event) {
-        switch (event.event_type) {
-            case LinkEventType.HOVER_ENTER:
-                var gdk_window = page.get_window (Gtk.TextWindowType.TEXT);
-                if (gdk_window != null) {
-                    var pointer = new Gdk.Cursor.from_name (
-                        gdk_window.get_display (),
-                        "pointer"
-                    );
+    private Granite.Widgets.Tab create_tab (Core.Tab model) {
+        var tab = new Granite.Widgets.Tab (
+            model.uri.file_name (),
+            null,
+            new TabContent (this, model)
+        );
 
-                    gdk_window.set_cursor (pointer);
-                }
+        tab.tooltip = model.uri.to_string ();
+        model.session.notify["loading"].connect ((s, p) => {
+            var is_loading = model.session.loading;
+            tab.working = is_loading;
+            if (!is_loading) {
+                tab.label = model.uri.file_name ();
+                tab.tooltip = model.uri.to_string ();
+            }
+        });
 
-                return;
-            case LinkEventType.HOVER_EXIT:
-                var gdk_window = page.get_window (Gtk.TextWindowType.TEXT);
-                if (gdk_window != null) {
-                    var text = new Gdk.Cursor.from_name (
-                        gdk_window.get_display (),
-                        "text"
-                    );
+        return tab;
+    }
 
-                    gdk_window.set_cursor (text);
-                }
-
-                return;
-            case LinkEventType.LEFT_MOUSE_CLICK:
-                var raw_uri = event.link_url;
-                session.navigate_to (raw_uri);
-                return;
-        }
+    private Core.Session focused_tab_session () {
+        var focused_tab = notebook.current;
+        var model = ((TabContent) focused_tab.page).tab_model;
+        return model.session;
     }
 
     private void on_reload () {
         var raw_uri = header.address_uri;
-        session.navigate_to (raw_uri);
+        focused_tab_session ().navigate_to (raw_uri);
     }
 
     private void on_stop () {
-        session.cancel_loading ();
+        focused_tab_session ().cancel_loading ();
     }
 
     private void on_go_back () {
-        session.navigate_back ();
+        focused_tab_session ().navigate_back ();
     }
 
     private void on_go_home () {
         var home_uri = settings.get_string ("homepage");
-        session.navigate_to (home_uri);
+        focused_tab_session ().navigate_to (home_uri);
     }
 
     private void on_go_forward () {
-        session.navigate_forward ();
+        focused_tab_session ().navigate_forward ();
     }
 
     private void on_go_up () {
-        session.navigate_up ();
+        focused_tab_session ().navigate_up ();
     }
 
     private void on_go_to_root () {
-        session.navigate_to_root ();
+        focused_tab_session ().navigate_to_root ();
     }
 
     private void on_zoom_out () {

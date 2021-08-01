@@ -40,21 +40,8 @@ public class Starfish.Core.Session : Object {
     public signal void response_received (Response response);
     public signal void cancel_loading ();
 
-    public bool push_uri_onto_history_before_init (string raw_uri) {
-        Uri uri;
-        try {
-            uri = Uri.parse (raw_uri, new Uri ());
-        } catch (Core.UriError e) {
-            warning ("Error parsing %s, will skip loading! Error: %s", raw_uri, e.message);
-            return false;
-        }
-
-        if (uri.scheme != "gemini") {
-            return false;
-        }
-
+    public void push_uri_onto_history_before_init (Uri uri) {
         update_history_with_uri (uri);
-        return true;
     }
 
     public void init () {
