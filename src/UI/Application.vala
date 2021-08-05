@@ -16,7 +16,7 @@ public class Starfish.UI.Application : Gtk.Application {
     }
 
     construct {
-        manager = new Core.TabManager (settings);
+        manager = new Core.TabManager.backed_by (settings);
     }
 
     protected override void activate () {

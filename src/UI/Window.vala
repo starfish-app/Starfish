@@ -72,9 +72,13 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         setup_actions ();
         link_to_settings ();
 
-        notebook = new Granite.Widgets.DynamicNotebook ();
-        notebook.expand = true;
-        notebook.allow_restoring = true;
+        notebook = new Granite.Widgets.DynamicNotebook () {
+            expand = true,
+            can_focus = false,
+            allow_restoring = true,
+            max_restorable_tabs = tab_manager.max_restorable_tabs
+        };
+
         setup_tabs (notebook);
 
         var grid = new Gtk.Grid () {
@@ -182,6 +186,13 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
             var focused_index = notebook.get_tab_position (new_tab);
             tab_manager.focused_tab_index = focused_index;
         });
+
+        notebook.tab_restored.connect ((label, tab_id, icon) => {
+            var model = tab_manager.restore_tab (tab_id);
+            var tab = create_tab (model);
+            notebook.insert_tab (tab, notebook.n_tabs);
+            notebook.current = tab;
+        });
     }
 
     private Granite.Widgets.Tab create_tab (Core.Tab model) {
@@ -192,6 +203,11 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         );
 
         tab.tooltip = model.uri.to_string ();
+        tab.restore_data = model.id;
+        tab.dropped_callback = (() => {
+            tab_manager.session_manager.remove_session_by_name (model.id);
+        });
+
         model.session.notify["loading"].connect ((s, p) => {
             var is_loading = model.session.loading;
             tab.working = is_loading;
@@ -291,7 +307,6 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
                 var model = tab_manager.new_tab (uri.to_string ());
                 var tab = create_tab (model);
                 notebook.insert_tab (tab, notebook.n_tabs);
-                notebook.current = tab;
             }
         } catch (Core.UriError err) {
             warning ("Received invalid Uri on middle mouse click: `%s`, will skip opening new tab. Error: %s`", raw_relative_uri, err.message);
