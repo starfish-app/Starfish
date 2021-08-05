@@ -37,6 +37,7 @@ sources = gresource + files(
     'src/UI/PageDownloadView.vala',
     'src/UI/LinkEventType.vala',
     'src/UI/LinkEvent.vala',
+    'src/UI/TabContent.vala',
     'src/Core/Client.vala',
     'src/Core/Uri.vala',
     'src/Core/Mime.vala',
@@ -45,11 +46,13 @@ sources = gresource + files(
     'src/Core/LineType.vala',
     'src/Core/TextBody.vala',
     'src/Core/GeminiBody.vala',
-    'src/Core/SessionStorage.vala',
-    'src/Core/SettingsBackedSessionStorage.vala',
+    'src/Core/Storage.vala',
+    'src/Core/SettingsBackedStorage.vala',
     'src/Core/SessionManager.vala',
     'src/Core/Session.vala',
-    'src/Core/Theme.vala'
+    'src/Core/Theme.vala',
+    'src/Core/Tab.vala',
+    'src/Core/TabManager.vala'
 )
 
 # Test build

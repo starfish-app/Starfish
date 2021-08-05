@@ -12,20 +12,14 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             _session_subs = {};
             _session = value;
             _session_subs += _session.notify["loading"].connect ((s, p) => {
-                if (session.loading) {
-                    disable_buttons ();
-                    start_pulsing ();
-                    show_stop_button ();
-                } else {
-                    enable_buttons ();
-                    stop_pulsing ();
-                    show_reload_button ();
-                }
+                on_session_change ();
             });
 
             _session_subs += _session.response_received.connect (response => {
-                address.text = response.uri.to_string ();
+                on_session_change ();
             });
+
+            on_session_change ();
         }
     }
 
@@ -69,6 +63,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         reload_icon = new Gtk.Image.from_icon_name ("go-jump", Gtk.IconSize.LARGE_TOOLBAR);
         stop_icon = new Gtk.Image.from_icon_name ("media-playback-stop", Gtk.IconSize.LARGE_TOOLBAR);
         stop_reload_button = setup_button ("go-jump", _("Reload"), Window.ACTION_RELOAD);
+        stop_reload_button.sensitive = true;
         back_button = setup_button ("edit-undo", _("Go back"), Window.ACTION_GO_BACK);
         forward_button = setup_button ("edit-redo", _("Go forward"), Window.ACTION_GO_FORWARD);
         up_button = setup_button ("go-up", _("Go up"), Window.ACTION_GO_UP);
@@ -93,6 +88,20 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         pack_end (menu_button);
     }
 
+    private void on_session_change () {
+        if (_session.loading) {
+            disable_buttons ();
+            start_pulsing ();
+            show_stop_button ();
+        } else {
+            enable_buttons ();
+            stop_pulsing ();
+            show_reload_button ();
+        }
+
+        address.text = _session.current_uri.to_string ();
+    }
+
     private void disable_buttons () {
         back_button.sensitive = false;
         forward_button.sensitive = false;
@@ -105,19 +114,11 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private void enable_buttons () {
         home_button.sensitive = true;
         address.sensitive = true;
-
-        if (session.has_back ()) {
-            back_button.sensitive = true;
-        }
-
-        if (session.has_forward ()) {
-            forward_button.sensitive = true;
-        }
-
-        if (session.current_uri.scheme == "gemini") {
-            up_button.sensitive = true;
-            root_button.sensitive = true;
-        }
+        back_button.sensitive = _session.has_back ();
+        forward_button.sensitive = _session.has_forward ();
+        var is_gemini_site = session.current_uri.scheme == "gemini";
+        up_button.sensitive = is_gemini_site;
+        root_button.sensitive = is_gemini_site;
     }
 
     private void show_reload_button () {

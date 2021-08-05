@@ -16,6 +16,21 @@
       <summary>Current browsing sessions</summary>
       <description>Each browsing session is identified by a unique string key and comprised of a history of visited URIs and an index of current URI from the history.</description>
     </key>
+    <key name="tabs" type="as">
+      <default>[]</default>
+      <summary>List of tabs</summary>
+      <description>Each element of tabs list is an id matching a single session</description>
+    </key>
+    <key name="max-tabs-history" type="i">
+      <default>10</default>
+      <summary>Maximum size of closed tabs history</summary>
+      <description>Maximum number of tabs that will be stored in tabs histroy after closing.</description>
+    </key>
+    <key name="focused-tab" type="i">
+        <default>0</default>
+        <summary>Index of the focused tab</summary>
+        <description>Index of the focused tab</description>
+    </key>
     <key name="window-position" type="(ii)">
       <default>(-1, -1)</default>
       <summary>Window position</summary>
@@ -32,7 +47,7 @@
       <description>Whether the window was maximized on last run</description>
     </key>
     <key name="font-size" type="d">
-      <default>1.2</default>
+      <default>1.3</default>
       <summary>Base gemtext font size in em</summary>
       <description>Base size of text in TextView used to render gemtext. Headdings, monospace, etc may use relativelly larger or smaller size. Value expressed in em.</description>
     </key>

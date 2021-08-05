@@ -275,6 +275,8 @@ public class Starfish.Core.Uri : Object {
                 buff.append (":");
                 buff.append (port.to_string ());
             }
+        } else {
+            buff.append ("//");
         }
 
         if (path != null && path.length > 0) {
@@ -346,15 +348,20 @@ public class Starfish.Core.Uri : Object {
     }
 
     public string? file_name () {
-        if (path_is_empty ()) {
-            return null;
+        if (path_is_empty () || path.replace ("/", "").length == 0) {
+            return host;
         }
 
-        if (!path.contains ("/")) {
-            return path;
+        return last_non_empty_path_segment ();
+    }
+
+    private string last_non_empty_path_segment () {
+        var cleaned_up_path = path;
+        while (cleaned_up_path.has_suffix ("/")) {
+            cleaned_up_path = cleaned_up_path[0:cleaned_up_path.length - 1];
         }
 
-        return path[path.last_index_of ("/") + 1:path.length];
+        return cleaned_up_path[cleaned_up_path.last_index_of ("/") + 1:cleaned_up_path.length];
     }
 
     private bool path_is_empty () {

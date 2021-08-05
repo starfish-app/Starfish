@@ -4,7 +4,7 @@ public class Starfish.UI.Application : Gtk.Application {
 
     public Core.Client client { get; construct; }
     public Settings settings { get; construct; }
-    private Core.SessionManager manager;
+    private Core.TabManager manager;
 
     public Application () {
         Object (
@@ -16,22 +16,24 @@ public class Starfish.UI.Application : Gtk.Application {
     }
 
     construct {
-        manager = new Core.SessionManager.backed_by (settings);
+        manager = new Core.TabManager.backed_by (settings);
     }
 
     protected override void activate () {
-        var default_session = manager.load ("default");
-        show_main_window (default_session);
+        show_main_window ();
     }
 
     protected override void open (File[] files, string hint) {
-        var default_session = manager.load ("default");
-        push_gemini_links (default_session, files);
-        show_main_window (default_session);
+        add_new_tabs_for (files);
+        show_main_window ();
     }
 
-    private void show_main_window (Core.Session session) {
-        var main_window = new Window (this, session);
+    private void show_main_window () {
+        if (manager.tabs.size == 0) {
+            manager.new_tab ();
+        }
+
+        var main_window = new Window (this, manager);
         link_dark_mode_settings ();
         main_window.show_all ();
     }
@@ -47,9 +49,24 @@ public class Starfish.UI.Application : Gtk.Application {
         });
     }
 
-    private void push_gemini_links (Core.Session session, File[] files) {
-        foreach (File f in files) {
-            session.push_uri_onto_history_before_init (f.get_uri ());
+    private void add_new_tabs_for (File[] files) {
+        foreach (File file in files) {
+            var raw_uri = file.get_uri ();
+            Core.Uri uri;
+            try {
+                uri = Core.Uri.parse (raw_uri, new Core.Uri ());
+            } catch (Core.UriError e) {
+                warning ("Error parsing %s, will skip loading! Error: %s", raw_uri, e.message);
+                continue;
+            }
+
+            if (uri.scheme != "gemini" && uri.scheme != "file") {
+                warning ("Scheme of %s is neither gemini nor file, will skip loading!", raw_uri);
+                continue;
+            }
+            var new_tab = manager.new_tab ();
+            new_tab.session.push_uri_onto_history_before_init (uri);
+            manager.focused_tab_index = manager.tabs.size - 1;
         }
     }
 }
