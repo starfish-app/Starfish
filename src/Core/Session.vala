@@ -19,6 +19,10 @@ public class Starfish.Core.Session : Object {
         get { return manager.settings; }
     }
 
+    public BookmarksManager bookmarks_manager {
+        get { return manager.bookmarks_manager; }
+    }
+
     public int history_index { get { return _history_index; } }
     public Uri current_uri {
         get { return _history[_history_index]; }
@@ -69,7 +73,6 @@ public class Starfish.Core.Session : Object {
     public bool has_back () {
         return _history_index > 0;
     }
-
 
     public void navigate_back () {
         if (!has_back ()) {
@@ -139,23 +142,27 @@ public class Starfish.Core.Session : Object {
             return;
         }
 
-        if (!manager.client.supports (new_uri)) {
-            delegate_opening_of (new_uri);
-        } else {
-            lock (loading) {
-                if (loading) {
-                    return;
-                } else {
-                    loading = true;
-                }
+        manager.client.supports.begin (new_uri, null, (obj, res) => {
+            var is_supported_nativelly = manager.client.supports.end (res);
+            if (!is_supported_nativelly) {
+                delegate_opening_of (new_uri);
+            } else {
+                lock (loading) {
+                    if (loading) {
+                        return;
+                    } else {
+                        loading = true;
+                    }
 
-                manager.client.load.begin (new_uri, null, true, (obj, res) => {
-                    var response = manager.client.load.end (res);
-                    update_history_on_response (response);
-                    response_received (response);
-                });
+                    manager.client.load.begin (new_uri, null, true, (obj, res) => {
+                        var response = manager.client.load.end (res);
+                        update_history_on_response (response);
+                        response_received (response);
+                    });
+                }
             }
-        }
+        });
+
     }
 
     public void navigate_up () {

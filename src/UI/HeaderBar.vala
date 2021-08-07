@@ -42,6 +42,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Button up_button;
     private Gtk.Button root_button;
     private Gtk.Button home_button;
+    private Gtk.Button bookmarks_button;
     private Gtk.Button reset_zoom_button;
 
     private uint? timeout_id = null;
@@ -69,6 +70,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         up_button = setup_button ("go-up", _("Go up"), Window.ACTION_GO_UP);
         root_button = setup_button ("go-top", _("Go to root"), Window.ACTION_GO_TO_ROOT);
         home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
+        bookmarks_button = setup_button ("user-bookmarks", _("Open bookmarks"), Window.ACTION_OPEN_BOOKMARKS);
 
         address = setup_address ();
         title_widget = new Gtk.Grid () {
@@ -86,6 +88,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         pack_start (forward_button);
         var menu_button = setup_menu ();
         pack_end (menu_button);
+        pack_end (bookmarks_button);
     }
 
     private void on_session_change () {
@@ -97,6 +100,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             enable_buttons ();
             stop_pulsing ();
             show_reload_button ();
+            update_address_bookmark_icon ();
         }
 
         address.text = _session.current_uri.to_string ();
@@ -109,6 +113,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         up_button.sensitive = false;
         root_button.sensitive = false;
         address.sensitive = false;
+        bookmarks_button.sensitive = false;
     }
 
     private void enable_buttons () {
@@ -119,6 +124,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var is_gemini_site = session.current_uri.scheme == "gemini";
         up_button.sensitive = is_gemini_site;
         root_button.sensitive = is_gemini_site;
+        bookmarks_button.sensitive = true;
     }
 
     private void show_reload_button () {
@@ -164,7 +170,10 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
     private Gtk.Entry setup_address () {
         var address = new Gtk.Entry () {
-            hexpand = true
+            hexpand = true,
+            secondary_icon_activatable = true,
+            secondary_icon_name = "non-starred",
+            secondary_icon_tooltip_text = _("Bookmark this page")
         };
 
         unowned Gtk.StyleContext style_ctx = address.get_style_context ();
@@ -175,7 +184,37 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             action.activate (null);
         });
 
+        address.icon_release.connect ((pos, event) => {
+            if (pos == Gtk.EntryIconPosition.SECONDARY) {
+                var manager = _session.bookmarks_manager;
+                var uri = _session.current_uri;
+                if (manager.is_bookmarked (uri)) {
+                    var action = actions.lookup_action (Window.ACTION_REMOVE_BOOKMARK);
+                    action.activate (null);
+                    address.secondary_icon_name = "non-starred";
+                    address.secondary_icon_tooltip_text = _("Bookmark this page");
+                } else {
+                    var action = actions.lookup_action (Window.ACTION_ADD_BOOKMARK);
+                    action.activate (null);
+                    address.secondary_icon_name = "starred";
+                    address.secondary_icon_tooltip_text = _("Remove this page rom bookmarks");
+                }
+            }
+        });
+
         return address;
+    }
+
+    private void update_address_bookmark_icon () {
+        var manager = _session.bookmarks_manager;
+        var uri = _session.current_uri;
+        if (manager.is_bookmarked (uri)) {
+            address.secondary_icon_name = "starred";
+            address.secondary_icon_tooltip_text = _("Remove this page rom bookmarks");
+        } else {
+            address.secondary_icon_name = "non-starred";
+            address.secondary_icon_tooltip_text = _("Bookmark this page");
+        }
     }
 
     private Gtk.MenuButton setup_menu () {

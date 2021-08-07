@@ -4,6 +4,7 @@ public class Starfish.Core.SessionManager : Object {
     public Storage storage { get; construct; }
     public Client client { get; construct; }
     public Theme theme { get; construct; }
+    public BookmarksManager bookmarks_manager { get; construct; }
 
     private Variant sessions;
 
@@ -12,7 +13,8 @@ public class Starfish.Core.SessionManager : Object {
             settings,
             new SettingsBackedStorage (settings),
             new Client (),
-            new Theme.os (settings)
+            new Theme.os (settings),
+            new BookmarksManager ()
         );
     }
 
@@ -20,13 +22,15 @@ public class Starfish.Core.SessionManager : Object {
         Settings settings,
         Storage storage,
         Client client,
-        Theme theme
+        Theme theme,
+        BookmarksManager bookmarks_manager
     ) {
         Object (
             settings: settings,
             storage: storage,
             client: client,
-            theme: theme
+            theme: theme,
+            bookmarks_manager: bookmarks_manager
         );
     }
 

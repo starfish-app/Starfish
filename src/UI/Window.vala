@@ -23,6 +23,9 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
     public const string ACTION_RESET_ZOOM = "reset-zoom";
     public const string ACTION_ZOOM_IN = "zoom-in";
     public const string ACTION_OPEN_PREFERENCES = "open-preferences";
+    public const string ACTION_OPEN_BOOKMARKS = "open-bookmarks";
+    public const string ACTION_ADD_BOOKMARK = "add-bookmark";
+    public const string ACTION_REMOVE_BOOKMARK = "remove-bookmark";
     public const string ACTION_LOAD_URI = "load-uri";
     public const string ACTION_LOAD_URI_IN_NEW_TAB = "load-uri-in-new-tab";
 
@@ -40,6 +43,9 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         {ACTION_RESET_ZOOM, on_reset_zoom},
         {ACTION_ZOOM_IN, on_zoom_in},
         {ACTION_OPEN_PREFERENCES, on_open_preferences},
+        {ACTION_OPEN_BOOKMARKS, on_open_bookmarks},
+        {ACTION_ADD_BOOKMARK, on_add_bookmark},
+        {ACTION_REMOVE_BOOKMARK, on_remove_bookmark},
         {ACTION_LOAD_URI, on_load_uri, "s"},
         {ACTION_LOAD_URI_IN_NEW_TAB, on_load_uri_in_new_tab, "s"},
     };
@@ -289,6 +295,47 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         }
 
         preferences_dialog.present ();
+    }
+
+    private void on_open_bookmarks () {
+        var manager = focused_tab_session ().bookmarks_manager;
+        manager.get_bookmarks_uri.begin ((obj, res) => {
+            try {
+                var uri = manager.get_bookmarks_uri.end (res);
+                var model = tab_manager.new_tab (uri.to_string ());
+                var tab = create_tab (model);
+                notebook.insert_tab (tab, notebook.n_tabs);
+                notebook.current = tab;
+            } catch (Error err) {
+                warning ("Failed to open bookmarks, error: %s", err.message);
+            }
+        });
+    }
+
+    private void on_add_bookmark () {
+        var session = focused_tab_session ();
+        var uri = session.current_uri;
+        var manager = session.bookmarks_manager;
+        manager.add_bookmark.begin (uri, "", (obj, res) => {
+            try {
+                manager.add_bookmark.end (res);
+            } catch (Error err) {
+                warning ("Failed to add bookmark, error: %s", err.message);
+            }
+        });
+    }
+
+    private void on_remove_bookmark () {
+        var session = focused_tab_session ();
+        var uri = session.current_uri;
+        var manager = session.bookmarks_manager;
+        manager.remove_bookmark.begin (uri, (obj, res) => {
+            try {
+                manager.remove_bookmark.end (res);
+            } catch (Error err) {
+                warning ("Failed to remove bookmark, error: %s", err.message);
+            }
+        });
     }
 
     private void on_load_uri (SimpleAction action, Variant? uri_parameter) {

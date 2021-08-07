@@ -15,8 +15,28 @@ public class Starfish.Core.Client : Object {
         };
     }
 
-    public bool supports (Uri uri) {
-        return uri.scheme == "gemini" || uri.scheme == "file";
+    public async bool supports (Uri uri, Cancellable? cancel = null) {
+        if (uri.scheme == "gemini") {
+            return true;
+        }
+
+        if (uri.scheme == "file") {
+            var file = File.new_for_uri (uri.to_string ());
+            try {
+                var file_info = yield file.query_info_async (
+                    "standard::*",
+                    FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+                    Priority.DEFAULT,
+                    cancel
+                );
+
+                return file_info.get_file_type () == FileType.REGULAR;
+            } catch (Error err) {
+                warning ("Failed to get type of %s, will mark it as non-supported. Error: %s", uri.to_string (), err.message);
+            }
+        }
+
+        return false;
     }
 
     public async Response load (Uri uri, Cancellable? cancel = null, bool follow_redirects = true) {
@@ -36,12 +56,14 @@ public class Starfish.Core.Client : Object {
             if (!exists) {
                 return not_found_response_for (uri);
             }
+
             var file_info = yield file.query_info_async (
                 "standard::*",
                 FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
                 Priority.DEFAULT,
                 cancel
             );
+
             var content_type = file_info.get_content_type ();
             var mime = ContentType.get_mime_type (content_type);
             var file_in = yield file.read_async (Priority.DEFAULT, cancel);
@@ -109,17 +131,20 @@ public class Starfish.Core.Client : Object {
     }
 
     private Response error_response_for (string error_message, Uri uri) {
-        var in_mem_in = new MemoryInputStream.from_data("".data);
-        var in_mem_out = new MemoryOutputStream.resizable ();
-        var in_mem_conn = new SimpleIOStream (in_mem_in, in_mem_out);
-        return new Response (uri, "-1 Loading %s failed with error: %s.".printf (uri.to_string (), error_message), in_mem_conn);
+        var status = "-1 Loading %s failed with error: %s.".printf (uri.to_string (), error_message);
+        return custom_response_for (uri, status);
     }
 
     private Response not_found_response_for (Uri uri) {
-        var in_mem_in = new MemoryInputStream.from_data("".data);
+        var status = "52 Could not find %s.".printf (uri.to_string ());
+        return custom_response_for (uri, status);
+    }
+
+    private Response custom_response_for (Uri uri, string status, string body = "") {
+        var in_mem_in = new MemoryInputStream.from_data(body.data);
         var in_mem_out = new MemoryOutputStream.resizable ();
         var in_mem_conn = new SimpleIOStream (in_mem_in, in_mem_out);
-        return new Response (uri, "52 Could not find %s.".printf (uri.to_string ()), in_mem_conn);
+        return new Response (uri, status, in_mem_conn);
     }
 
 }
