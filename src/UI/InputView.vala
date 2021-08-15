@@ -46,11 +46,13 @@ public class Starfish.UI.InputView : Gtk.Grid, ResponseView {
     public void clear () {
         prompt.label = "";
         input.text = "";
+        input.visibility = true;
         send.sensitive = false;
     }
 
     public void display (Core.Response response) {
         prompt.label = response.meta ?? _("Please provide input.");
+        input.visibility = response.status != 11;
         session.loading = false;
     }
 

@@ -114,8 +114,8 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
         });
 
         this.motion_notify_event.connect ((view, event) => on_motion_notify (event));
-        this.button_release_event.connect ((view, event) => this.on_button_release (event));
-        this.populate_popup.connect ((view, menu) => this.on_populate_popup (menu));
+        this.button_release_event.connect ((view, event) => on_button_release (event));
+        this.populate_popup.connect ((view, menu) => on_populate_popup (menu));
     }
 
     private bool on_motion_notify (Gdk.EventMotion event) {
@@ -182,6 +182,10 @@ public class Starfish.UI.PageTextView : Gtk.TextView, ResponseView {
 
     private void on_populate_popup (Gtk.Menu popup_menu) {
         var link = this.hovering_over_link;
+        if (link == null) {
+            return;
+        }
+
         Core.Uri uri;
         try {
             uri = Core.Uri.parse (link.url, session.current_uri);

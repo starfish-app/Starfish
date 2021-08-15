@@ -22,5 +22,5 @@ Your bookmarks:
     protected override string get_template () {
         return template;
     }
-
 }
+

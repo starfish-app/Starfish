@@ -60,6 +60,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     construct {
         show_close_button = true;
         hexpand = true;
+        spacing = 1;
 
         reload_icon = new Gtk.Image.from_icon_name ("go-jump", Gtk.IconSize.LARGE_TOOLBAR);
         stop_icon = new Gtk.Image.from_icon_name ("media-playback-stop", Gtk.IconSize.LARGE_TOOLBAR);
@@ -74,7 +75,8 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
         address = setup_address ();
         title_widget = new Gtk.Grid () {
-            column_spacing = 8
+            column_spacing = 8,
+            hexpand = true
         };
         title_widget.attach (address, 0, 0);
         title_widget.attach (stop_reload_button, 1, 0);

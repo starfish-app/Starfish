@@ -81,7 +81,7 @@ public class Starfish.Core.BookmarksManager : Object {
             var content = template.render (
                 Templates.Bookmarks.PARENT_DIRECTORY_KEY,
                 parent_dir.get_path ()
-            );
+            ).data;
 
             yield out_stream.write_all_async (content, Priority.HIGH, null, out written);
         }

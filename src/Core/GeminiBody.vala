@@ -2,6 +2,12 @@ public class Starfish.Core.GeminiBody : TextBody {
 
     public bool is_in_preformatted_block { get; protected set; default = false; }
 
+    public GeminiBody.from_string (owned string content) {
+        var mime = new Mime ("text/gemini");
+        var conn = Response.in_mem_conn (content);
+        this (mime, conn);
+    }
+
     public GeminiBody (Mime mime, owned IOStream connection) {
         base (mime, connection);
     }

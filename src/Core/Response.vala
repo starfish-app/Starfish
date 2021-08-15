@@ -16,6 +16,10 @@ public class Starfish.Core.Response : Object {
     public bool is_fail { get { return is_temp_fail || is_perm_fail; } }
     public bool is_client_cert { get { return status >= 60 && status < 70; } }
 
+    public Response.not_found (Uri uri) {
+        this (uri, Response.status_line (51), Response.in_mem_conn ());
+    }
+
     public Response (Uri uri, string status_line, owned IOStream connection) {
         Object (
             uri: uri,
@@ -83,6 +87,20 @@ public class Starfish.Core.Response : Object {
         } catch (IOError e) {
             warning ("Could not close connection, might leak resources! Error: %s", e.message);
         }
+    }
+
+    public static string status_line (int status_code, string? meta = null) {
+        if (meta != null) {
+            return "%d %s".printf (status_code, meta);
+        } else {
+            return "%d".printf (status_code);
+        }
+    }
+
+    public static IOStream in_mem_conn (string? content = "") {
+        var in_mem_in = new MemoryInputStream.from_data(content.data);
+        var in_mem_out = new MemoryOutputStream.resizable ();
+        return new SimpleIOStream (in_mem_in, in_mem_out);
     }
 }
 

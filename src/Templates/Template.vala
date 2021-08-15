@@ -2,7 +2,7 @@ public abstract class Starfish.Templates.Template : Object {
 
     protected abstract string get_template ();
 
-    public uint8[] render (string? param_key = null, string? param_value = null, ...) {
+    public string render (string? param_key = null, string? param_value = null, ...) {
         var result = get_template ();
         if (param_key != null && param_value != null) {
             var key = "${%s}".printf (param_key);
@@ -25,7 +25,7 @@ public abstract class Starfish.Templates.Template : Object {
             result = result.replace (key, next_param_value);
         }
 
-        return result.data;
+        return result;
     }
 }
 

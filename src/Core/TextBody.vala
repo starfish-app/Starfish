@@ -9,11 +9,8 @@ public class Starfish.Core.TextBody : Object {
 
     public TextBody.from_string (owned string content) {
         var mime = new Mime ("text/plain");
-        var memory_stream = new MemoryInputStream.from_data(content.data);
-        var data_stream = new DataInputStream (memory_stream);
-        var in_mem_out = new MemoryOutputStream.resizable ();
-        var in_mem_conn = new SimpleIOStream (data_stream, in_mem_out);
-        this (mime, in_mem_conn);
+        var conn = Response.in_mem_conn (content);
+        this (mime, conn);
     }
 
     public TextBody (Mime mime, owned IOStream connection) {
