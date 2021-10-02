@@ -7,19 +7,17 @@
   <name>Starfish</name>
   <summary>Surf the Geminispace</summary>
   <description>
-    <p>
-      Starfish is a Gemini client. With it you can browse sites published with the Gemini
-      protocol. Read personal stories and fictional tales. Enjoy written words without
-      flashy distractions. Keep your browsing private and stay safe from tracking.
-    </p>
+    <p>Browse Gemini sites on the small internet. Read personal stories and fictional tales. Enjoy written words without flashy distractions. Keep your browsing private and stay safe from tracking.</p>
+    <p>Starfish is a begginer friendly desktop client for Gemini protol. It supports all core features of Gemini, such as beautiful rendering of text based content and encrypted communication with servers. On top of those Starfish offers comforts of modern browsers, like local browsing history, tabs and bookmarks.</p>
   </description>
   <custom>
-    <value key="x-appcenter-color-primary">#ff924a</value>
-    <value key="x-appcenter-color-primary-text">#214478</value>
-    <value key="x-appcenter-suggested-price">3</value>
+    <value key="x-appcenter-color-primary">#FFBC8F</value>
+    <value key="x-appcenter-color-primary-text">#1D3963</value>
+    <value key="x-appcenter-suggested-price">0</value>
   </custom>
-  <content_rating type="oars-1.1" />
   <developer_name>Josip Antoliš</developer_name>
+  <url type="homepage">https://github.com/starfish-app/starfish</url>
+  <url type="bugtracker">https://github.com/starfish-app/starfish/issues</url>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style-screenshot.png</image>
@@ -31,4 +29,33 @@
       <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/dyslexia-font-screenshot.png</image>
     </screenshot>
   </screenshots>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
 </component>

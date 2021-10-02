@@ -4,7 +4,7 @@ project('hr.from.josipantolis.starfish', 'vala', 'c')
 gnome = import('gnome')
 i18n = import('i18n')
 
-# Set our translation domain
+# Set translation domain
 add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name()), language:'c')
 
 # Common build
@@ -98,7 +98,7 @@ test_executeable = executable(
 
 test('tests', test_executeable)
 
-# Productin build
+# Production build
 executable(
     meson.project_name(),
     sources + files('src/Main.vala'),
@@ -119,7 +119,7 @@ install_data(
 )
 meson.add_install_script('meson/post_install.py', meson.project_name ())
 
-# Translate and install our .desktop file
+# Translate and install .desktop file
 i18n.merge_file(
     input: join_paths('data', 'starfish.desktop.in'),
     output: meson.project_name() + '.desktop',
@@ -129,7 +129,7 @@ i18n.merge_file(
     install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
-# Translate and install our .appdata file
+# Translate and install .appdata file
 i18n.merge_file(
     input: join_paths('data', 'starfish.appdata.xml.in'),
     output: meson.project_name() + '.appdata.xml',

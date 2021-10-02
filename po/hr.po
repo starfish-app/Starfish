@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-02 16:58+0200\n"
+"POT-Creation-Date: 2021-10-02 22:35+0200\n"
 "PO-Revision-Date: 2021-08-15 02:42+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -613,8 +613,8 @@ msgstr ""
 msgid "Starfish Gemini browser"
 msgstr ""
 
-#: data/starfish.desktop.in:5
-msgid "Browse Gemini sites on the small internet"
+#: data/starfish.desktop.in:5 data/starfish.appdata.xml.in:8
+msgid "Surf the Geminispace"
 msgstr ""
 
 #: data/starfish.desktop.in:8
@@ -625,18 +625,22 @@ msgstr ""
 msgid "gemini;browser;client;gemtext;geminispace;"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:8
-msgid "Surf the Geminispace"
-msgstr ""
-
 #: data/starfish.appdata.xml.in:10
 msgid ""
-"Starfish is a Gemini client. With it you can browse sites published with the "
-"Gemini protocol. Read personal stories and fictional tales. Enjoy written "
-"words without flashy distractions. Keep your browsing private and stay safe "
-"from tracking."
+"Browse Gemini sites on the small internet. Read personal stories and "
+"fictional tales. Enjoy written words without flashy distractions. Keep your "
+"browsing private and stay safe from tracking."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:22
+#: data/starfish.appdata.xml.in:11
+msgid ""
+"Starfish is a begginer friendly desktop client for Gemini protol. It "
+"supports all core features of Gemini, such as beautiful rendering of text "
+"based content and encrypted communication with servers. On top of those "
+"Starfish offers comforts of modern browsers, like local browsing history, "
+"tabs and bookmarks."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:18
 msgid "Josip Antoliš"
 msgstr ""
