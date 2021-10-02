@@ -40,7 +40,11 @@ public class Starfish.Core.Theme : Object {
             textview {
                 font-size: %.1fem;
             }
-        """.printf (base_font_size);
+
+            grid {
+                font-size: %.1fem;
+            }
+        """.printf (base_font_size, base_font_size);
 
         var provider = new Gtk.CssProvider ();
         try {

@@ -16,12 +16,12 @@ Starfish is currently in early development stage. It can already be used to surf
 
 One of the missing features is the inclusion in package managers / app stores. Currently the only way to install Starfish is to compile it locally.
 
-## Compile
+## Build
 
-Starfish is built for elementary OS 6 which is currently in beta. All prerequisites can be met by installing `elementary-sdk`:
+Starfish is built for elementary OS 6. All prerequisites can be met by installing `elementary-sdk` and `libgnutls28-dev`:
 
 ```sh
-sudo apt install elementary-sdk
+sudo apt install elementary-sdk libgnutls28-dev
 ```
 
 To build and install the app execute (from project's root directory):
@@ -48,6 +48,14 @@ After adding user facing strings, remember to wrap them `_("like so")`, from ins
 ```sh
 ninja hr.from.josipantolis.starfish-pot
 ninja hr.from.josipantolis.starfish-update-po
+```
+
+## Package
+
+Starfish is packaged as a Flatpak. You can build and install it locally with:
+
+```sh
+flatpak-builder build hr.from.josipantolis.starfish.yml --user --install --force-clean
 ```
 
 ## License

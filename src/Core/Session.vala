@@ -57,7 +57,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var starting_uri = current_uri;
-            manager.client.load.begin (starting_uri, null, true, (obj, res) => {
+            manager.client.load.begin (starting_uri, null, true, false, false, (obj, res) => {
                 var response = manager.client.load.end (res);
                 var loaded_uri = response.uri;
                 if (current_uri.to_string() != loaded_uri.to_string ()) {
@@ -87,7 +87,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index - 1];
-            manager.client.load.begin (uri, null, true, (obj, res) => {
+            manager.client.load.begin (uri, null, true, false, false, (obj, res) => {
                 var response = manager.client.load.end (res);
                 var loaded_uri = response.uri;
                 _history_index--;
@@ -118,7 +118,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index + 1];
-            manager.client.load.begin (uri, null, true, (obj, res) => {
+            manager.client.load.begin (uri, null, true, false, false, (obj, res) => {
                 var response = manager.client.load.end (res);
                 var loaded_uri = response.uri;
                 _history_index++;
@@ -133,7 +133,11 @@ public class Starfish.Core.Session : Object {
         }
     }
 
-    public void navigate_to (string raw_uri) {
+    public void navigate_to (
+        string raw_uri,
+        bool accept_expired_cert = false,
+        bool accept_mismatched_cert = false
+    ) {
         Uri new_uri;
         try {
             new_uri = Uri.parse (raw_uri, current_uri);
@@ -154,7 +158,7 @@ public class Starfish.Core.Session : Object {
                         loading = true;
                     }
 
-                    manager.client.load.begin (new_uri, null, true, (obj, res) => {
+                    manager.client.load.begin (new_uri, null, true, accept_expired_cert, accept_mismatched_cert, (obj, res) => {
                         var response = manager.client.load.end (res);
                         update_history_on_response (response);
                         response_received (response);
@@ -192,7 +196,7 @@ public class Starfish.Core.Session : Object {
     }
 
     private void navigate_one_level_up_from (Uri uri) {
-        manager.client.load.begin (uri, null, false, (obj, res) => {
+        manager.client.load.begin (uri, null, false, false, false, (obj, res) => {
             var response = manager.client.load.end (res);
             if (response.is_success) {
                 update_history_on_response (response);

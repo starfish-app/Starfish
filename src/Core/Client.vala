@@ -1,18 +1,13 @@
 public class Starfish.Core.Client : Object {
 
-    private SocketClient socket_client;
+    public CertManager cert_manager { get; construct; }
     public int max_redirects { get; construct; }
 
-    public Client (int max_redirects = 5) {
-        Object (max_redirects: max_redirects);
-    }
-
-    construct {
-        socket_client = new SocketClient () {
-            tls = true,
-            tls_validation_flags = TlsCertificateFlags.GENERIC_ERROR,
-            timeout = 100000000
-        };
+    public Client (int max_redirects = 5, CertManager cert_manager = new CertManager()) {
+        Object (
+            max_redirects: max_redirects,
+            cert_manager: cert_manager
+        );
     }
 
     public async bool supports (Uri uri, Cancellable? cancel = null) {
@@ -39,12 +34,18 @@ public class Starfish.Core.Client : Object {
         return false;
     }
 
-    public async Response load (Uri uri, Cancellable? cancel = null, bool follow_redirects = true) {
+    public async Response load (
+        Uri uri,
+        Cancellable? cancel = null,
+        bool follow_redirects = true,
+        bool accept_expired_cert = false,
+        bool accept_mismatched_cert = false
+    ) {
         switch (uri.scheme) {
             case "file":
                 return yield load_file (uri, cancel);
             case "gemini":
-                return yield load_gemini (uri, cancel, follow_redirects);
+                return yield load_gemini (uri, cancel, 0, follow_redirects, accept_expired_cert, accept_mismatched_cert);
         }
         return new InternalErrorResponse.schema_not_supported (uri);
     }
@@ -81,13 +82,49 @@ public class Starfish.Core.Client : Object {
         }
     }
 
-    private async Response load_gemini (Uri uri, Cancellable? cancel, bool follow_redirects = true, int redirect_count = 0) {
+    private async Response load_gemini (
+        Uri uri,
+        Cancellable? cancel,
+        int redirect_count = 0,
+        bool follow_redirects = true,
+        bool accept_expired_cert = false,
+        bool accept_mismatched_cert = false
+    ) {
         SocketConnection conn;
+        CertError cert_error = null;
         try {
+            var socket_client = new SocketClient () {
+                tls = true,
+                timeout = 100000000
+            };
+            socket_client.event.connect ((event, connectable, conn) => {
+                if (event == SocketClientEvent.TLS_HANDSHAKING) {
+                    var tls_conn = (TlsClientConnection) conn;
+                    tls_conn.accept_certificate.connect ((cert, errors) => {
+                        try {
+                            cert_manager.verify (tls_conn.server_identity, cert, accept_expired_cert, accept_mismatched_cert);
+                            return true;
+                        } catch (CertError err) {
+                            cert_error = err;
+                            return false;
+                        }
+                    });
+                }
+            });
             conn = yield socket_client.connect_to_uri_async (uri.to_string (), 1965, cancel);
             var request = (uri.to_string () + "\r\n").data;
             yield conn.output_stream.write_async (request, Priority.DEFAULT, cancel);
         } catch (Error err) {
+            if (cert_error != null) {
+                if (cert_error is CertError.PARSING_ERROR || cert_error is CertError.FINGERPRINTING_ERROR) {
+                    return new InternalErrorResponse.server_certificate_invalid (uri, cert_error.message);
+                } else if (cert_error is CertError.EXPIRED_ERROR) {
+                    return new InternalErrorResponse.server_certificate_expired (uri, cert_error.message);
+                } else if (cert_error is CertError.MISMATCH_ERROR) {
+                    return new InternalErrorResponse.server_certificate_mismatch (uri);
+                }
+            }
+
             return new InternalErrorResponse.connection_failed (uri, err.message);
         }
 
@@ -110,7 +147,7 @@ public class Starfish.Core.Client : Object {
                     return new InternalErrorResponse.redirect_to_non_gemini_link (uri, new_uri);
                 }
                 if (redirect_count <= max_redirects) {
-                    return yield load_gemini (new_uri, cancel, follow_redirects, redirect_count + 1);
+                    return yield load_gemini (new_uri, cancel, redirect_count + 1, follow_redirects);
                 } else {
                     return new InternalErrorResponse.redirect_limit_reached (uri, new_uri);
                 }

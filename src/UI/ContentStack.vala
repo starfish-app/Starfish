@@ -31,6 +31,7 @@ public class Starfish.UI.ContentStack : Gtk.Stack {
             };
 
             scrollable.add (entry.value);
+            scrollable.show ();
             add_named (scrollable, entry.key);
         }
         set_visible_child_name (default_view);

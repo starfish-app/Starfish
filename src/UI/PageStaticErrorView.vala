@@ -1,4 +1,4 @@
-public class Starfish.UI.PageErrorView : PageTextView {
+public class Starfish.UI.PageStaticErrorView : PageTextView {
 
     private Templates.Template temp_faliue = new Templates.TempFailure ();
     private Templates.Template connection_failed = new Templates.ConnectionFailed ();
@@ -14,7 +14,7 @@ public class Starfish.UI.PageErrorView : PageTextView {
     private Templates.Template cert_error = new Templates.CertError ();
     private Templates.Template file_access_denied = new Templates.FileAccessDenied ();
 
-    public PageErrorView (Core.Session session) {
+    public PageStaticErrorView (Core.Session session) {
         base (session);
     }
 
@@ -23,7 +23,7 @@ public class Starfish.UI.PageErrorView : PageTextView {
             return false;
         }
 
-        if (!response.is_success) {
+        if (!response.is_success && !is_recoverable_cert_error (response.status)) {
             return true;
         }
 
@@ -51,6 +51,7 @@ public class Starfish.UI.PageErrorView : PageTextView {
                     Templates.ConnectionFailed.ERROR_MESSAGE_KEY, response.meta
                 );
             case Core.InternalErrorResponse.STATUS_LINE_INVALID:
+            case Core.InternalErrorResponse.SERVER_CERTIFICATE_INVALID:
                 return invalid_response.render (
                     Templates.InvalidResponse.URI_KEY, response.uri.to_string (),
                     Templates.InvalidResponse.ERROR_MESSAGE_KEY, response.meta
@@ -129,6 +130,11 @@ public class Starfish.UI.PageErrorView : PageTextView {
                     Templates.TempFailure.META_KEY, response.meta
                 );
         }
+    }
+
+    private bool is_recoverable_cert_error (int status_code) {
+        return status_code == Core.InternalErrorResponse.SERVER_CERTIFICATE_EXPIRED
+            || status_code == Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH;
     }
 }
 

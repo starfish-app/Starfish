@@ -15,6 +15,7 @@ dependencies = [
     dependency('gtk+-3.0'),
     dependency('granite'),
     dependency('libhandy-1'),
+    dependency('gnutls'),
 ]
 
 gresource = gnome.compile_resources(
@@ -31,7 +32,8 @@ sources = gresource + files(
     'src/UI/ContentStack.vala',
     'src/UI/InputView.vala',
     'src/UI/ResponseView.vala',
-    'src/UI/PageErrorView.vala',
+    'src/UI/PageStaticErrorView.vala',
+    'src/UI/PageCertErrorView.vala',
     'src/UI/PageImageView.vala',
     'src/UI/PageTextView.vala',
     'src/UI/PageDownloadView.vala',
@@ -54,6 +56,9 @@ sources = gresource + files(
     'src/Templates/CertError.vala',
     'src/Templates/FileAccessDenied.vala',
     'src/Core/Client.vala',
+    'src/Core/CertError.vala',
+    'src/Core/CertInfo.vala',
+    'src/Core/CertManager.vala',
     'src/Core/Uri.vala',
     'src/Core/Mime.vala',
     'src/Core/Response.vala',
