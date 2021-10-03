@@ -1,41 +1,58 @@
 public class Starfish.UI.Application : Gtk.Application {
 
-    public static string ID = "hr.from.josipantolis.starfish";
-
     public Core.Client client { get; construct; }
     public Settings settings { get; construct; }
-    private Core.TabManager manager;
+    public Core.TabManager manager { get; construct; }
+    private Window? main_window;
 
     public Application () {
+        var settings = new Settings ("hr.from.josipantolis.starfish");
         Object (
-            application_id: ID,
+            application_id: "hr.from.josipantolis.starfish",
             flags: ApplicationFlags.HANDLES_OPEN,
             client: new Starfish.Core.Client (),
-            settings: new Settings ("hr.from.josipantolis.starfish")
+            settings: settings,
+            manager: new Core.TabManager.backed_by (settings)
         );
     }
 
-    construct {
-        manager = new Core.TabManager.backed_by (settings);
-    }
-
     protected override void activate () {
-        show_main_window ();
+        if (main_window == null) {
+            main_window = show_main_window ();
+        } else {
+            main_window.present ();
+        }
     }
 
     protected override void open (File[] files, string hint) {
-        add_new_tabs_for (files);
-        show_main_window ();
+        if (main_window == null) {
+            handle_gemini_files (files, (uri) => {
+                var new_tab = manager.new_tab ();
+                new_tab.session.push_uri_onto_history_before_init (uri);
+                manager.focused_tab_index = manager.tabs.size - 1;
+            });
+            main_window = show_main_window ();
+        } else {
+            handle_gemini_files (files, (uri) => {
+                var uri_parameter = new Variant.string (uri.to_string ());
+                main_window.activate_action (
+                    Window.ACTION_LOAD_URI_IN_NEW_TAB,
+                    uri_parameter
+                );
+            });
+            main_window.present ();
+        }
     }
 
-    private void show_main_window () {
+    private Window show_main_window () {
         if (manager.tabs.size == 0) {
             manager.new_tab ();
         }
 
-        var main_window = new Window (this, manager);
+        var window = new Window (this, manager);
         link_dark_mode_settings ();
-        main_window.show_all ();
+        window.show_all ();
+        return window;
     }
 
     private void link_dark_mode_settings () {
@@ -49,7 +66,7 @@ public class Starfish.UI.Application : Gtk.Application {
         });
     }
 
-    private void add_new_tabs_for (File[] files) {
+    private void handle_gemini_files (File[] files, UriHandler open_uri) {
         foreach (File file in files) {
             var raw_uri = file.get_uri ();
             Core.Uri uri;
@@ -64,10 +81,11 @@ public class Starfish.UI.Application : Gtk.Application {
                 warning ("Scheme of %s is neither gemini nor file, will skip loading!", raw_uri);
                 continue;
             }
-            var new_tab = manager.new_tab ();
-            new_tab.session.push_uri_onto_history_before_init (uri);
-            manager.focused_tab_index = manager.tabs.size - 1;
+
+            open_uri (uri);
         }
     }
 }
+
+private delegate void UriHandler (Starfish.Core.Uri uri);
 

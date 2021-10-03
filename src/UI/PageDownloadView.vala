@@ -192,7 +192,7 @@ public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
         notif.set_body (_("Finished downloading %s.".printf (file_name)));
         notif.set_icon (new ThemedIcon ("process-completed"));
         var app = GLib.Application.get_default ();
-        app.send_notification (Application.ID, notif);
+        app.send_notification ("hr.from.josipantolis.starfish", notif);
     }
 
     private void do_download () {
