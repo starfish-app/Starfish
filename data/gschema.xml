@@ -6,6 +6,11 @@
       <summary>User's homepage</summary>
       <description>URI of the gemini document used as a homepage</description>
     </key>
+    <key name="introduction" type="s">
+      <default>'file://{{MESON_INSTALL_PREFIX}}/share/doc/starfish/index.gmi'</default>
+      <summary>Introduction to Gemini</summary>
+      <description>Location on disc of help documentation fles that provide an introduction to Gemini.</description>
+    </key>
     <key name="max-history" type="i">
       <default>20</default>
       <summary>Maximum size of session history</summary>
@@ -47,7 +52,7 @@
       <description>Whether the window was maximized on last run</description>
     </key>
     <key name="font-size" type="d">
-      <default>1.3</default>
+      <default>1.17</default>
       <summary>Base gemtext font size in em</summary>
       <description>Base size of text in TextView used to render gemtext. Headdings, monospace, etc may use relativelly larger or smaller size. Value expressed in em.</description>
     </key>

@@ -34,10 +34,14 @@ public class Starfish.UI.Application : Gtk.Application {
             main_window = show_main_window ();
         } else {
             handle_gemini_files (files, (uri) => {
-                var uri_parameter = new Variant.string (uri.to_string ());
+                var action_args = new Variant.tuple ({
+                    new Variant.string (uri.to_string ()),
+                    new Variant.boolean (true)
+                });
+
                 main_window.activate_action (
                     Window.ACTION_LOAD_URI_IN_NEW_TAB,
-                    uri_parameter
+                    action_args
                 );
             });
             main_window.present ();

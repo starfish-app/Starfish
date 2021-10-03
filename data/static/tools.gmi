@@ -1,6 +1,6 @@
 # 🛠️ Find new and familiar tools
 
-Gemini is more limited than the WWW content on the Big Internet. Despite this, there are useful and fun interactive sites on Gemini too.
+Gemini is more limited than the WWW content on the Big Internet. Despite this, you can find both useful and fun interactive sites on Gemini too.
 
 
 ## 🔍️ Search
@@ -12,7 +12,7 @@ Gemini capsules aren't indexed by Google or Bing. Instead, there are search engi
 
 ## 🎭️ Mirrors
 
-There are Gemini mirrors of some popular WWW Internet sites. These capsules allow you to access content usually associated with the Big Internet over Gemini. This way you get benefits like light weight textual interface, no tracking etc. Here are some popular options:
+There are Gemini mirrors of some popular WWW Internet sites. These capsules allow you to access content usually associated with the Big Internet over Gemini. This way you get benefits like lightweight textual interface, no tracking etc. Here are some popular options:
 
 => gemini://vault.transjovian.org Wikipedia mirror
 => gemini://gemini.bunburya.eu/remini.gmi Reddit mirror

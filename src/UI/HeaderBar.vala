@@ -248,6 +248,21 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             action_name = full_name (Window.ACTION_OPEN_PREFERENCES)
         };
 
+        var intro_button = new Gtk.ModelButton () {
+            text = _("Introduction to Gemini")
+        };
+
+        intro_button.clicked.connect (() => {
+            var intro_file_uri = session.settings.get_value ("introduction");
+            var action_args = new Variant.tuple ({
+                intro_file_uri,
+                new Variant.boolean (true)
+            });
+
+            var action = actions.lookup_action (Window.ACTION_LOAD_URI_IN_NEW_TAB);
+            action.activate (action_args);
+        });
+
         var menu_grid = new Gtk.Grid () {
             margin_bottom = 3,
             orientation = Gtk.Orientation.VERTICAL,
@@ -257,6 +272,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         menu_grid.attach (font_size_grid, 0, 0, 3, 1);
         menu_grid.attach (separator, 0, 1, 3, 1);
         menu_grid.attach (preferences_button, 0, 2, 3);
+        menu_grid.attach (intro_button, 0, 3, 3);
         menu_grid.show_all ();
 
         var menu = new Gtk.Popover (null);

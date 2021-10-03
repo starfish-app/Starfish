@@ -1,10 +1,10 @@
 # 🤓️ Learn the terminology
 
-Some geeky terms floating around Gemin sites. Knowing them is completely optional, but isn't it fun to learn new things?
+There are some geeky terms floating around Gemini sites. Knowing them is completely optional, but isn't it fun to learn new things?
 
 ## Gemini protocol
 
-A protocol is an agreement between different computer programs on how to communicate with each other. Gemini is a network protocol detailing communication over Internet. It's designed to be simpler than HTTP and to improve on user privacy.
+A protocol is an agreement respected by different computer programs that allows them to communicate with each other. Gemini is a network protocol detailing communication over Internet. It's designed to be simpler than HTTP and to improve on user privacy.
 
 => gemini://gemini.circumlunar.space/ Project Gemini
 
@@ -20,9 +20,11 @@ A single site served over Gemini protocol. Usually maintained by a single author
 
 Native document type on the Geminispace, similar to what HTML pages are for HTTP. It's defined in the Gemini specification, has mime type text/gemini and file extension .gmi.
 
+=> gemini://gemini.circumlunar.space/docs/gemtext.gmi A quick introduction to "gemtext" markup
+
 ## Gemlog
 
-A blog published over Gemini protocol. They usually have an index page that list links to individual blog entries with date prefixes. This makes it possible for users to subscribe to them.
+A blog published over Gemini protocol. They usually have an index page that lists links to individual blog entries with date prefixes. This makes it possible for users to subscribe to them.
 
 => gemini://gemini.circumlunar.space/docs/companion/subscription.gmi Gemini companion specification for subscriptions
 
@@ -32,11 +34,11 @@ A podcast published over Gemini protocol. (Yes, audio files can be served over G
 
 ## Zine
 
-A small, self-published magazine. Popular format in Geminispace.
+A small, self-published magazine. A popular format in Geminispace.
 
 ## Smol / small net
 
-Communities on the internet, and the technology that powers them, designed intentionally not to scale. The goal is to stay small in terms of number of users, hardware needed to support them, software complexity, etc. Opposite of big internet, with websites such as Facebook, Youtube, Amazon, etc.
+Communities on the internet, and the technology that powers them, intentionally designed not to scale. The goal is to stay small in terms of number of users, hardware needed to support them, software complexity, etc. Opposite to Big Internet, with websites such as Facebook, Youtube, Amazon, etc.
 
 
 ---

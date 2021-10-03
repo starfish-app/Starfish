@@ -47,7 +47,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         {ACTION_ADD_BOOKMARK, on_add_bookmark},
         {ACTION_REMOVE_BOOKMARK, on_remove_bookmark},
         {ACTION_LOAD_URI, on_load_uri, "s"},
-        {ACTION_LOAD_URI_IN_NEW_TAB, on_load_uri_in_new_tab, "s"},
+        {ACTION_LOAD_URI_IN_NEW_TAB, on_load_uri_in_new_tab, "(sb)"},
     };
 
     static construct {
@@ -338,13 +338,24 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         });
     }
 
-    private void on_load_uri (SimpleAction action, Variant? uri_parameter) {
-        var raw_uri = uri_parameter.get_string ();
+    private void on_load_uri (SimpleAction action, Variant? arg) {
+        if (arg == null) {
+            warning ("Received null argument in load uri callback, will skip opening new tab.");
+            return;
+        }
+
+        var raw_uri = arg.get_string ();
         focused_tab_session ().navigate_to (raw_uri);
     }
 
-    private void on_load_uri_in_new_tab (SimpleAction action, Variant? uri_parameter) {
-        var raw_relative_uri = uri_parameter.get_string ();
+    private void on_load_uri_in_new_tab (SimpleAction action, Variant? args) {
+        if (args == null) {
+            warning ("Received null argument in load uri in new tab callback, will skip opening new tab.");
+            return;
+        }
+
+        var raw_relative_uri = args.get_child_value (0).get_string ();
+        var should_focus_new_tab = args.get_child_value (1).get_boolean ();
         try {
             var base_uri = focused_tab_session ().current_uri;
             var uri = Core.Uri.parse (raw_relative_uri, base_uri);
@@ -354,9 +365,12 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
                 var model = tab_manager.new_tab (uri.to_string ());
                 var tab = create_tab (model);
                 notebook.insert_tab (tab, notebook.n_tabs);
+                if (should_focus_new_tab) {
+                    notebook.current = tab;
+                }
             }
         } catch (Core.UriError err) {
-            warning ("Received invalid Uri on middle mouse click: `%s`, will skip opening new tab. Error: %s`", raw_relative_uri, err.message);
+            warning ("Received invalid Uri in load uri in new tab callback: `%s`, will skip opening new tab. Error: %s`", raw_relative_uri, err.message);
         }
     }
 
