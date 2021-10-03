@@ -4,7 +4,7 @@ A Gemini browser for elementary OS.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYING)
 
-![Starfish Screenshot](https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style-screenshot.png)
+![Starfish Screenshot](https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style.png)
 
 ## About
 
