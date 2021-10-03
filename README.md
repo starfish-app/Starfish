@@ -1,20 +1,21 @@
-# Starfish
+<img align="left" width="64" height="64" src="https://raw.githubusercontent.com/starfish-app/starfish/main/data/icons/64.png">
+<h1>Starfish</h1>
 
-A Gemini browser for elementary OS.
+A [Gemini](https://gemini.circumlunar.space/) browser made for [elementary OS](https://elementary.io/).
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYING)
 
-![Starfish Screenshot](https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style.png)
+|![Default style Screenshot](https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style.png)|![Dark style Screenshot](https://raw.githubusercontent.com/starfish-app/starfish/main/data/dark-style.png)|
+|----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| Starfish browser rendering an introduction to Gemini page | Starfish client with the dark theme rendering its own project page on Gemini |
 
 ## About
 
-Starfish is a graphical client for the Gemini protocol built with GTK and Vala. The main goal of the project is to provide a native looking elementary OS application for reading Gemini sites. Read more on the project's Gemini page: [gemini://josipantolis.from.hr/starfish/](gemini://josipantolis.from.hr/starfish/).
+Starfish is a graphical client for the Gemini protocol built with GTK and Vala. The main goal of the project is to provide a native elementary OS application for reading Gemini sites, that will make the protocol more accessible to users. Read more on the project's Gemini page: [gemini://josipantolis.from.hr/starfish/](gemini://josipantolis.from.hr/starfish/).
 
 ### Status
 
-Starfish is currently in early development stage. It can already be used to surf Geminispace. It renders Gemtext pages and has basic support for viewing images. It supports user input as its defined in the Gemini spec. However, there are many missing features, such as client certificates, subscriptions, favorites, tabs, etc.
-
-One of the missing features is the inclusion in package managers / app stores. Currently the only way to install Starfish is to compile it locally.
+Starfish is in active development. It currently supports core of the Gemini specification, including gemtext rendering, and can be used to view images and download other file types. There are still some missing features, such as client certificates, or support for subscribing to gemlogs. There are also UI features that could use improvements, such as adding search for gemtext pages, or improving the image viewing.
 
 ## Build
 
