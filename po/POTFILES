@@ -7,6 +7,7 @@ src/UI/InputView.vala
 src/UI/ResponseView.vala
 src/UI/PageStaticErrorView.vala
 src/UI/PageCertErrorView.vala
+src/UI/PageClientCertPickerView.vala
 src/UI/PageImageView.vala
 src/UI/PageTextView.vala
 src/UI/PageDownloadView.vala

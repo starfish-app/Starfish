@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-02 22:35+0200\n"
+"POT-Creation-Date: 2021-10-13 00:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:69 src/UI/PageCertErrorView.vala:50
+#: src/UI/HeaderBar.vala:69 src/UI/PageCertErrorView.vala:49
 #: src/UI/PageDownloadView.vala:56
 msgid "Go back"
 msgstr ""
@@ -55,32 +55,44 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:178 src/UI/HeaderBar.vala:197
-#: src/UI/HeaderBar.vala:218
+#: src/UI/HeaderBar.vala:177
+msgid "Check identity"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:181 src/UI/HeaderBar.vala:219
+#: src/UI/HeaderBar.vala:240
 msgid "Bookmark this page"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:202 src/UI/HeaderBar.vala:215
+#: src/UI/HeaderBar.vala:205
+msgid "Name:"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:224 src/UI/HeaderBar.vala:237
 msgid "Remove this page rom bookmarks"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:223
+#: src/UI/HeaderBar.vala:245
 msgid "Zoom out"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:224
+#: src/UI/HeaderBar.vala:246
 msgid "Zoom in"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:229
+#: src/UI/HeaderBar.vala:251
 msgid "Reset zoom level"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:247 src/UI/PreferencesDialog.vala:10
+#: src/UI/HeaderBar.vala:269 src/UI/PreferencesDialog.vala:10
 msgid "Preferences"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:267
+#: src/UI/HeaderBar.vala:274
+msgid "Introduction to Gemini"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:305
 msgid "Menu"
 msgstr ""
 
@@ -122,41 +134,87 @@ msgstr ""
 msgid "Please provide input."
 msgstr ""
 
-#: src/UI/PageCertErrorView.vala:40
+#: src/UI/PageCertErrorView.vala:39
 msgid ""
 "<span variant=\"smallcaps\" size=\"xx-large\">Received an invalid "
 "certificate</span>"
 msgstr ""
 
-#: src/UI/PageCertErrorView.vala:76
+#: src/UI/PageCertErrorView.vala:75
 #, c-format
 msgid ""
 "<span>Certificate for %s appears to be invalid. To proceed you can:</span>"
 msgstr ""
 
-#: src/UI/PageCertErrorView.vala:80
+#: src/UI/PageCertErrorView.vala:79
 msgid "Load the page anyway"
 msgstr ""
 
-#: src/UI/PageCertErrorView.vala:87
+#: src/UI/PageCertErrorView.vala:86
 #, c-format
 msgid "<span>Certificate for %s has expired. To proceed you can:</span>"
 msgstr ""
 
-#: src/UI/PageCertErrorView.vala:92
+#: src/UI/PageCertErrorView.vala:91
 #, c-format
 msgid "<span>Certificate for %s has expired at %s. To proceed you can:</span>"
 msgstr ""
 
-#: src/UI/PageCertErrorView.vala:95
+#: src/UI/PageCertErrorView.vala:94
 msgid "Trust the new certificate"
 msgstr ""
 
-#: src/UI/PageCertErrorView.vala:100
+#: src/UI/PageCertErrorView.vala:99
 #, c-format
 msgid ""
 "<span>Certificate for %s has changed since last time you wisited it. To "
 "proceed you can:</span>"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:37
+msgid ""
+"<span variant=\"smallcaps\" size=\"xx-large\">Client certificate required</"
+"span>"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:47
+msgid "Pick existing certificate"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:54
+msgid "Create a new certificate"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:74
+#, c-format
+msgid ""
+"The page at %s requires the use of client certificate. This is usually "
+"required in order for server to show you some personalized content. To "
+"proceed you can:"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:77
+#, c-format
+msgid ""
+"The certificate you provided is not authorised to access the page at %s. "
+"This page may belong to another user, or you may need to provide a different "
+"certificate. To proceed you can:"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:88
+#, c-format
+msgid ""
+"<span>The certificate you provided is not valid. This usually happens when "
+"certificate's expiry date passes. Alternativelly, the certificate might be "
+"wrongly formated.</span> bgcolor=\"%s\">\n"
+"\n"
+"<tt>\n"
+"Gemini response details\n"
+"\n"
+"STATUS: 62\n"
+"\n"
+"META: %s\n"
+"</tt>"
 msgstr ""
 
 #: src/UI/PageTextView.vala:199
@@ -553,7 +611,7 @@ msgid ""
 "```\n"
 msgstr ""
 
-#: src/Templates/CertError.vala:7
+#: src/Templates/CertError.vala:8
 msgid ""
 "# Certificate required\n"
 "\n"
@@ -633,13 +691,41 @@ msgstr ""
 
 #: data/starfish.appdata.xml.in:11
 msgid ""
-"Starfish is a begginer friendly desktop client for Gemini protol. It "
+"Starfish is a begginer-friendly desktop client for Gemini protol. It "
 "supports all core features of Gemini, such as beautiful rendering of text "
 "based content and encrypted communication with servers. On top of those "
 "Starfish offers comforts of modern browsers, like local browsing history, "
-"tabs and bookmarks."
+"tabs and favorites."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:16
+msgid "Initial release, bringing you features such as:"
 msgstr ""
 
 #: data/starfish.appdata.xml.in:18
+msgid ""
+"Beautiful rendering of gemtext content, both served over the network via "
+"Gemini protocol and read from local files."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:19
+msgid ""
+"In-app rendering of images and a download option for other file types that "
+"you might encounter in the Geminispace."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:20
+msgid ""
+"A gentle introduction to Gemini, with pointers on how to get around and "
+"discover more content."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:21
+msgid ""
+"Stuff you'd normally expect from a browser, like tabs, favorites, history-"
+"based navigation, etc."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:31
 msgid "Josip Antoliš"
 msgstr ""

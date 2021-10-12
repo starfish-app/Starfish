@@ -321,7 +321,7 @@ public class Starfish.Core.Uri : Object {
         var path_segments = path.split ("/");
         var new_path = "";
         foreach (var segment in path_segments[1:path_segments.length - 1]) {
-                new_path += "/" + segment;
+            new_path += "/" + segment;
         }
 
         if (!path.has_suffix ("/")) {
@@ -341,10 +341,36 @@ public class Starfish.Core.Uri : Object {
             if (!user_path.contains ("/")) {
                 return this;
             }
+
             var username = user_path[0:user_path.index_of_char ('/')];
             var new_path = base_path + username;
             return new Uri (scheme, userinfo, host, port, new_path);
         }
+    }
+
+    public bool is_subresource_of (Uri other) {
+        if (this.scheme != other.scheme
+            || this.userinfo != other.userinfo
+            || this.host != other.host
+            || this.port != other.port
+        ) {
+            return false;
+        }
+
+        var this_path_segments = this.path.split ("/");
+        var other_path_segments = other.path.split ("/");
+
+        if (this_path_segments.length < other_path_segments.length) {
+            return false;
+        }
+
+        for (int i = 0; i < other_path_segments.length; ++i) {
+            if (this_path_segments[i] != other_path_segments[i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public string? file_name () {

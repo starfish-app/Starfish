@@ -7,6 +7,7 @@ public class Starfish.Core.Session : Object {
 
     public bool loading { get; set; default = false; }
     public string name { get { return _name; } }
+    public Core.CertInfo? cert_info { get; set; default = null; }
     public Gee.List<Uri> history {
         owned get { return new Gee.ArrayList<Uri>.wrap (_history); }
     }
@@ -21,6 +22,10 @@ public class Starfish.Core.Session : Object {
 
     public BookmarksManager bookmarks_manager {
         get { return manager.bookmarks_manager; }
+    }
+
+    public CertManager cert_manager {
+        get { return manager.cert_manager; }
     }
 
     public int history_index { get { return _history_index; } }
@@ -59,6 +64,7 @@ public class Starfish.Core.Session : Object {
             var starting_uri = current_uri;
             manager.client.load.begin (starting_uri, null, true, false, false, (obj, res) => {
                 var response = manager.client.load.end (res);
+                cert_info = response.cert_info;
                 var loaded_uri = response.uri;
                 if (current_uri.to_string() != loaded_uri.to_string ()) {
                     _history[_history_index] = loaded_uri;
@@ -89,6 +95,7 @@ public class Starfish.Core.Session : Object {
             var uri = _history[_history_index - 1];
             manager.client.load.begin (uri, null, true, false, false, (obj, res) => {
                 var response = manager.client.load.end (res);
+                cert_info = response.cert_info;
                 var loaded_uri = response.uri;
                 _history_index--;
                 if (current_uri.to_string() != loaded_uri.to_string ()) {
@@ -120,6 +127,7 @@ public class Starfish.Core.Session : Object {
             var uri = _history[_history_index + 1];
             manager.client.load.begin (uri, null, true, false, false, (obj, res) => {
                 var response = manager.client.load.end (res);
+                cert_info = response.cert_info;
                 var loaded_uri = response.uri;
                 _history_index++;
                 manager.save (this);
@@ -160,6 +168,7 @@ public class Starfish.Core.Session : Object {
 
                     manager.client.load.begin (new_uri, null, true, accept_expired_cert, accept_mismatched_cert, (obj, res) => {
                         var response = manager.client.load.end (res);
+                        cert_info = response.cert_info;
                         update_history_on_response (response);
                         response_received (response);
                     });
@@ -199,6 +208,7 @@ public class Starfish.Core.Session : Object {
         manager.client.load.begin (uri, null, false, false, false, (obj, res) => {
             var response = manager.client.load.end (res);
             if (response.is_success) {
+                cert_info = response.cert_info;
                 update_history_on_response (response);
                 response_received (response);
             } else {
@@ -210,10 +220,12 @@ public class Starfish.Core.Session : Object {
                             new_uri = Uri.parse (response.meta, uri);
                             navigate_one_level_up_from (new_uri);
                         } catch (Core.UriError err) {
+                            cert_info = response.cert_info;
                             update_history_on_response (response);
                             response_received (response);
                         }
                     } else {
+                        cert_info = response.cert_info;
                         update_history_on_response (response);
                         response_received (response);
                     }

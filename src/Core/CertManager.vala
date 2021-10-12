@@ -1,15 +1,20 @@
 public class Starfish.Core.CertManager : Object {
 
-    public File parent_dir { get; construct; }
+    public File config_dir { get; construct; }
     public File known_certs_file { get; construct; }
+    public ClientCertFactory cert_factory { get; construct; }
+    public ClientCertRepo cert_repo { get; construct; }
 
-    private Gee.Map<string, CertInfo> known_certs = new Gee.HashMap<string, CertInfo> ();
+    private Gee.Map<string, CertHash> known_certs = new Gee.HashMap<string, CertHash> ();
 
     public CertManager () {
-        var config_dir = Environment.get_user_config_dir ();
+        var usr_config_dir = Environment.get_user_config_dir ();
+        var config_dir = File.new_build_filename (usr_config_dir, "starfish");
         Object (
-            parent_dir: File.new_build_filename (config_dir, "starfish"),
-            known_certs_file: File.new_build_filename (config_dir, "starfish", "known_certs")
+            config_dir: config_dir,
+            known_certs_file: config_dir.get_child ("known_certs"),
+            cert_factory: new ClientCertFactory (),
+            cert_repo: new ClientCertRepo (config_dir)
         );
     }
 
@@ -24,49 +29,72 @@ public class Starfish.Core.CertManager : Object {
         }
     }
 
-    public void verify (
-        SocketConnectable server_identity,
+    public CertInfo verify (
+        Uri uri,
         TlsCertificate certificate,
         bool accept_expired_cert,
         bool accept_mismatched_cert
     ) throws CertError {
-        var cert_info = CertInfo.parse (server_identity, certificate);
+        var cert_info = CertInfo.parse (uri, certificate);
         var now = new DateTime.now_utc ();
-        var cert_has_expired = now.compare (cert_info.expires_at) > 0;
+        var expires_at = cert_info.expires_at;
+        var cert_has_expired = now.compare (expires_at) > 0;
         if (!accept_expired_cert && cert_has_expired) {
-            var unix_expiry = cert_info.expires_at.to_unix ();
+            var unix_expiry = expires_at.to_unix ();
             throw new CertError.EXPIRED_ERROR ("%lld".printf (unix_expiry));
         }
 
-        var known_cert = known_certs[cert_info.domain_hash];
+        var cert_hash = CertHash.from_cert (cert_info);
+        var known_cert = known_certs[cert_hash.host_hash];
         if (known_cert == null) {
             if (!cert_has_expired) {
-                known_certs[cert_info.domain_hash] = cert_info;
-                try_to_append_to_known_certs_file (cert_info);
+                known_certs[cert_hash.host_hash] = cert_hash;
+                try_to_append_to_known_certs_file (cert_hash);
             }
-            return;
+            return cert_info;
         }
 
         if (now.compare (known_cert.expires_at) > 0) {
-            known_certs[cert_info.domain_hash] = cert_info;
+            known_certs[cert_hash.host_hash] = cert_hash;
             try_to_rewrite_known_certs_file ();
-            return;
+            return cert_info;
         }
 
-        if (cert_info.fingerprint != known_cert.fingerprint) {
+        if (cert_hash.fingerprint != known_cert.fingerprint) {
             if (!accept_mismatched_cert) {
                 var tmpl = _("Certificate for %s does not match previously seen one");
-                var msg = tmpl.printf (cert_info.domain);
+                var msg = tmpl.printf (cert_info.host);
                 throw new CertError.MISMATCH_ERROR (msg);
             }
 
-            known_certs[cert_info.domain_hash] = cert_info;
+            known_certs[cert_hash.host_hash] = cert_hash;
             try_to_rewrite_known_certs_file ();
-            return;
+            return cert_info;
         }
+
+        return cert_info;
     }
 
-    private void try_to_append_to_known_certs_file (CertInfo cert) {
+    public TlsCertificate? get_client_cert_for (Uri uri) {
+        File? pk_file;
+        File? cert_file;
+        var found = cert_repo.get_cert_files_for_uri (
+            uri,
+            out pk_file,
+            out cert_file
+        );
+
+        if (!found) {
+            return null;
+        }
+
+        return new TlsCertificate.from_files (
+            cert_file.get_path (),
+            pk_file.get_path ()
+        );
+    }
+
+    private void try_to_append_to_known_certs_file (CertHash cert) {
         try {
             var created_new_file = recreate_missing_known_certs_file ();
             if (created_new_file) {
@@ -80,7 +108,7 @@ public class Starfish.Core.CertManager : Object {
         try {
             var out_stream = known_certs_file.append_to (FileCreateFlags.NONE);
             size_t written;
-            var row = cert_info_to_row (cert);
+            var row = cert.to_file_row ();
             out_stream.write_all (row.data, out written);
         } catch (Error err) {
             warning ("Failed to append cert info to file, error: %s", err.message);
@@ -109,8 +137,8 @@ public class Starfish.Core.CertManager : Object {
     }
 
     private bool recreate_missing_known_certs_file () throws Error {
-        if (!parent_dir.query_exists()) {
-            parent_dir.make_directory_with_parents ();
+        if (!config_dir.query_exists()) {
+            config_dir.make_directory_with_parents ();
         }
 
         if (!known_certs_file.query_exists ()) {
@@ -131,9 +159,9 @@ public class Starfish.Core.CertManager : Object {
         string? row = null;
         do {
             row = data_stream.read_line_utf8 ();
-            var cert_info = row_to_cert_info (row);
-            if (cert_info != null) {
-                known_certs[cert_info.domain_hash] = cert_info;
+            var cert = CertHash.from_file_row (row);
+            if (cert != null) {
+                known_certs[cert.host_hash] = cert;
             }
         } while (row != null);
     }
@@ -141,42 +169,11 @@ public class Starfish.Core.CertManager : Object {
     private string known_certs_file_content () {
         var builder = new StringBuilder ();
         foreach (var cert in known_certs.values) {
-            var row = cert_info_to_row (cert);
+            var row = cert.to_file_row ();
             builder.append (row);
         }
 
         return builder.str;
-    }
-
-    private string cert_info_to_row (CertInfo cert) {
-        return "%s %lld %s\n".printf (
-            cert.domain_hash,
-            cert.expires_at.to_unix (),
-            cert.fingerprint
-        );
-    }
-
-    private CertInfo? row_to_cert_info (string? row) {
-        if (row == null) {
-            return null;
-        }
-
-        var sections = row.split (" ");
-        if (sections.length != 3) {
-            return null;
-        }
-
-        var expires_at_unix = int64.parse(sections[1]);
-        if (expires_at_unix == 0) {
-            warning ("Failed to parse %s as Unix timestamp", sections[1]);
-            return null;
-        }
-
-        var domain_hash = sections[0];
-        var expires_at = new DateTime.from_unix_utc (expires_at_unix);
-
-        var fingerprint = sections[2];
-        return new CertInfo (expires_at, fingerprint, domain_hash);
     }
 }
 

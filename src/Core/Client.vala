@@ -3,7 +3,7 @@ public class Starfish.Core.Client : Object {
     public CertManager cert_manager { get; construct; }
     public int max_redirects { get; construct; }
 
-    public Client (int max_redirects = 5, CertManager cert_manager = new CertManager()) {
+    public Client (CertManager cert_manager, int max_redirects = 5) {
         Object (
             max_redirects: max_redirects,
             cert_manager: cert_manager
@@ -87,11 +87,13 @@ public class Starfish.Core.Client : Object {
         Cancellable? cancel,
         int redirect_count = 0,
         bool follow_redirects = true,
-        bool accept_expired_cert = false,
-        bool accept_mismatched_cert = false
+        bool accept_expired_cert = false, // TODO: remove this field!
+        bool accept_mismatched_cert = false,
+        bool same_domain_request = true // TODO: send from session!
     ) {
         SocketConnection conn;
-        CertError cert_error = null;
+        CertError? cert_error = null;
+        CertInfo? cert_info = null;
         try {
             var socket_client = new SocketClient () {
                 tls = true,
@@ -100,9 +102,16 @@ public class Starfish.Core.Client : Object {
             socket_client.event.connect ((event, connectable, conn) => {
                 if (event == SocketClientEvent.TLS_HANDSHAKING) {
                     var tls_conn = (TlsClientConnection) conn;
+                    if (same_domain_request) {
+                        var client_cert = cert_manager.get_client_cert_for (uri);
+                        if (client_cert != null) {
+                            tls_conn.certificate = client_cert;
+                        }
+                    }
+
                     tls_conn.accept_certificate.connect ((cert, errors) => {
                         try {
-                            cert_manager.verify (tls_conn.server_identity, cert, accept_expired_cert, accept_mismatched_cert);
+                            cert_info = cert_manager.verify (uri, cert, accept_expired_cert, accept_mismatched_cert);
                             return true;
                         } catch (CertError err) {
                             cert_error = err;
@@ -136,7 +145,7 @@ public class Starfish.Core.Client : Object {
         }
 
         try {
-            var resp = new Response (uri, status_line, conn);
+            var resp = new Response (uri, status_line, conn, cert_info);
             if (!resp.is_success) {
                 yield conn.close_async (Priority.DEFAULT, cancel);
             }

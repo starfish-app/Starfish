@@ -5,16 +5,19 @@ public class Starfish.Core.SessionManager : Object {
     public Client client { get; construct; }
     public Theme theme { get; construct; }
     public BookmarksManager bookmarks_manager { get; construct; }
+    public CertManager cert_manager { get; construct; }
 
     private Variant sessions;
 
     public SessionManager.backed_by (Settings settings) {
+        var cert_manager = new CertManager ();
         this (
             settings,
             new SettingsBackedStorage (settings),
-            new Client (),
+            new Client (cert_manager),
             new Theme.os (settings),
-            new BookmarksManager ()
+            new BookmarksManager (),
+            cert_manager
         );
     }
 
@@ -23,14 +26,16 @@ public class Starfish.Core.SessionManager : Object {
         Storage storage,
         Client client,
         Theme theme,
-        BookmarksManager bookmarks_manager
+        BookmarksManager bookmarks_manager,
+        CertManager cert_manager
     ) {
         Object (
             settings: settings,
             storage: storage,
             client: client,
             theme: theme,
-            bookmarks_manager: bookmarks_manager
+            bookmarks_manager: bookmarks_manager,
+            cert_manager: cert_manager
         );
     }
 

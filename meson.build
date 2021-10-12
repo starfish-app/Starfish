@@ -16,6 +16,7 @@ dependencies = [
     dependency('granite'),
     dependency('libhandy-1'),
     dependency('gnutls'),
+    meson.get_compiler('vala').find_library('posix'),
 ]
 
 gresource = gnome.compile_resources(
@@ -34,6 +35,7 @@ sources = gresource + files(
     'src/UI/ResponseView.vala',
     'src/UI/PageStaticErrorView.vala',
     'src/UI/PageCertErrorView.vala',
+    'src/UI/PageClientCertPickerView.vala',
     'src/UI/PageImageView.vala',
     'src/UI/PageTextView.vala',
     'src/UI/PageDownloadView.vala',
@@ -58,7 +60,10 @@ sources = gresource + files(
     'src/Core/Client.vala',
     'src/Core/CertError.vala',
     'src/Core/CertInfo.vala',
+    'src/Core/CertHash.vala',
     'src/Core/CertManager.vala',
+    'src/Core/ClientCertFactory.vala',
+    'src/Core/ClientCertRepo.vala',
     'src/Core/Uri.vala',
     'src/Core/Mime.vala',
     'src/Core/Response.vala',

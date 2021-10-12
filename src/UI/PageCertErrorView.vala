@@ -33,8 +33,7 @@ public class Starfish.UI.PageCertErrorView : Gtk.Grid, ResponseView {
         });
 
         title = new Gtk.Label (null) {
-            halign = Gtk.Align.START,
-            wrap_mode = Pango.WrapMode.CHAR
+            halign = Gtk.Align.START
         };
 
         title.set_markup (_("<span variant=\"smallcaps\" size=\"xx-large\">Received an invalid certificate</span>"));
@@ -42,7 +41,7 @@ public class Starfish.UI.PageCertErrorView : Gtk.Grid, ResponseView {
 
         descritpion = new Gtk.Label (null) {
             halign = Gtk.Align.START,
-            wrap_mode = Pango.WrapMode.CHAR
+            wrap = true
         };
 
         attach (descritpion, 0, 1, 2);

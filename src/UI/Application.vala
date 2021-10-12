@@ -1,6 +1,5 @@
 public class Starfish.UI.Application : Gtk.Application {
 
-    public Core.Client client { get; construct; }
     public Settings settings { get; construct; }
     public Core.TabManager manager { get; construct; }
     private Window? main_window;
@@ -10,7 +9,6 @@ public class Starfish.UI.Application : Gtk.Application {
         Object (
             application_id: "hr.from.josipantolis.starfish",
             flags: ApplicationFlags.HANDLES_OPEN,
-            client: new Starfish.Core.Client (),
             settings: settings,
             manager: new Core.TabManager.backed_by (settings)
         );

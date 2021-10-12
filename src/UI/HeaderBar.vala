@@ -172,6 +172,9 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
     private Gtk.Entry setup_address () {
         var address = new Gtk.Entry () {
+            primary_icon_activatable = true,
+            primary_icon_name = "security-medium",
+            primary_icon_tooltip_text = _("Check identity"),
             hexpand = true,
             secondary_icon_activatable = true,
             secondary_icon_name = "non-starred",
@@ -187,7 +190,26 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         });
 
         address.icon_release.connect ((pos, event) => {
-            if (pos == Gtk.EntryIconPosition.SECONDARY) {
+            if (pos == Gtk.EntryIconPosition.PRIMARY) {
+                var cert_info = session.cert_info;
+
+                var popover = new Gtk.Popover (address) {
+                    pointing_to = address.get_icon_area (Gtk.EntryIconPosition.PRIMARY)
+                };
+
+                var grid = new Gtk.Grid () {
+                    margin = 16,
+                    orientation = Gtk.Orientation.VERTICAL
+                };
+
+                var name_lbl = new Gtk.Label (_("Name:"));
+                var name_val = new Gtk.Label (cert_info.common_name);
+                grid.attach (name_lbl, 0, 0, 1, 1);
+                grid.attach_next_to (name_val, name_lbl, Gtk.PositionType.RIGHT, 1, 1);
+
+                popover.add (grid);
+                popover.show_all ();
+            } else if (pos == Gtk.EntryIconPosition.SECONDARY) {
                 var manager = _session.bookmarks_manager;
                 var uri = _session.current_uri;
                 if (manager.is_bookmarked (uri)) {

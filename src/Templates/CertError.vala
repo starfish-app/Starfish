@@ -1,3 +1,4 @@
+// TODO: delete this class
 public class Starfish.Templates.CertError : Template {
 
         public static string URI_KEY = "uri";

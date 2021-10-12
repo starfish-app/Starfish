@@ -11,7 +11,7 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
     private Templates.Template bad_request = new Templates.BadRequest ();
     private Templates.Template unsuported_schema = new Templates.UnsuportedSchema ();
     private Templates.Template perm_faliue = new Templates.PermFailure ();
-    private Templates.Template cert_error = new Templates.CertError ();
+    // private Templates.Template cert_error = new Templates.CertError ();
     private Templates.Template file_access_denied = new Templates.FileAccessDenied ();
 
     public PageStaticErrorView (Core.Session session) {
@@ -23,7 +23,7 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
             return false;
         }
 
-        if (!response.is_success && !is_recoverable_cert_error (response.status)) {
+        if (!response.is_success && !is_recoverable_cert_error (response)) {
             return true;
         }
 
@@ -111,14 +111,14 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
                     Templates.BadRequest.STATUS_CODE_KEY, "%d".printf (response.status),
                     Templates.BadRequest.META_KEY, response.meta
                 );
-            case 60:
-            case 61:
-            case 62:
-                return cert_error.render (
-                    Templates.CertError.URI_KEY, response.uri.to_string (),
-                    Templates.CertError.STATUS_CODE_KEY, "%d".printf (response.status),
-                    Templates.CertError.META_KEY, response.meta
-                );
+            // case 60:
+            // case 61:
+            // case 62:
+            //     return cert_error.render (
+            //         Templates.CertError.URI_KEY, response.uri.to_string (),
+            //         Templates.CertError.STATUS_CODE_KEY, "%d".printf (response.status),
+            //         Templates.CertError.META_KEY, response.meta
+            //     );
             case Core.InternalErrorResponse.FILE_ACCESS_DENIED:
                 return file_access_denied.render (
                     Templates.FileAccessDenied.PATH_KEY, response.uri.path
@@ -132,9 +132,10 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
         }
     }
 
-    private bool is_recoverable_cert_error (int status_code) {
-        return status_code == Core.InternalErrorResponse.SERVER_CERTIFICATE_EXPIRED
-            || status_code == Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH;
+    private bool is_recoverable_cert_error (Core.Response response) {
+        return response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_EXPIRED
+            || response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH
+            || response.is_client_cert;
     }
 }
 

@@ -22,12 +22,14 @@ public class Starfish.UI.TabContent : Gtk.Box {
         var static_error_view = new PageStaticErrorView (session);
         static_error_view.link_event.connect (on_link_event);
         var cert_error_view = new PageCertErrorView (session);
+        var client_cert_picker_view = new PageClientCertPickerView (session);
         var image_view = new PageImageView (session);
         var download_view = new PageDownloadView (session);
         content = new ContentStack.with_views (
             "text-response", text_view,
             "error-response", static_error_view,
             "cert-error-response", cert_error_view,
+            "client-cert-needed-response", client_cert_picker_view,
             "input", input_view,
             "image", image_view,
             "download", download_view
