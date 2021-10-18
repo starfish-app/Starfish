@@ -44,6 +44,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Button home_button;
     private Gtk.Button bookmarks_button;
     private Gtk.Button reset_zoom_button;
+    private CertPopover cert_popover;
 
     private uint? timeout_id = null;
 
@@ -74,6 +75,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         bookmarks_button = setup_button ("user-bookmarks", _("Open bookmarks"), Window.ACTION_OPEN_BOOKMARKS);
 
         address = setup_address ();
+        cert_popover = new CertPopover (address);
         title_widget = new Gtk.Grid () {
             column_spacing = 8,
             hexpand = true
@@ -106,6 +108,10 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         }
 
         address.text = _session.current_uri.to_string ();
+        address.primary_icon_name = icon_name_for (
+            _session.cert_info,
+            _session.current_uri
+        );
     }
 
     private void disable_buttons () {
@@ -173,8 +179,6 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Entry setup_address () {
         var address = new Gtk.Entry () {
             primary_icon_activatable = true,
-            primary_icon_name = "security-medium",
-            primary_icon_tooltip_text = _("Check identity"),
             hexpand = true,
             secondary_icon_activatable = true,
             secondary_icon_name = "non-starred",
@@ -191,24 +195,9 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
         address.icon_release.connect ((pos, event) => {
             if (pos == Gtk.EntryIconPosition.PRIMARY) {
-                var cert_info = session.cert_info;
-
-                var popover = new Gtk.Popover (address) {
-                    pointing_to = address.get_icon_area (Gtk.EntryIconPosition.PRIMARY)
-                };
-
-                var grid = new Gtk.Grid () {
-                    margin = 16,
-                    orientation = Gtk.Orientation.VERTICAL
-                };
-
-                var name_lbl = new Gtk.Label (_("Name:"));
-                var name_val = new Gtk.Label (cert_info.common_name);
-                grid.attach (name_lbl, 0, 0, 1, 1);
-                grid.attach_next_to (name_val, name_lbl, Gtk.PositionType.RIGHT, 1, 1);
-
-                popover.add (grid);
-                popover.show_all ();
+                cert_popover.cert_info = session.cert_info;
+                cert_popover.pointing_to = address.get_icon_area (Gtk.EntryIconPosition.PRIMARY);
+                cert_popover.show_all ();
             } else if (pos == Gtk.EntryIconPosition.SECONDARY) {
                 var manager = _session.bookmarks_manager;
                 var uri = _session.current_uri;
@@ -335,6 +324,22 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var default_zoom = settings.get_default_value ("font-size").get_double ();
         var zoom_percent = (settings.get_double ("font-size") / default_zoom) * 100;
         return "%.0f%%".printf (zoom_percent);
+    }
+
+    private string? icon_name_for (Core.CertInfo? cert_info, Core.Uri uri) {
+        if (uri.scheme == "file") {
+            return null;
+        }
+
+        if (cert_info == null || cert_info.is_not_applicable_to_uri ()) {
+            return "security-low";
+        }
+
+        if (cert_info.is_inactive () || cert_info.is_expired ()) {
+            return "security-medium";
+        }
+
+        return "security-high";
     }
 }
 

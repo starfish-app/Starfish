@@ -1,6 +1,7 @@
 src/UI/Application.vala
 src/UI/Window.vala
 src/UI/HeaderBar.vala
+src/UI/CertPopover.vala
 src/UI/PreferencesDialog.vala
 src/UI/ContentStack.vala
 src/UI/InputView.vala
@@ -27,7 +28,7 @@ src/Templates/Gone.vala
 src/Templates/BadRequest.vala
 src/Templates/UnsuportedSchema.vala
 src/Templates/PermFailure.vala
-src/Templates/CertError.vala
+src/Templates/CertNotApplicable.vala
 src/Templates/FileAccessDenied.vala
 src/Core/Client.vala
 src/Core/Uri.vala

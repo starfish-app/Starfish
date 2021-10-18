@@ -30,30 +30,26 @@ public class Starfish.Core.CertManager : Object {
     }
 
     public CertInfo verify (
-        Uri uri,
-        TlsCertificate certificate,
-        bool accept_expired_cert,
+        CertInfo cert_info,
         bool accept_mismatched_cert
     ) throws CertError {
-        var cert_info = CertInfo.parse (uri, certificate);
-        var now = new DateTime.now_utc ();
-        var expires_at = cert_info.expires_at;
-        var cert_has_expired = now.compare (expires_at) > 0;
-        if (!accept_expired_cert && cert_has_expired) {
-            var unix_expiry = expires_at.to_unix ();
-            throw new CertError.EXPIRED_ERROR ("%lld".printf (unix_expiry));
+        if (cert_info.is_not_applicable_to_uri ()) {
+            throw new CertError.INVALID_HOST_ERROR (
+                "TLS certificate is not applicable to requested URI's host."
+            );
         }
 
         var cert_hash = CertHash.from_cert (cert_info);
         var known_cert = known_certs[cert_hash.host_hash];
         if (known_cert == null) {
-            if (!cert_has_expired) {
+            if (!cert_info.is_inactive () && !cert_info.is_expired ()) {
                 known_certs[cert_hash.host_hash] = cert_hash;
                 try_to_append_to_known_certs_file (cert_hash);
             }
             return cert_info;
         }
 
+        var now = new DateTime.now_utc ();
         if (now.compare (known_cert.expires_at) > 0) {
             known_certs[cert_hash.host_hash] = cert_hash;
             try_to_rewrite_known_certs_file ();
@@ -88,10 +84,19 @@ public class Starfish.Core.CertManager : Object {
             return null;
         }
 
-        return new TlsCertificate.from_files (
-            cert_file.get_path (),
-            pk_file.get_path ()
-        );
+        try {
+            return new TlsCertificate.from_files (
+                cert_file.get_path (),
+                pk_file.get_path ()
+            );
+        } catch (Error error) {
+            warning ("Failed to load client cert from files %s and %s, will proceed without it. Error: %s".printf (
+                cert_file.get_path (),
+                pk_file.get_path (),
+                error.message
+            ));
+            return null;
+        }
     }
 
     private void try_to_append_to_known_certs_file (CertHash cert) {

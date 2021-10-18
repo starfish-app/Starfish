@@ -38,14 +38,13 @@ public class Starfish.Core.Client : Object {
         Uri uri,
         Cancellable? cancel = null,
         bool follow_redirects = true,
-        bool accept_expired_cert = false,
         bool accept_mismatched_cert = false
     ) {
         switch (uri.scheme) {
             case "file":
                 return yield load_file (uri, cancel);
             case "gemini":
-                return yield load_gemini (uri, cancel, 0, follow_redirects, accept_expired_cert, accept_mismatched_cert);
+                return yield load_gemini (uri, cancel, 0, follow_redirects, accept_mismatched_cert);
         }
         return new InternalErrorResponse.schema_not_supported (uri);
     }
@@ -76,9 +75,9 @@ public class Starfish.Core.Client : Object {
                 return new InternalErrorResponse.file_access_denied (uri);
             }
 
-            return new InternalErrorResponse.general_error (uri, err.message);
+            return new InternalErrorResponse.general_error (null, uri, err.message);
         } catch (Error err) {
-            return new InternalErrorResponse.general_error (uri, err.message);
+            return new InternalErrorResponse.general_error (null, uri, err.message);
         }
     }
 
@@ -87,9 +86,8 @@ public class Starfish.Core.Client : Object {
         Cancellable? cancel,
         int redirect_count = 0,
         bool follow_redirects = true,
-        bool accept_expired_cert = false, // TODO: remove this field!
         bool accept_mismatched_cert = false,
-        bool same_domain_request = true // TODO: send from session!
+        bool same_domain_request = false // TODO: send from session!
     ) {
         SocketConnection conn;
         CertError? cert_error = null;
@@ -97,6 +95,7 @@ public class Starfish.Core.Client : Object {
         try {
             var socket_client = new SocketClient () {
                 tls = true,
+                tls_validation_flags = TlsCertificateFlags.VALIDATE_ALL,
                 timeout = 100000000
             };
             socket_client.event.connect ((event, connectable, conn) => {
@@ -111,13 +110,22 @@ public class Starfish.Core.Client : Object {
 
                     tls_conn.accept_certificate.connect ((cert, errors) => {
                         try {
-                            cert_info = cert_manager.verify (uri, cert, accept_expired_cert, accept_mismatched_cert);
+                            cert_info = CertInfo.parse (uri, cert);
+                            cert_manager.verify (cert_info, accept_mismatched_cert);
                             return true;
                         } catch (CertError err) {
                             cert_error = err;
                             return false;
                         }
                     });
+                } else if (event == SocketClientEvent.TLS_HANDSHAKED && cert_info == null) {
+                    var tls_conn = (TlsClientConnection) conn;
+                    var cert = tls_conn.peer_certificate;
+                    try {
+                        cert_info = CertInfo.parse (uri, cert);
+                    } catch (CertError err) {
+                        warning ("Failed to parse trusted certificate, will report page as untrusted. Error: %s", err.message);
+                    }
                 }
             });
             conn = yield socket_client.connect_to_uri_async (uri.to_string (), 1965, cancel);
@@ -126,22 +134,22 @@ public class Starfish.Core.Client : Object {
         } catch (Error err) {
             if (cert_error != null) {
                 if (cert_error is CertError.PARSING_ERROR || cert_error is CertError.FINGERPRINTING_ERROR) {
-                    return new InternalErrorResponse.server_certificate_invalid (uri, cert_error.message);
-                } else if (cert_error is CertError.EXPIRED_ERROR) {
-                    return new InternalErrorResponse.server_certificate_expired (uri, cert_error.message);
+                    return new InternalErrorResponse.server_certificate_invalid (cert_info, uri, cert_error.message);
                 } else if (cert_error is CertError.MISMATCH_ERROR) {
-                    return new InternalErrorResponse.server_certificate_mismatch (uri);
+                    return new InternalErrorResponse.server_certificate_mismatch (cert_info, uri);
+                } else if (cert_error is CertError.INVALID_HOST_ERROR) {
+                    return new InternalErrorResponse.server_certificate_not_applicable (cert_info, uri);
                 }
             }
 
-            return new InternalErrorResponse.connection_failed (uri, err.message);
+            return new InternalErrorResponse.connection_failed (cert_info, uri, err.message);
         }
 
         string status_line;
         try {
             status_line = yield read_status_line (conn.input_stream, cancel);
         } catch (Error err) {
-            return new InternalErrorResponse.status_line_invalid (uri, err.message);
+            return new InternalErrorResponse.status_line_invalid (cert_info, uri, err.message);
         }
 
         try {
@@ -153,18 +161,18 @@ public class Starfish.Core.Client : Object {
             if (resp.is_redirect && follow_redirects) {
                 var new_uri = Uri.parse (resp.meta, uri);
                 if (new_uri.scheme != "gemini") {
-                    return new InternalErrorResponse.redirect_to_non_gemini_link (uri, new_uri);
+                    return new InternalErrorResponse.redirect_to_non_gemini_link (cert_info, uri, new_uri);
                 }
                 if (redirect_count <= max_redirects) {
                     return yield load_gemini (new_uri, cancel, redirect_count + 1, follow_redirects);
                 } else {
-                    return new InternalErrorResponse.redirect_limit_reached (uri, new_uri);
+                    return new InternalErrorResponse.redirect_limit_reached (cert_info, uri, new_uri);
                 }
             }
 
             return resp;
         } catch (Error err) {
-            return new InternalErrorResponse.general_error (uri, err.message);
+            return new InternalErrorResponse.general_error (cert_info, uri, err.message);
         }
     }
 

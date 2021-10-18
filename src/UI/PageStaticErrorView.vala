@@ -11,7 +11,7 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
     private Templates.Template bad_request = new Templates.BadRequest ();
     private Templates.Template unsuported_schema = new Templates.UnsuportedSchema ();
     private Templates.Template perm_faliue = new Templates.PermFailure ();
-    // private Templates.Template cert_error = new Templates.CertError ();
+    private Templates.Template cert_not_applicable = new Templates.CertNotApplicable ();
     private Templates.Template file_access_denied = new Templates.FileAccessDenied ();
 
     public PageStaticErrorView (Core.Session session) {
@@ -57,11 +57,15 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
                     Templates.InvalidResponse.ERROR_MESSAGE_KEY, response.meta
                 );
             case Core.InternalErrorResponse.REDIRECT_TO_NON_GEMINI_LINK:
-                var redirect_uri = Core.Uri.parse (response.meta.strip ());
+                var uri_str = response.meta.strip ();
+                string scheme = "unknown";
+                try {
+                    scheme = Core.Uri.parse (uri_str).scheme;
+                } catch (Core.UriError ignored) {}
                 return non_gemini_redirect.render (
                     Templates.NonGeminiRedirect.URI_KEY, response.uri.to_string (),
-                    Templates.NonGeminiRedirect.REDIRECT_PROTOCOL_KEY, redirect_uri.scheme,
-                    Templates.NonGeminiRedirect.REDIRECT_URI_KEY, redirect_uri.to_string ()
+                    Templates.NonGeminiRedirect.REDIRECT_PROTOCOL_KEY, scheme,
+                    Templates.NonGeminiRedirect.REDIRECT_URI_KEY, uri_str
                 );
             case Core.InternalErrorResponse.REDIRECT_LIMIT_REACHED:
                 return too_many_redirects.render (
@@ -81,6 +85,11 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
                 return slow_down.render (
                     Templates.SlowDown.URI_KEY, response.uri.to_string (),
                     Templates.SlowDown.SECONDS_TO_WAIT_KEY, response.meta.strip ()
+                );
+            case Core.InternalErrorResponse.SERVER_CERTIFICATE_NOT_APPLICABLE:
+                return cert_not_applicable.render (
+                    Templates.CertNotApplicable.URI_KEY, response.uri.to_string (),
+                    Templates.CertNotApplicable.HOST_KEY, response.meta
                 );
             case 50:
                 return perm_faliue.render (
@@ -111,14 +120,6 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
                     Templates.BadRequest.STATUS_CODE_KEY, "%d".printf (response.status),
                     Templates.BadRequest.META_KEY, response.meta
                 );
-            // case 60:
-            // case 61:
-            // case 62:
-            //     return cert_error.render (
-            //         Templates.CertError.URI_KEY, response.uri.to_string (),
-            //         Templates.CertError.STATUS_CODE_KEY, "%d".printf (response.status),
-            //         Templates.CertError.META_KEY, response.meta
-            //     );
             case Core.InternalErrorResponse.FILE_ACCESS_DENIED:
                 return file_access_denied.render (
                     Templates.FileAccessDenied.PATH_KEY, response.uri.path
@@ -133,8 +134,7 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
     }
 
     private bool is_recoverable_cert_error (Core.Response response) {
-        return response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_EXPIRED
-            || response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH
+        return response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH
             || response.is_client_cert;
     }
 }

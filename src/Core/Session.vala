@@ -62,7 +62,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var starting_uri = current_uri;
-            manager.client.load.begin (starting_uri, null, true, false, false, (obj, res) => {
+            manager.client.load.begin (starting_uri, null, true, false, (obj, res) => {
                 var response = manager.client.load.end (res);
                 cert_info = response.cert_info;
                 var loaded_uri = response.uri;
@@ -93,7 +93,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index - 1];
-            manager.client.load.begin (uri, null, true, false, false, (obj, res) => {
+            manager.client.load.begin (uri, null, true, false, (obj, res) => {
                 var response = manager.client.load.end (res);
                 cert_info = response.cert_info;
                 var loaded_uri = response.uri;
@@ -125,7 +125,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index + 1];
-            manager.client.load.begin (uri, null, true, false, false, (obj, res) => {
+            manager.client.load.begin (uri, null, true, false, (obj, res) => {
                 var response = manager.client.load.end (res);
                 cert_info = response.cert_info;
                 var loaded_uri = response.uri;
@@ -143,7 +143,6 @@ public class Starfish.Core.Session : Object {
 
     public void navigate_to (
         string raw_uri,
-        bool accept_expired_cert = false,
         bool accept_mismatched_cert = false
     ) {
         Uri new_uri;
@@ -166,7 +165,7 @@ public class Starfish.Core.Session : Object {
                         loading = true;
                     }
 
-                    manager.client.load.begin (new_uri, null, true, accept_expired_cert, accept_mismatched_cert, (obj, res) => {
+                    manager.client.load.begin (new_uri, null, true, accept_mismatched_cert, (obj, res) => {
                         var response = manager.client.load.end (res);
                         cert_info = response.cert_info;
                         update_history_on_response (response);
@@ -205,7 +204,7 @@ public class Starfish.Core.Session : Object {
     }
 
     private void navigate_one_level_up_from (Uri uri) {
-        manager.client.load.begin (uri, null, false, false, false, (obj, res) => {
+        manager.client.load.begin (uri, null, false, false, (obj, res) => {
             var response = manager.client.load.end (res);
             if (response.is_success) {
                 cert_info = response.cert_info;

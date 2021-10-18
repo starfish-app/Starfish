@@ -3,6 +3,7 @@ public class Starfish.Core.CertInfo : Object {
     public string host { get; construct; }
     public DateTime active_from { get; construct; }
     public DateTime expires_at { get; construct; }
+    public bool hostname_check { get; construct; }
     public string fingerprint { get; construct; }
     public string full_print { get; construct; }
     public string? common_name { get; construct; }
@@ -13,6 +14,7 @@ public class Starfish.Core.CertInfo : Object {
         string host,
         DateTime active_from,
         DateTime expires_at,
+        bool hostname_check,
         string fingerprint,
         string full_print,
         string? common_name = null,
@@ -23,6 +25,7 @@ public class Starfish.Core.CertInfo : Object {
             host: host,
             active_from: active_from,
             expires_at: expires_at,
+            hostname_check: hostname_check,
             fingerprint: fingerprint,
             full_print: full_print,
             common_name: common_name,
@@ -31,26 +34,34 @@ public class Starfish.Core.CertInfo : Object {
         );
     }
 
-    // Can throw PARSING_ERROR or INVALID_HOST_ERROR
+    // Can throw PARSING_ERROR
     public static CertInfo parse (Uri uri, TlsCertificate tls_cert) throws CertError {
-        var host = uri.host;
         var cert = import_cert (tls_cert);
-        if (!cert.check_hostname (host)) {
-            throw new CertError.INVALID_HOST_ERROR (
-                "TLS certificate is not applicable to host %s.".printf (host)
-            );
-        }
-
         return new CertInfo (
-            host,
+            uri.host,
             extract_active_from (cert),
             extract_expires_at (cert),
+            extract_hostname_check (cert, uri),
             calculate_fingerprint (cert),
             print_cert (cert),
             read_dn (cert, "2.5.4.3"),
             read_dn (cert, "2.5.4.6"),
             read_dn (cert, "2.5.4.10")
         );
+    }
+
+    public bool is_inactive () {
+        var now = new DateTime.now_utc ();
+        return now.compare (this.active_from) < 0;
+    }
+
+    public bool is_expired () {
+        var now = new DateTime.now_utc ();
+        return now.compare (this.expires_at) >= 0;
+    }
+
+    public bool is_not_applicable_to_uri () {
+        return hostname_check;
     }
 
     private static DateTime extract_active_from (
@@ -65,6 +76,13 @@ public class Starfish.Core.CertInfo : Object {
     ) {
         var utc_time = (int64) cert.get_expiration_time ();
         return new DateTime.from_unix_utc (utc_time);
+    }
+
+    private static bool extract_hostname_check (
+        GnuTLS.X509.Certificate cert,
+        Uri requested_uri
+    ) {
+        return !cert.check_hostname (requested_uri.host);
     }
 
     // Can throw FINGERPRINTING_ERROR
