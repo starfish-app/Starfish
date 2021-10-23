@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-18 19:42+0200\n"
+"POT-Creation-Date: 2021-10-24 01:49+0200\n"
 "PO-Revision-Date: 2021-08-15 02:42+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -89,74 +89,82 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-#: src/UI/CertPopover.vala:42
-msgid "Certificate information"
+#: src/UI/CertPopover.vala:52
+msgid "Server certificate information"
 msgstr ""
 
-#: src/UI/CertPopover.vala:50
+#: src/UI/CertPopover.vala:59 src/UI/CertPopover.vala:92
 msgid "Name"
 msgstr ""
 
-#: src/UI/CertPopover.vala:50
+#: src/UI/CertPopover.vala:59
 msgid "Certificate is not applicable to the domain you are requesting."
 msgstr ""
 
-#: src/UI/CertPopover.vala:51
+#: src/UI/CertPopover.vala:60
 msgid "Country"
 msgstr ""
 
-#: src/UI/CertPopover.vala:52
+#: src/UI/CertPopover.vala:61
 msgid "Orgamization"
 msgstr ""
 
-#: src/UI/CertPopover.vala:53
+#: src/UI/CertPopover.vala:62
 msgid "Active from"
 msgstr ""
 
-#: src/UI/CertPopover.vala:53
+#: src/UI/CertPopover.vala:62
 msgid "Certificate's activation date has not yet arrived."
 msgstr ""
 
-#: src/UI/CertPopover.vala:54
+#: src/UI/CertPopover.vala:63
 msgid "Expires at"
 msgstr ""
 
-#: src/UI/CertPopover.vala:54
+#: src/UI/CertPopover.vala:63
 msgid "Certificate's expiration date has passed."
 msgstr ""
 
-#: src/UI/CertPopover.vala:55
+#: src/UI/CertPopover.vala:64
 msgid "Fingerprint"
 msgstr ""
 
-#: src/UI/CertPopover.vala:57
+#: src/UI/CertPopover.vala:66 src/UI/CertPopover.vala:94
 msgid "Show full details"
 msgstr ""
 
-#: src/UI/CertPopover.vala:80
+#: src/UI/CertPopover.vala:85
+msgid "Client certificate information"
+msgstr ""
+
+#: src/UI/CertPopover.vala:109
+msgid "Stop using this certificate"
+msgstr ""
+
+#: src/UI/CertPopover.vala:137
 msgid "Your connection is insecure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:83
+#: src/UI/CertPopover.vala:140
 #, c-format
 msgid "Your connection to %s is insecure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:86
+#: src/UI/CertPopover.vala:143
 #, c-format
 msgid "Your connection to %s might be insecure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:89
+#: src/UI/CertPopover.vala:146
 #, c-format
 msgid "Your connection to %s is secure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:137
+#: src/UI/CertPopover.vala:194
 msgid "Server certificate details"
 msgstr ""
 
-#: src/UI/CertPopover.vala:138
+#: src/UI/CertPopover.vala:195
 msgid "Full details on the currently used client certificate."
 msgstr ""
 
@@ -221,50 +229,49 @@ msgid ""
 "proceed you can:</span>"
 msgstr ""
 
-#: src/UI/PageClientCertPickerView.vala:37
-msgid ""
-"<span variant=\"smallcaps\" size=\"xx-large\">Client certificate required</"
-"span>"
+#: src/UI/PageClientCertPickerView.vala:36
+msgid "Client certificate required"
 msgstr ""
 
-#: src/UI/PageClientCertPickerView.vala:47
-msgid "Pick existing certificate"
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:54
-msgid "Create a new certificate"
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:74
+#: src/UI/PageClientCertPickerView.vala:45
 #, c-format
 msgid ""
-"The page at %s requires the use of client certificate. This is usually "
-"required in order for server to show you some personalized content. To "
-"proceed you can:"
+"   The page at %s requires you to use a client certificate. This is usually "
+"reuired in order for the pod to show you some personalized content. For "
+"example by using the same certificate as last time you accessed this pod you "
+"may be able to pick up where you left off or your saved prefferences may be "
+"applied. Alternativelly, if you want to present a new identity to the server "
+"you can generate and use a new client certifcate."
 msgstr ""
 
-#: src/UI/PageClientCertPickerView.vala:77
-#, c-format
-msgid ""
-"The certificate you provided is not authorised to access the page at %s. "
-"This page may belong to another user, or you may need to provide a different "
-"certificate. To proceed you can:"
+#: src/UI/PageClientCertPickerView.vala:71
+msgid "Create new certificate"
 msgstr ""
 
-#: src/UI/PageClientCertPickerView.vala:88
-#, c-format
+#: src/UI/PageClientCertPickerView.vala:84
+msgid "Create certificate"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:85
+msgid "Pick a name for the new certificate."
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:100 src/UI/PageDownloadView.vala:154
+msgid "Cancel"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:101
+msgid "Create"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:119
+msgid "Failed to crete certificate"
+msgstr ""
+
+#: src/UI/PageClientCertPickerView.vala:120
 msgid ""
-"<span>The certificate you provided is not valid. This usually happens when "
-"certificate's expiry date passes. Alternativelly, the certificate might be "
-"wrongly formated.</span> bgcolor=\"%s\">\n"
-"\n"
-"<tt>\n"
-"Gemini response details\n"
-"\n"
-"STATUS: 62\n"
-"\n"
-"META: %s\n"
-"</tt>"
+"Failed to create client certificate. To proceed you can retry creating the "
+"certificate, or pick an existing one."
 msgstr ""
 
 #: src/UI/PageTextView.vala:199
@@ -317,10 +324,6 @@ msgstr ""
 
 #: src/UI/PageDownloadView.vala:150
 msgid "Save file"
-msgstr ""
-
-#: src/UI/PageDownloadView.vala:154
-msgid "Cancel"
 msgstr ""
 
 #: src/UI/PageDownloadView.vala:192

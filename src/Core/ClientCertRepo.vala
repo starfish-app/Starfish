@@ -64,6 +64,9 @@ public class Starfish.Core.ClientCertRepo : Object {
 
     public void link (Uri uri, string cert_name) {
         var str_uri = uri.to_string ();
+        if (uri_to_cert[str_uri] == cert_name) {
+            return;
+        }
         uri_to_cert[str_uri] = cert_name;
         var row = create_row (str_uri, cert_name);
         try_to_append_to_certs.begin (row);
@@ -122,9 +125,19 @@ public class Starfish.Core.ClientCertRepo : Object {
 
     public Gee.Collection<string> existing_certificate_names () {
         var names = new Gee.HashSet<string> ();
-        foreach (var name in uri_to_cert.values) {
-            names.add (name);
+        var iter = root_cert_dir.enumerate_children (
+            FileAttribute.STANDARD_NAME,
+            FileQueryInfoFlags.NONE
+        );
+
+        FileInfo file_info;
+        while ((file_info = iter.next_file ()) != null) {
+            var cert_name_candidate = file_info.get_name ();
+            if (cert_exists (cert_name_candidate)) {
+                names.add (cert_name_candidate);
+            }
         }
+
 
         return names;
     }

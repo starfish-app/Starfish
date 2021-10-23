@@ -195,7 +195,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
         address.icon_release.connect ((pos, event) => {
             if (pos == Gtk.EntryIconPosition.PRIMARY) {
-                cert_popover.cert_info = session.cert_info;
+                cert_popover.set_session (session);
                 cert_popover.pointing_to = address.get_icon_area (Gtk.EntryIconPosition.PRIMARY);
                 cert_popover.show_all ();
             } else if (pos == Gtk.EntryIconPosition.SECONDARY) {

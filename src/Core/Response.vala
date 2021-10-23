@@ -4,6 +4,7 @@ public class Starfish.Core.Response : Object {
     public string raw_status_line { private get; construct; }
     public IOStream connection { get; construct; }
     public CertInfo? cert_info { get; construct; }
+    public CertInfo? client_cert_info { get; construct; }
 
     public int status { get; private set; default = -1; }
     public string? meta { get; private set; default = "Unsupported server response."; }
@@ -25,13 +26,15 @@ public class Starfish.Core.Response : Object {
         Uri uri,
         string status_line,
         owned IOStream connection,
-        CertInfo? cert_info = null
+        CertInfo? cert_info = null,
+        CertInfo? client_cert_info = null
     ) {
         Object (
             uri: uri,
             raw_status_line: status_line,
             connection: connection,
-            cert_info: cert_info
+            cert_info: cert_info,
+            client_cert_info: client_cert_info
         );
     }
 

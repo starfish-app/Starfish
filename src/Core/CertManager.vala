@@ -99,6 +99,14 @@ public class Starfish.Core.CertManager : Object {
         }
     }
 
+    // Can throw CLIENT_CERT_GENERATION_ERROR and CLIENT_CERT_GENERATION_ERROR
+    public async void create_client_cert (string name) throws CertError {
+        File pk;
+        File cert;
+        cert_repo.set_up_new_cert_files (name, out pk, out cert);
+        yield cert_factory.create_new_client_cert (name, pk, cert);
+    }
+
     private void try_to_append_to_known_certs_file (CertHash cert) {
         try {
             var created_new_file = recreate_missing_known_certs_file ();

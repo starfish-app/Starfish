@@ -1,6 +1,9 @@
 public class Starfish.UI.CertPopover : Gtk.Popover {
 
-    public Core.CertInfo? cert_info { get; set; default = null; }
+    private Core.Session? session;
+    private Core.CertInfo? cert_info;
+    private Core.CertInfo? client_cert_info;
+    private Core.ClientCertRepo? cert_repo;
 
     private Gtk.Grid grid;
     private Granite.MessageDialog? full_details = null;
@@ -24,6 +27,13 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         show.connect (() => update_content ());
     }
 
+    public void set_session (Core.Session session) {
+        this.session = session;
+        cert_info = session.cert_info;
+        client_cert_info = session.client_cert_info;
+        cert_repo = session.client_cert_repo;
+    }
+
     private void update_content () {
         foreach (var child in grid.get_children ()) {
             grid.remove (child);
@@ -39,14 +49,13 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
     }
 
     private void update_cert_info () {
-        var sub_heading = new Gtk.Label (_("Certificate information")) {
+        var server_heading = new Gtk.Label (_("Server certificate information")) {
             halign = Gtk.Align.START
         };
 
-        unowned var style = sub_heading.get_style_context ();
-        style.add_class (Granite.STYLE_CLASS_H4_LABEL);
-        grid.attach (sub_heading, 0, 1, 2, 1);
-        Gtk.Widget last_attached = sub_heading;
+        server_heading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+        grid.attach (server_heading, 0, 1, 2, 1);
+        Gtk.Widget last_attached = server_heading;
         last_attached = attach_row (grid, last_attached, _("Name"), cert_info.common_name, cert_info.is_not_applicable_to_uri(), _("Certificate is not applicable to the domain you are requesting."));
         last_attached = attach_row (grid, last_attached, _("Country"), cert_info.country_name);
         last_attached = attach_row (grid, last_attached, _("Orgamization"), cert_info.organization_name);
@@ -54,19 +63,67 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         last_attached = attach_row (grid, last_attached, _("Expires at"), local_date_time (cert_info.expires_at), cert_info.is_expired (), _("Certificate's expiration date has passed."));
         last_attached = attach_row (grid, last_attached, _("Fingerprint"), cert_info.fingerprint);
 
-        var details_button = new Gtk.Button.with_label (_("Show full details"));
-        details_button.clicked.connect (() => {
-            show_full_details ();
+        var server_details_button = new Gtk.Button.with_label (_("Show full details"));
+        server_details_button.clicked.connect (() => {
+            show_full_details (cert_info);
             popdown ();
         });
 
         grid.attach_next_to (
-            details_button,
+            server_details_button,
             last_attached,
             Gtk.PositionType.BOTTOM,
             2,
             1
         );
+
+        last_attached = server_details_button;
+        if (client_cert_info != null) {
+            var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            grid.attach_next_to (separator, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+            last_attached = separator;
+            var client_hading = new Gtk.Label (_("Client certificate information")) {
+                halign = Gtk.Align.START
+            };
+
+            client_hading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+            grid.attach_next_to (client_hading, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+            last_attached = client_hading;
+            last_attached = attach_row (grid, last_attached, _("Name"), client_cert_info.common_name);
+
+            var client_details_button = new Gtk.Button.with_label (_("Show full details"));
+            client_details_button.clicked.connect (() => {
+                show_full_details (client_cert_info);
+                popdown ();
+            });
+
+            grid.attach_next_to (
+                client_details_button,
+                last_attached,
+                Gtk.PositionType.BOTTOM,
+                1,
+                1
+            );
+
+            last_attached = client_details_button;
+            var client_unlink_button = new Gtk.Button.with_label (_("Stop using this certificate"));
+            client_unlink_button.clicked.connect (() => {
+                var uri = session.current_uri;
+                cert_repo.unlink (uri, client_cert_info.common_name);
+                popdown ();
+                session.navigate_to (uri.to_string ());
+            });
+
+            grid.attach_next_to (
+                client_unlink_button,
+                last_attached,
+                Gtk.PositionType.RIGHT,
+                1,
+                1
+            );
+
+            last_attached = client_unlink_button;
+        }
     }
 
     private Gtk.Widget set_up_heading () {
@@ -131,7 +188,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         return name_lbl;
     }
 
-    private void show_full_details () {
+    private void show_full_details (Core.CertInfo cert_info) {
         if (full_details == null) {
             full_details = new Granite.MessageDialog.with_image_from_icon_name (
                 _("Server certificate details"),

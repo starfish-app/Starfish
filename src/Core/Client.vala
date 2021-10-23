@@ -38,13 +38,14 @@ public class Starfish.Core.Client : Object {
         Uri uri,
         Cancellable? cancel = null,
         bool follow_redirects = true,
-        bool accept_mismatched_cert = false
+        bool accept_mismatched_cert = false,
+        bool same_domain_request = false
     ) {
         switch (uri.scheme) {
             case "file":
                 return yield load_file (uri, cancel);
             case "gemini":
-                return yield load_gemini (uri, cancel, 0, follow_redirects, accept_mismatched_cert);
+                return yield load_gemini (uri, cancel, 0, follow_redirects, accept_mismatched_cert, same_domain_request);
         }
         return new InternalErrorResponse.schema_not_supported (uri);
     }
@@ -87,11 +88,12 @@ public class Starfish.Core.Client : Object {
         int redirect_count = 0,
         bool follow_redirects = true,
         bool accept_mismatched_cert = false,
-        bool same_domain_request = false // TODO: send from session!
+        bool same_domain_request = false
     ) {
         SocketConnection conn;
         CertError? cert_error = null;
         CertInfo? cert_info = null;
+        CertInfo? client_cert_info = null;
         try {
             var socket_client = new SocketClient () {
                 tls = true,
@@ -105,6 +107,11 @@ public class Starfish.Core.Client : Object {
                         var client_cert = cert_manager.get_client_cert_for (uri);
                         if (client_cert != null) {
                             tls_conn.certificate = client_cert;
+                            try {
+                                client_cert_info = CertInfo.parse (uri, client_cert);
+                            } catch (Error error) {
+                                warning ("Failed to parse client certificate. Will not report it to user. Error: %s".printf (error.message));
+                            }
                         }
                     }
 
@@ -153,7 +160,7 @@ public class Starfish.Core.Client : Object {
         }
 
         try {
-            var resp = new Response (uri, status_line, conn, cert_info);
+            var resp = new Response (uri, status_line, conn, cert_info, client_cert_info);
             if (!resp.is_success) {
                 yield conn.close_async (Priority.DEFAULT, cancel);
             }
