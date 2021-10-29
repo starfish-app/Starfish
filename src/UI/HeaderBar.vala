@@ -108,10 +108,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         }
 
         address.text = _session.current_uri.to_string ();
-        address.primary_icon_name = icon_name_for (
-            _session.cert_info,
-            _session.current_uri
-        );
+        address.primary_icon_name = icon_name_for (_session);
     }
 
     private void disable_buttons () {
@@ -179,6 +176,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Entry setup_address () {
         var address = new Gtk.Entry () {
             primary_icon_activatable = true,
+            primary_icon_tooltip_text = _("Check identity"),
             hexpand = true,
             secondary_icon_activatable = true,
             secondary_icon_name = "non-starred",
@@ -326,20 +324,27 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         return "%.0f%%".printf (zoom_percent);
     }
 
-    private string? icon_name_for (Core.CertInfo? cert_info, Core.Uri uri) {
+    private string? icon_name_for (Core.Session session) {
+        var uri = session.current_uri;
+        var server_cert = session.cert_info;
+        var client_cert = session.client_cert_info;
         if (uri.scheme == "file") {
             return null;
         }
 
-        if (cert_info == null || cert_info.is_not_applicable_to_uri ()) {
+        if (server_cert == null || server_cert.is_not_applicable_to_uri ()) {
             return "security-low";
         }
 
-        if (cert_info.is_inactive () || cert_info.is_expired ()) {
+        if (server_cert.is_inactive () || server_cert.is_expired ()) {
             return "security-medium";
         }
 
-        return "security-high";
+        if (client_cert == null) {
+            return "security-high";
+        }
+
+        return "avatar-default";
     }
 }
 

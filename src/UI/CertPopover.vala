@@ -49,23 +49,23 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
     }
 
     private void update_cert_info () {
-        var server_heading = new Gtk.Label (_("Server certificate information")) {
+        var server_heading = new Gtk.Label (_("Server identity")) {
             halign = Gtk.Align.START
         };
 
         server_heading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
         grid.attach (server_heading, 0, 1, 2, 1);
         Gtk.Widget last_attached = server_heading;
-        last_attached = attach_row (grid, last_attached, _("Name"), cert_info.common_name, cert_info.is_not_applicable_to_uri(), _("Certificate is not applicable to the domain you are requesting."));
+        last_attached = attach_row (grid, last_attached, _("Name"), cert_info.common_name, cert_info.is_not_applicable_to_uri(), _("Server certificate is not applicable to the domain you are requesting."));
         last_attached = attach_row (grid, last_attached, _("Country"), cert_info.country_name);
         last_attached = attach_row (grid, last_attached, _("Orgamization"), cert_info.organization_name);
-        last_attached = attach_row (grid, last_attached, _("Active from"), local_date_time (cert_info.active_from), cert_info.is_inactive (), _("Certificate's activation date has not yet arrived."));
-        last_attached = attach_row (grid, last_attached, _("Expires at"), local_date_time (cert_info.expires_at), cert_info.is_expired (), _("Certificate's expiration date has passed."));
+        last_attached = attach_row (grid, last_attached, _("Active from"), local_date_time (cert_info.active_from), cert_info.is_inactive (), _("Server certificate's activation date has not yet arrived."));
+        last_attached = attach_row (grid, last_attached, _("Expires at"), local_date_time (cert_info.expires_at), cert_info.is_expired (), _("Server certificate's expiration date has passed."));
         last_attached = attach_row (grid, last_attached, _("Fingerprint"), cert_info.fingerprint);
 
         var server_details_button = new Gtk.Button.with_label (_("Show full details"));
         server_details_button.clicked.connect (() => {
-            show_full_details (cert_info);
+            show_full_details (cert_info, "server");
             popdown ();
         });
 
@@ -82,7 +82,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
             var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
             grid.attach_next_to (separator, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
             last_attached = separator;
-            var client_hading = new Gtk.Label (_("Client certificate information")) {
+            var client_hading = new Gtk.Label (_("Client identity")) {
                 halign = Gtk.Align.START
             };
 
@@ -93,7 +93,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
 
             var client_details_button = new Gtk.Button.with_label (_("Show full details"));
             client_details_button.clicked.connect (() => {
-                show_full_details (client_cert_info);
+                show_full_details (client_cert_info, "client");
                 popdown ();
             });
 
@@ -106,7 +106,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
             );
 
             last_attached = client_details_button;
-            var client_unlink_button = new Gtk.Button.with_label (_("Stop using this certificate"));
+            var client_unlink_button = new Gtk.Button.with_label (_("Stop using this identity"));
             client_unlink_button.clicked.connect (() => {
                 var uri = session.current_uri;
                 cert_repo.unlink (uri, client_cert_info.common_name);
@@ -188,11 +188,11 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         return name_lbl;
     }
 
-    private void show_full_details (Core.CertInfo cert_info) {
+    private void show_full_details (Core.CertInfo cert_info, string source) {
         if (full_details == null) {
             full_details = new Granite.MessageDialog.with_image_from_icon_name (
-                _("Server certificate details"),
-                _("Full details on the currently used client certificate."),
+                _("Certificate details"),
+                _("Full details on the currently used %s certificate.").printf (source),
                 "text-x-generic",
                 Gtk.ButtonsType.CLOSE
             ) {

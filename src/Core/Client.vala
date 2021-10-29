@@ -39,13 +39,13 @@ public class Starfish.Core.Client : Object {
         Cancellable? cancel = null,
         bool follow_redirects = true,
         bool accept_mismatched_cert = false,
-        bool same_domain_request = false
+        bool should_use_cleint_cert = false
     ) {
         switch (uri.scheme) {
             case "file":
                 return yield load_file (uri, cancel);
             case "gemini":
-                return yield load_gemini (uri, cancel, 0, follow_redirects, accept_mismatched_cert, same_domain_request);
+                return yield load_gemini (uri, cancel, 0, follow_redirects, accept_mismatched_cert, should_use_cleint_cert);
         }
         return new InternalErrorResponse.schema_not_supported (uri);
     }
@@ -88,7 +88,7 @@ public class Starfish.Core.Client : Object {
         int redirect_count = 0,
         bool follow_redirects = true,
         bool accept_mismatched_cert = false,
-        bool same_domain_request = false
+        bool should_use_cleint_cert = false
     ) {
         SocketConnection conn;
         CertError? cert_error = null;
@@ -103,7 +103,7 @@ public class Starfish.Core.Client : Object {
             socket_client.event.connect ((event, connectable, conn) => {
                 if (event == SocketClientEvent.TLS_HANDSHAKING) {
                     var tls_conn = (TlsClientConnection) conn;
-                    if (same_domain_request) {
+                    if (should_use_cleint_cert) {
                         var client_cert = cert_manager.get_client_cert_for (uri);
                         if (client_cert != null) {
                             tls_conn.certificate = client_cert;

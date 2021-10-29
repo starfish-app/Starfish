@@ -99,7 +99,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index - 1];
-            manager.client.load.begin (uri, null, true, false, is_same_domain(uri), (obj, res) => {
+            manager.client.load.begin (uri, null, true, false, should_use_client_cert(uri), (obj, res) => {
                 var response = manager.client.load.end (res);
                 cert_info = response.cert_info;
                 client_cert_info = response.client_cert_info;
@@ -132,7 +132,7 @@ public class Starfish.Core.Session : Object {
             }
 
             var uri = _history[_history_index + 1];
-            manager.client.load.begin (uri, null, true, false, is_same_domain(uri), (obj, res) => {
+            manager.client.load.begin (uri, null, true, false, should_use_client_cert(uri), (obj, res) => {
                 var response = manager.client.load.end (res);
                 cert_info = response.cert_info;
                 client_cert_info = response.client_cert_info;
@@ -173,7 +173,7 @@ public class Starfish.Core.Session : Object {
                         loading = true;
                     }
 
-                    manager.client.load.begin (new_uri, null, true, accept_mismatched_cert, is_same_domain(new_uri), (obj, res) => {
+                    manager.client.load.begin (new_uri, null, true, accept_mismatched_cert, should_use_client_cert(new_uri), (obj, res) => {
                         var response = manager.client.load.end (res);
                         cert_info = response.cert_info;
                         client_cert_info = response.client_cert_info;
@@ -212,8 +212,16 @@ public class Starfish.Core.Session : Object {
         navigate_to (new_uri.to_string ());
     }
 
-    private bool is_same_domain (Uri uri) {
-        return uri.host == current_uri.host;
+    private bool should_use_client_cert (Uri uri) {
+        if (current_uri.scheme == "file") {
+            return true;
+        }
+
+        if (uri.host == current_uri.host) {
+            return true;
+        };
+
+        return false;
     }
 
     private void navigate_one_level_up_from (Uri uri) {

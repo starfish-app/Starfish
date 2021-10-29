@@ -30,6 +30,7 @@ sources = gresource + files(
     'src/UI/Window.vala',
     'src/UI/HeaderBar.vala',
     'src/UI/CertPopover.vala',
+    'src/UI/ClientCertListBox.vala',
     'src/UI/PreferencesDialog.vala',
     'src/UI/ContentStack.vala',
     'src/UI/InputView.vala',
