@@ -14,8 +14,8 @@ public class Starfish.UI.PreferencesDialog : Granite.Dialog {
     construct {
         var grid = new Gtk.Grid () {
             margin = 12,
-            column_spacing = 12,
-            row_spacing = 6
+            column_spacing = 16,
+            row_spacing = 16
         };
 
         grid.attach (new Granite.HeaderLabel (_("Home")), 0, 0, 3);

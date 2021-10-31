@@ -1,5 +1,8 @@
 public class Starfish.UI.CertPopover : Gtk.Popover {
 
+
+    public Window? window { get; set; default = null; }
+
     private Core.Session? session;
     private Core.CertInfo? cert_info;
     private Core.CertInfo? client_cert_info;
@@ -49,6 +52,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
     }
 
     private void update_cert_info () {
+        var uri = session.current_uri;
         var server_heading = new Gtk.Label (_("Server identity")) {
             halign = Gtk.Align.START
         };
@@ -63,7 +67,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         last_attached = attach_row (grid, last_attached, _("Expires at"), local_date_time (cert_info.expires_at), cert_info.is_expired (), _("Server certificate's expiration date has passed."));
         last_attached = attach_row (grid, last_attached, _("Fingerprint"), cert_info.fingerprint);
 
-        var server_details_button = new Gtk.Button.with_label (_("Show full details"));
+        var server_details_button = new Gtk.Button.with_label (_("Show Details"));
         server_details_button.clicked.connect (() => {
             show_full_details (cert_info, "server");
             popdown ();
@@ -78,37 +82,52 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         );
 
         last_attached = server_details_button;
-        if (client_cert_info != null) {
-            var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
-            grid.attach_next_to (separator, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
-            last_attached = separator;
-            var client_hading = new Gtk.Label (_("Client identity")) {
+        var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+        grid.attach_next_to (separator, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+        last_attached = separator;
+        var client_hading = new Gtk.Label (_("Client identity")) {
+            halign = Gtk.Align.START
+        };
+
+        client_hading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+        grid.attach_next_to (client_hading, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+        last_attached = client_hading;
+
+        if (client_cert_info == null) {
+            var missing_client_identity_label = new Gtk.Label (
+                _("You are not providing server %s with your identity.").printf (uri.host)
+            ) {
                 halign = Gtk.Align.START
             };
 
-            client_hading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
-            grid.attach_next_to (client_hading, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
-            last_attached = client_hading;
-            last_attached = attach_row (grid, last_attached, _("Name"), client_cert_info.common_name);
+            grid.attach_next_to (
+                missing_client_identity_label,
+                last_attached,
+                Gtk.PositionType.BOTTOM,
+                2,
+                1
+            );
 
-            var client_details_button = new Gtk.Button.with_label (_("Show full details"));
-            client_details_button.clicked.connect (() => {
-                show_full_details (client_cert_info, "client");
+            last_attached = missing_client_identity_label;
+            var provide_identity_button = new Gtk.Button.with_label (_("Provide Identity"));
+            provide_identity_button.clicked.connect (() => {
+                show_client_cert_picker_for (uri);
                 popdown ();
             });
 
             grid.attach_next_to (
-                client_details_button,
+                provide_identity_button,
                 last_attached,
                 Gtk.PositionType.BOTTOM,
                 1,
                 1
             );
 
-            last_attached = client_details_button;
-            var client_unlink_button = new Gtk.Button.with_label (_("Stop using this identity"));
+            last_attached = provide_identity_button;
+        } else {
+            last_attached = attach_row (grid, last_attached, _("Name"), client_cert_info.common_name);
+            var client_unlink_button = new Gtk.Button.with_label (_("Stop Using Identity"));
             client_unlink_button.clicked.connect (() => {
-                var uri = session.current_uri;
                 cert_repo.unlink (uri, client_cert_info.common_name);
                 popdown ();
                 session.navigate_to (uri.to_string ());
@@ -117,12 +136,28 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
             grid.attach_next_to (
                 client_unlink_button,
                 last_attached,
-                Gtk.PositionType.RIGHT,
+                Gtk.PositionType.BOTTOM,
                 1,
                 1
             );
 
             last_attached = client_unlink_button;
+
+            var client_details_button = new Gtk.Button.with_label (_("Show Details"));
+            client_details_button.clicked.connect (() => {
+                show_full_details (client_cert_info, "client");
+                popdown ();
+            });
+
+            grid.attach_next_to (
+                client_details_button,
+                last_attached,
+                Gtk.PositionType.RIGHT,
+                1,
+                1
+            );
+
+            last_attached = client_details_button;
         }
     }
 
@@ -230,6 +265,30 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         var time_fmt = Granite.DateTime.get_default_time_format ();
         var date_fmt = Granite.DateTime.get_default_date_format (false, true, true);
         return "%s %s".printf (dt.format (time_fmt), dt.format (date_fmt));
+    }
+
+    private void show_client_cert_picker_for (Core.Uri uri) {
+        var dialog = new Granite.Dialog () {
+            transient_for = window
+        };
+
+        var header = new Granite.HeaderLabel (_("Pick identity"));
+        var layout = new Gtk.Grid () {
+            row_spacing = 12,
+            margin = 12
+        };
+
+        layout.attach (header, 0, 1);
+        var certs_list = new ClientCertListBox (session.client_cert_repo, uri);
+        certs_list.cert_picked.connect ((t, c) => {
+            dialog.destroy ();
+            window.activate_action (Window.ACTION_RELOAD, null);
+        });
+
+        layout.attach (certs_list, 0, 2);
+        dialog.get_content_area ().add (layout);
+        dialog.add_button (_("Cancel"), Gtk.ResponseType.CANCEL);
+        dialog.show_all ();
     }
 }
 

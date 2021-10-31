@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-30 01:28+0200\n"
+"POT-Creation-Date: 2021-11-01 00:45+0100\n"
 "PO-Revision-Date: 2021-08-15 02:42+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -60,117 +60,134 @@ msgstr ""
 msgid "Check identity"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:183 src/UI/HeaderBar.vala:206
-#: src/UI/HeaderBar.vala:227
+#: src/UI/HeaderBar.vala:183 src/UI/HeaderBar.vala:205
+#: src/UI/HeaderBar.vala:225
 msgid "Bookmark this page"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:211 src/UI/HeaderBar.vala:224
+#: src/UI/HeaderBar.vala:209 src/UI/HeaderBar.vala:222
 msgid "Remove this page rom bookmarks"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:232
+#: src/UI/HeaderBar.vala:230
 msgid "Zoom out"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:233
+#: src/UI/HeaderBar.vala:231
 msgid "Zoom in"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:238
+#: src/UI/HeaderBar.vala:236
 msgid "Reset zoom level"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:256 src/UI/PreferencesDialog.vala:10
+#: src/UI/HeaderBar.vala:254 src/UI/PreferencesDialog.vala:10
 msgid "Preferences"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:261
+#: src/UI/HeaderBar.vala:259
 msgid "Introduction to Gemini"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:292
+#: src/UI/HeaderBar.vala:289
 msgid "Menu"
 msgstr ""
 
-#: src/UI/CertPopover.vala:52
+#: src/UI/CertPopover.vala:56
 msgid "Server identity"
 msgstr ""
 
-#: src/UI/CertPopover.vala:59 src/UI/CertPopover.vala:92
+#: src/UI/CertPopover.vala:63 src/UI/CertPopover.vala:128
 msgid "Name"
 msgstr ""
 
-#: src/UI/CertPopover.vala:59
+#: src/UI/CertPopover.vala:63
 msgid "Server certificate is not applicable to the domain you are requesting."
 msgstr ""
 
-#: src/UI/CertPopover.vala:60
+#: src/UI/CertPopover.vala:64
 msgid "Country"
 msgstr ""
 
-#: src/UI/CertPopover.vala:61
+#: src/UI/CertPopover.vala:65
 msgid "Orgamization"
 msgstr ""
 
-#: src/UI/CertPopover.vala:62
+#: src/UI/CertPopover.vala:66
 msgid "Active from"
 msgstr ""
 
-#: src/UI/CertPopover.vala:62
+#: src/UI/CertPopover.vala:66
 msgid "Server certificate's activation date has not yet arrived."
 msgstr ""
 
-#: src/UI/CertPopover.vala:63
+#: src/UI/CertPopover.vala:67
 msgid "Expires at"
 msgstr ""
 
-#: src/UI/CertPopover.vala:63
+#: src/UI/CertPopover.vala:67
 msgid "Server certificate's expiration date has passed."
 msgstr ""
 
-#: src/UI/CertPopover.vala:64
+#: src/UI/CertPopover.vala:68
 msgid "Fingerprint"
 msgstr ""
 
-#: src/UI/CertPopover.vala:66 src/UI/CertPopover.vala:94
-msgid "Show full details"
+#: src/UI/CertPopover.vala:70 src/UI/CertPopover.vala:146
+msgid "Show Details"
 msgstr ""
 
-#: src/UI/CertPopover.vala:85
+#: src/UI/CertPopover.vala:88
 msgid "Client identity"
 msgstr ""
 
-#: src/UI/CertPopover.vala:109
-msgid "Stop using this identity"
+#: src/UI/CertPopover.vala:98
+#, c-format
+msgid "You are not providing server %s with your identity."
 msgstr ""
 
-#: src/UI/CertPopover.vala:137
+#: src/UI/CertPopover.vala:112
+msgid "Provide Identity"
+msgstr ""
+
+#: src/UI/CertPopover.vala:129
+msgid "Stop Using Identity"
+msgstr ""
+
+#: src/UI/CertPopover.vala:172
 msgid "Your connection is insecure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:140
+#: src/UI/CertPopover.vala:175
 #, c-format
 msgid "Your connection to %s is insecure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:143
+#: src/UI/CertPopover.vala:178
 #, c-format
 msgid "Your connection to %s might be insecure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:146
+#: src/UI/CertPopover.vala:181
 #, c-format
 msgid "Your connection to %s is secure"
 msgstr ""
 
-#: src/UI/CertPopover.vala:194
+#: src/UI/CertPopover.vala:229
 msgid "Certificate details"
 msgstr ""
 
-#: src/UI/CertPopover.vala:195
+#: src/UI/CertPopover.vala:230
 #, c-format
 msgid "Full details on the currently used %s certificate."
+msgstr ""
+
+#: src/UI/CertPopover.vala:275
+msgid "Pick identity"
+msgstr ""
+
+#: src/UI/CertPopover.vala:290 src/UI/PageDownloadView.vala:154
+msgid "Cancel"
 msgstr ""
 
 #: src/UI/PreferencesDialog.vala:21
@@ -249,34 +266,8 @@ msgid ""
 "new identity to the server you can generate and use a new client certifcate."
 msgstr ""
 
-#: src/UI/PageClientCertPickerView.vala:58
-msgid "Create new identity"
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:70
-msgid "Create identity"
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:71
-msgid "Pick a name for this identity."
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:86 src/UI/PageDownloadView.vala:154
-msgid "Cancel"
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:87
-msgid "Create"
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:105
-msgid "Failed to crete identity"
-msgstr ""
-
-#: src/UI/PageClientCertPickerView.vala:106
-msgid ""
-"Failed to create client certificate. To proceed you can retry creating "
-"identity, or pick an existing one."
+#: src/UI/PageClientCertPickerView.vala:63
+msgid "Create New Identity"
 msgstr ""
 
 #: src/UI/PageTextView.vala:199

@@ -1,17 +1,16 @@
 public class Starfish.UI.ClientCertListBox : Gtk.ListBox {
 
     public Core.ClientCertRepo repo { get; construct; }
-    public Window window { get; construct; }
     public Core.Uri uri { get; construct; }
+
+    public signal void cert_picked (string cert);
 
     public ClientCertListBox (
         Core.ClientCertRepo repo,
-        Window window,
         Core.Uri uri
     ) {
         Object (
             repo: repo,
-            window: window,
             uri: uri,
             activate_on_single_click: false,
             selection_mode: Gtk.SelectionMode.NONE
@@ -19,7 +18,6 @@ public class Starfish.UI.ClientCertListBox : Gtk.ListBox {
     }
 
     construct {
-
         foreach (var cert_name in repo.existing_certificate_names ()) {
             var row = new Gtk.ListBoxRow () {
                 activatable = false,
@@ -39,14 +37,14 @@ public class Starfish.UI.ClientCertListBox : Gtk.ListBox {
                 hexpand = true
             };
             grid.attach (label, 0, 0);
-            grid.attach (new Gtk.VSeparator (), 1, 0);
+            grid.attach (new Gtk.Separator (Gtk.Orientation.VERTICAL), 1, 0);
 
             var use_button = new Gtk.Button.with_label (_("Use"));
             use_button.get_style_context ().add_class (Gtk.STYLE_CLASS_SUGGESTED_ACTION);
             use_button.tooltip_text = _("Use %s identity for requests to pages under %s.").printf (cert_name, uri.to_string ());
             use_button.clicked.connect (() => {
                 repo.link (uri, cert_name);
-                window.activate_action (Window.ACTION_RELOAD, null);
+                cert_picked (cert_name);
             });
             grid.attach (use_button, 2, 0);
 
@@ -55,15 +53,20 @@ public class Starfish.UI.ClientCertListBox : Gtk.ListBox {
             use_for_domain_button.clicked.connect (() => {
                 var domain_uri = new Core.Uri (uri.scheme, uri.userinfo, uri.host);
                 repo.link (domain_uri, cert_name);
-                window.activate_action (Window.ACTION_RELOAD, null);
+                cert_picked (cert_name);
             });
             grid.attach (use_for_domain_button, 3, 0);
 
-            grid.attach (new Gtk.VSeparator (), 4, 0);
+            grid.attach (new Gtk.Separator (Gtk.Orientation.VERTICAL), 4, 0);
             var delete_button = new Gtk.Button.from_icon_name ("user-trash-symbolic") {
                 label = _("Delete"),
                 always_show_image = true
             };
+            delete_button.clicked.connect (() => {
+                repo.delete_cert (cert_name);
+                remove (row);
+            });
+
             delete_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
             grid.attach (delete_button, 5, 0);
             row.add (grid);

@@ -51,12 +51,18 @@ public class Starfish.UI.PageClientCertPickerView : Gtk.Grid, ResponseView {
         attach_next_to (desc, heading, Gtk.PositionType.BOTTOM, 2, 1);
         Gtk.Widget previous = desc;
 
-        var certs_list = new ClientCertListBox (repo, window, uri);
+        var certs_list = new ClientCertListBox (repo, uri);
+        certs_list.cert_picked.connect ((t, c) => {
+            window.activate_action (Window.ACTION_RELOAD, null);
+        });
+
         attach_next_to (certs_list, previous, Gtk.PositionType.BOTTOM, 2, 1);
         previous = certs_list;
 
-        var create_button = new Gtk.Button.with_label (_("Create new identity")) {
-            halign = Gtk.Align.START
+        var create_button = new Gtk.Button.from_icon_name ("contact-new-symbolic") {
+            label = _("Create New Identity"),
+            halign = Gtk.Align.START,
+            always_show_image = true
         };
 
         create_button.clicked.connect (() => create_cert_for (uri));
@@ -67,55 +73,10 @@ public class Starfish.UI.PageClientCertPickerView : Gtk.Grid, ResponseView {
     }
 
     private void create_cert_for (Core.Uri uri) {
-        var header = new Granite.HeaderLabel (_("Create identity"));
-        var desc = new Gtk.Label (_("Pick a name for this identity."));
-        var name_entry = new Gtk.Entry ();
-        var layout = new Gtk.Grid () {
-            row_spacing = 12,
-            margin = 16
-        };
-
-        layout.attach (header, 0, 1);
-        layout.attach (desc, 0, 2);
-        layout.attach (name_entry, 0, 3);
-        var dialog = new Granite.Dialog () {
-            transient_for = window,
-        };
-
-        dialog.get_content_area ().add(layout);
-        var cancel_button = dialog.add_button (_("Cancel"), Gtk.ResponseType.CANCEL);
-        var create_button = dialog.add_button (_("Create"), Gtk.ResponseType.ACCEPT);
-        create_button.get_style_context ().add_class (Gtk.STYLE_CLASS_SUGGESTED_ACTION);
+        var dialog = new ClientCertCreateDialog (
+            manager, repo, uri, window
+        );
         dialog.show_all ();
-        dialog.response.connect ((response_id) => {
-            if (response_id == Gtk.ResponseType.ACCEPT) {
-                cancel_button.sensitive = false;
-                create_button.sensitive = false;
-                name_entry.editable = false;
-                var name = name_entry.text;
-                manager.create_client_cert.begin (name, (obj, res) => {
-                    try {
-                        manager.create_client_cert.end (res);
-                        repo.link (uri, name);
-                        dialog.destroy ();
-                        window.activate_action (Window.ACTION_RELOAD, null);
-                    } catch (Core.CertError error) {
-                        dialog.destroy ();
-                        var err_dialog = new Granite.MessageDialog.with_image_from_icon_name (
-                             _("Failed to crete identity"),
-                             _("Failed to create client certificate. To proceed you can retry creating identity, or pick an existing one."),
-                             "dialog-error",
-                             Gtk.ButtonsType.CLOSE
-                        );
-
-                        err_dialog.show_error_details (error.message);
-                        err_dialog.show_all ();
-                    }
-                });
-            } else {
-                dialog.destroy ();
-            }
-        });
     }
 }
 

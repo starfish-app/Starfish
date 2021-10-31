@@ -125,21 +125,48 @@ public class Starfish.Core.ClientCertRepo : Object {
 
     public Gee.Collection<string> existing_certificate_names () {
         var names = new Gee.HashSet<string> ();
-        var iter = root_cert_dir.enumerate_children (
-            FileAttribute.STANDARD_NAME,
-            FileQueryInfoFlags.NONE
-        );
+        try {
+            var iter = root_cert_dir.enumerate_children (
+                FileAttribute.STANDARD_NAME,
+                FileQueryInfoFlags.NONE
+            );
 
-        FileInfo file_info;
-        while ((file_info = iter.next_file ()) != null) {
-            var cert_name_candidate = file_info.get_name ();
-            if (cert_exists (cert_name_candidate)) {
-                names.add (cert_name_candidate);
+            FileInfo file_info;
+            while ((file_info = iter.next_file ()) != null) {
+                var cert_name_candidate = file_info.get_name ();
+                if (cert_exists (cert_name_candidate)) {
+                    names.add (cert_name_candidate);
+                }
             }
+        } catch (Error error) {
+            warning ("Error checking cert directory info, will skip dir, error: %s".printf (error.message));
         }
 
 
         return names;
+    }
+
+    public bool delete_cert (string cert_name) {
+        string? key_to_remove = null;
+        foreach (var entry in uri_to_cert.entries) {
+            if (entry.value == cert_name) {
+                key_to_remove = entry.key;
+                break;
+            }
+        }
+
+        if (key_to_remove != null) {
+            uri_to_cert.unset (key_to_remove);
+            try_to_recreate_certs_file.begin ();
+        }
+
+        var cert_dir = root_cert_dir.get_child (cert_name);
+        try {
+            return cert_dir.trash ();
+        } catch (Error error){
+            warning ("Failed to send cert dir %s to trash, error: %s".printf (cert_dir.get_path (), error.message));
+            return false;
+        }
     }
 
     private void recreate_missing_certs_dir () throws Error {
