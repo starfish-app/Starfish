@@ -41,19 +41,37 @@ public class Starfish.UI.ClientCertCreateDialog : Granite.Dialog {
 
         grid.attach (name_entry, 1, 1, 2);
 
+        grid.attach (new Gtk.Image () {
+            gicon = new ThemedIcon ("dialog-information-symbolic"),
+            pixel_size = 24,
+            tooltip_text = _("It is a good practice to use different identity for each site. Give it a name that reflects the site you are planning to use it with.")
+        }, 3, 1);
+
+        var name_validation_msg = new Gtk.Label (null) {
+            halign = Gtk.Align.END
+        };
+
+        name_validation_msg.get_style_context ().add_class (Gtk.STYLE_CLASS_ERROR);
+        grid.attach (name_validation_msg, 1, 2, 2);
+
         Gtk.RadioButton? subdomain_button = null;
         if (uri.path != null) {
             grid.attach (new Gtk.Label (_("Use for")) {
                 halign = Gtk.Align.END,
                 margin_start = 12
-            }, 0, 2);
+            }, 0, 3);
 
             var subpath_button = new Gtk.RadioButton.with_label (
                 null,
                 _("requests to pages under %s").printf (uri.to_string ())
             );
 
-            grid.attach (subpath_button, 1, 2, 2);
+            grid.attach (subpath_button, 1, 3, 2);
+            grid.attach (new Gtk.Image () {
+                gicon = new ThemedIcon ("dialog-information-symbolic"),
+                pixel_size = 24,
+                tooltip_text = _("While it is a good practice to present identity only to pages under this one, some sites require it on all pages. Notable case of this is Station capsule.")
+            }, 3, 3);
 
             subdomain_button = new Gtk.RadioButton.with_label (
                 null,
@@ -61,7 +79,7 @@ public class Starfish.UI.ClientCertCreateDialog : Granite.Dialog {
             );
 
             subdomain_button.group = subpath_button;
-            grid.attach (subdomain_button, 1, 3, 2);
+            grid.attach (subdomain_button, 1, 4, 2);
         }
 
         get_content_area ().add(grid);
@@ -71,6 +89,31 @@ public class Starfish.UI.ClientCertCreateDialog : Granite.Dialog {
         create_button.get_style_context ().add_class (
             Gtk.STYLE_CLASS_SUGGESTED_ACTION
         );
+
+        name_entry.changed.connect (() => {
+            var name = name_entry.text;
+            if (name == null || name == "") {
+                name_entry.secondary_icon_name = "process-error-symbolic";
+                name_entry.get_style_context ().add_class (Gtk.STYLE_CLASS_ERROR);
+                name_validation_msg.label = _("Please pick a name.");
+                create_button.sensitive = false;
+                return;
+            }
+
+            var existing_names = repo.existing_certificate_names ();
+            if (existing_names.contains (name)) {
+                name_entry.secondary_icon_name = "process-error-symbolic";
+                name_entry.get_style_context ().add_class (Gtk.STYLE_CLASS_ERROR);
+                name_validation_msg.label = _("Identity named %s already exists. Please pick a unique name.").printf (name);
+                create_button.sensitive = false;
+                return;
+            }
+
+            name_entry.secondary_icon_name = "process-completed-symbolic";
+            name_entry.get_style_context ().remove_class (Gtk.STYLE_CLASS_ERROR);
+            name_validation_msg.label = null;
+            create_button.sensitive = true;
+        });
 
         response.connect ((response_id) => {
             if (response_id == Gtk.ResponseType.ACCEPT) {
@@ -105,7 +148,8 @@ public class Starfish.UI.ClientCertCreateDialog : Granite.Dialog {
                         );
 
                         err_dialog.show_error_details (error.message);
-                        err_dialog.show_all ();
+                        err_dialog.run ();
+                        err_dialog.destroy ();
                     }
                 });
             } else {

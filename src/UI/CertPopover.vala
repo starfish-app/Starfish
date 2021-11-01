@@ -82,20 +82,24 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         );
 
         last_attached = server_details_button;
-        var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
-        grid.attach_next_to (separator, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
-        last_attached = separator;
-        var client_hading = new Gtk.Label (_("Client identity")) {
-            halign = Gtk.Align.START
-        };
 
-        client_hading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
-        grid.attach_next_to (client_hading, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
-        last_attached = client_hading;
+        var repo = session.client_cert_repo;
+        var certs_linekd_to_host = repo.existing_certificate_names (uri.host);
+        var has_certs_for_host = !certs_linekd_to_host.is_empty;
+        if (client_cert_info == null && has_certs_for_host) {
+            var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            grid.attach_next_to (separator, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+            last_attached = separator;
+            var client_hading = new Gtk.Label (_("Client identity")) {
+                halign = Gtk.Align.START
+            };
 
-        if (client_cert_info == null) {
+            client_hading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+            grid.attach_next_to (client_hading, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+            last_attached = client_hading;
+
             var missing_client_identity_label = new Gtk.Label (
-                _("You are not providing server %s with your identity.").printf (uri.host)
+                _("You have identities associated with other pages on the %s domain.").printf (uri.host)
             ) {
                 halign = Gtk.Align.START
             };
@@ -109,22 +113,35 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
             );
 
             last_attached = missing_client_identity_label;
-            var provide_identity_button = new Gtk.Button.with_label (_("Provide Identity"));
-            provide_identity_button.clicked.connect (() => {
+            var use_identity_button = new Gtk.Button.with_label (_("Use Identity"));
+            use_identity_button.clicked.connect (() => {
                 show_client_cert_picker_for (uri);
                 popdown ();
             });
 
             grid.attach_next_to (
-                provide_identity_button,
+                use_identity_button,
                 last_attached,
                 Gtk.PositionType.BOTTOM,
                 1,
                 1
             );
 
-            last_attached = provide_identity_button;
-        } else {
+            last_attached = use_identity_button;
+        }
+
+        if (client_cert_info != null) {
+            var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            grid.attach_next_to (separator, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+            last_attached = separator;
+            var client_hading = new Gtk.Label (_("Client identity")) {
+                halign = Gtk.Align.START
+            };
+
+            client_hading.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+            grid.attach_next_to (client_hading, last_attached, Gtk.PositionType.BOTTOM, 2, 1);
+            last_attached = client_hading;
+
             last_attached = attach_row (grid, last_attached, _("Name"), client_cert_info.common_name);
             var client_unlink_button = new Gtk.Button.with_label (_("Stop Using Identity"));
             client_unlink_button.clicked.connect (() => {
@@ -279,7 +296,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         };
 
         layout.attach (header, 0, 1);
-        var certs_list = new ClientCertListBox (session.client_cert_repo, uri);
+        var certs_list = new ClientCertListBox (session.client_cert_repo, uri, true, false);
         certs_list.cert_picked.connect ((t, c) => {
             dialog.destroy ();
             window.activate_action (Window.ACTION_RELOAD, null);
@@ -288,6 +305,7 @@ public class Starfish.UI.CertPopover : Gtk.Popover {
         layout.attach (certs_list, 0, 2);
         dialog.get_content_area ().add (layout);
         dialog.add_button (_("Cancel"), Gtk.ResponseType.CANCEL);
+        dialog.response.connect ((res_id) => dialog.destroy ());
         dialog.show_all ();
     }
 }

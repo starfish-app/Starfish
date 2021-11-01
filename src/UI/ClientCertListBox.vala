@@ -2,23 +2,34 @@ public class Starfish.UI.ClientCertListBox : Gtk.ListBox {
 
     public Core.ClientCertRepo repo { get; construct; }
     public Core.Uri uri { get; construct; }
+    public string? linked_host { get; construct; }
+    public bool show_extra_actions { get; construct; }
 
     public signal void cert_picked (string cert);
 
     public ClientCertListBox (
         Core.ClientCertRepo repo,
-        Core.Uri uri
+        Core.Uri uri,
+        bool show_only_linked_host = false,
+        bool show_extra_actions = true
     ) {
+        string? linked_host = null;
+        if (show_only_linked_host) {
+            linked_host = uri.host;
+        }
+
         Object (
             repo: repo,
             uri: uri,
+            linked_host: linked_host,
+            show_extra_actions: show_extra_actions,
             activate_on_single_click: false,
             selection_mode: Gtk.SelectionMode.NONE
         );
     }
 
     construct {
-        foreach (var cert_name in repo.existing_certificate_names ()) {
+        foreach (var cert_name in repo.existing_certificate_names (linked_host)) {
             var row = new Gtk.ListBoxRow () {
                 activatable = false,
                 selectable = false
@@ -57,18 +68,38 @@ public class Starfish.UI.ClientCertListBox : Gtk.ListBox {
             });
             grid.attach (use_for_domain_button, 3, 0);
 
-            grid.attach (new Gtk.Separator (Gtk.Orientation.VERTICAL), 4, 0);
-            var delete_button = new Gtk.Button.from_icon_name ("user-trash-symbolic") {
-                label = _("Delete"),
-                always_show_image = true
-            };
-            delete_button.clicked.connect (() => {
-                repo.delete_cert (cert_name);
-                remove (row);
-            });
+            if (show_extra_actions) {
+                grid.attach (new Gtk.Separator (Gtk.Orientation.VERTICAL), 4, 0);
+                var dir_button = new Gtk.Button.from_icon_name ("folder-open") {
+                    tooltip_text = _("Show certificate and private key files for %s").printf (cert_name),
+                    focus_on_click = false
+                };
 
-            delete_button.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
-            grid.attach (delete_button, 5, 0);
+                dir_button.clicked.connect (() => {
+                    var cert_dir = repo.find_cert_dir_for (cert_name);
+                    try {
+                        Gtk.show_uri_on_window (null, cert_dir, (uint32) Gdk.CURRENT_TIME);
+                    } catch (Error error) {
+                        warning ("Failed to open cert directory %s, will skip operation. Error message: %s".printf (cert_dir, error.message));
+                    }
+                });
+
+
+                grid.attach (dir_button, 5, 0);
+
+                var delete_button = new Gtk.Button.from_icon_name ("user-trash") {
+                    tooltip_text = _("Stop using %s identity and send its files to trash").printf (cert_name),
+                    focus_on_click = false
+                };
+
+                delete_button.clicked.connect (() => {
+                    repo.delete_cert (cert_name);
+                    remove (row);
+                });
+
+                grid.attach (delete_button, 6, 0);
+            }
+
             row.add (grid);
             add (row);
         }

@@ -127,19 +127,28 @@ public class Starfish.Core.ClientCertRepo : Object {
         return true;
     }
 
-    public Gee.Collection<string> existing_certificate_names () {
+    public Gee.Collection<string> existing_certificate_names (string? linked_host = null) {
         var names = new Gee.HashSet<string> ();
         try {
-            var iter = root_cert_dir.enumerate_children (
-                FileAttribute.STANDARD_NAME,
-                FileQueryInfoFlags.NONE
-            );
+            if (linked_host == null) {
+                var iter = root_cert_dir.enumerate_children (
+                    FileAttribute.STANDARD_NAME,
+                    FileQueryInfoFlags.NONE
+                );
 
-            FileInfo file_info;
-            while ((file_info = iter.next_file ()) != null) {
-                var cert_name_candidate = file_info.get_name ();
-                if (cert_exists (cert_name_candidate)) {
-                    names.add (cert_name_candidate);
+                FileInfo file_info;
+                while ((file_info = iter.next_file ()) != null) {
+                    var cert_name_candidate = file_info.get_name ();
+                    if (cert_exists (cert_name_candidate)) {
+                        names.add (cert_name_candidate);
+                    }
+                }
+            } else {
+                foreach (var entry in uri_to_cert.entries) {
+                    var uri = Core.Uri.parse (entry.key);
+                    if (uri.host == linked_host) {
+                        names.add (entry.value);
+                    }
                 }
             }
         } catch (Error error) {
@@ -171,6 +180,10 @@ public class Starfish.Core.ClientCertRepo : Object {
             warning ("Failed to send cert dir %s to trash, error: %s".printf (cert_dir.get_path (), error.message));
             return false;
         }
+    }
+
+    public string find_cert_dir_for (string cert_name) {
+        return root_cert_dir.get_child (cert_name).get_uri ();
     }
 
     private void recreate_missing_certs_dir () throws Error {
@@ -235,6 +248,10 @@ public class Starfish.Core.ClientCertRepo : Object {
     }
 
     private async void try_to_append_to_certs (string row) {
+        if (!Granite.Services.System.history_is_enabled ()) {
+            return;
+        }
+
         try {
             recreate_missing_certs_dir ();
             var out_stream = yield certs_file.append_to_async (
@@ -259,6 +276,10 @@ public class Starfish.Core.ClientCertRepo : Object {
     }
 
     private async void try_to_recreate_certs_file () {
+        if (!Granite.Services.System.history_is_enabled ()) {
+            return;
+        }
+
         var builder = new StringBuilder ();
         foreach (var entry in uri_to_cert.entries) {
             builder.append (create_row (entry.key, entry.value));

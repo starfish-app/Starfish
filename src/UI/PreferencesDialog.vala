@@ -41,31 +41,36 @@ public class Starfish.UI.PreferencesDialog : Granite.Dialog {
             var raw_uri = homepage_entry.text;
             try {
                 var uri = Core.Uri.parse (raw_uri);
-                if (uri.scheme != "gemini") {
-                    homepage_entry.secondary_icon_name = "dialog-error-symbolic";
+                if (!raw_uri.has_prefix ("gemini://")) {
+                    homepage_entry.secondary_icon_name = "process-error-symbolic";
+                    homepage_entry.get_style_context ().add_class (Gtk.STYLE_CLASS_ERROR);
                     homepage_validation_msg.label = _("Please provide a link to a gemini site.");
                     return;
                 }
 
                 if (uri.host == null || uri.host == "") {
-                    homepage_entry.secondary_icon_name = "dialog-error-symbolic";
+                    homepage_entry.secondary_icon_name = "process-error-symbolic";
+                    homepage_entry.get_style_context ().add_class (Gtk.STYLE_CLASS_ERROR);
                     homepage_validation_msg.label = _("Please define a domain.");
                     return;
                 }
 
                 if (uri.resolve_host ().length == 0) {
-                    homepage_entry.secondary_icon_name = "dialog-error-symbolic";
+                    homepage_entry.secondary_icon_name = "process-error-symbolic";
+                    homepage_entry.get_style_context ().add_class (Gtk.STYLE_CLASS_ERROR);
                     homepage_validation_msg.label = _("Could not resolve domain %s.".printf (uri.host));
                     return;
                 }
 
             } catch (Core.UriError e) {
-                homepage_entry.secondary_icon_name = "dialog-error-symbolic";
+                homepage_entry.secondary_icon_name = "process-error-symbolic";
+                homepage_entry.get_style_context ().add_class (Gtk.STYLE_CLASS_ERROR);
                 homepage_validation_msg.label = _("Could not parse the link. Error: %s".printf (e.message));
                 return;
             };
 
-            homepage_entry.secondary_icon_name = null;
+            homepage_entry.secondary_icon_name = "process-completed-symbolic";
+            homepage_entry.get_style_context ().remove_class (Gtk.STYLE_CLASS_ERROR);
             homepage_validation_msg.label = null;
             settings.set_string ("homepage", raw_uri);
         });
