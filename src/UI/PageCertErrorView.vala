@@ -33,8 +33,7 @@ public class Starfish.UI.PageCertErrorView : Gtk.Grid, ResponseView {
         });
 
         title = new Gtk.Label (null) {
-            halign = Gtk.Align.START,
-            wrap_mode = Pango.WrapMode.CHAR
+            halign = Gtk.Align.START
         };
 
         title.set_markup (_("<span variant=\"smallcaps\" size=\"xx-large\">Received an invalid certificate</span>"));
@@ -42,7 +41,7 @@ public class Starfish.UI.PageCertErrorView : Gtk.Grid, ResponseView {
 
         descritpion = new Gtk.Label (null) {
             halign = Gtk.Align.START,
-            wrap_mode = Pango.WrapMode.CHAR
+            wrap = true
         };
 
         attach (descritpion, 0, 1, 2);
@@ -62,8 +61,7 @@ public class Starfish.UI.PageCertErrorView : Gtk.Grid, ResponseView {
     }
 
     public bool can_display (Core.Response response) {
-        return response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_EXPIRED
-            || response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH;
+        return response.status == Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH;
     }
 
     public void clear () {
@@ -75,26 +73,10 @@ public class Starfish.UI.PageCertErrorView : Gtk.Grid, ResponseView {
         var host = response.uri.host;
         string desc = _("<span>Certificate for %s appears to be invalid. To proceed you can:</span>").printf (host);
         switch (response.status) {
-            case Core.InternalErrorResponse.SERVER_CERTIFICATE_EXPIRED:
-                var expires_at_unix = int64.parse(response.meta);
-                allow_button.label = _("Load the page anyway");
-                allow_button.clicked.connect (() => {
-                    session.navigate_to (session.current_uri.to_string (), true);
-                });
-
-                if (expires_at_unix == 0) {
-                    warning ("Failed to parse %s as Unix timestamp", response.meta);
-                    desc = _("<span>Certificate for %s has expired. To proceed you can:</span>").printf (host);
-                    break;
-                }
-
-                var expired_at = new DateTime.from_unix_utc (expires_at_unix);
-                desc = _("<span>Certificate for %s has expired at %s. To proceed you can:</span>").printf (host, expired_at.format ("%X %d-%m-%Y"));
-                break;
             case Core.InternalErrorResponse.SERVER_CERTIFICATE_MISMATCH:
                 allow_button.label = _("Trust the new certificate");
                 allow_button.clicked.connect (() => {
-                    session.navigate_to (session.current_uri.to_string (), false, true);
+                    session.navigate_to (session.current_uri.to_string (), true);
                 });
 
                 desc = _("<span>Certificate for %s has changed since last time you wisited it. To proceed you can:</span>").printf (host);

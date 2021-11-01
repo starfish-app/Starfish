@@ -1,68 +1,101 @@
 public class Starfish.Core.CertInfo : Object {
 
-    public string? domain { get; construct; }
-    public string domain_hash { get; construct; }
+    public string host { get; construct; }
+    public DateTime active_from { get; construct; }
     public DateTime expires_at { get; construct; }
+    public bool hostname_check { get; construct; }
     public string fingerprint { get; construct; }
+    public string full_print { get; construct; }
+    public string? common_name { get; construct; }
+    public string? country_name { get; construct; }
+    public string? organization_name { get; construct; }
 
-    public CertInfo (DateTime expires_at, string fingerprint, string domain_hash, string? domain = null) {
+    private CertInfo (
+        string host,
+        DateTime active_from,
+        DateTime expires_at,
+        bool hostname_check,
+        string fingerprint,
+        string full_print,
+        string? common_name = null,
+        string? country_name = null,
+        string? organization_name = null
+    ) {
         Object (
-            domain: domain,
-            domain_hash: domain_hash,
+            host: host,
+            active_from: active_from,
             expires_at: expires_at,
-            fingerprint: fingerprint
+            hostname_check: hostname_check,
+            fingerprint: fingerprint,
+            full_print: full_print,
+            common_name: common_name,
+            country_name: country_name,
+            organization_name: organization_name
         );
     }
 
-    public static CertInfo parse (SocketConnectable identity, TlsCertificate cert) throws CertError {
-        var tls_cert = to_tls_cert (cert);
-        var domain = identity.to_string ();
-        var domain_hash = Checksum.compute_for_string (ChecksumType.SHA1, domain);
+    // Can throw PARSING_ERROR
+    public static CertInfo parse (Uri uri, TlsCertificate tls_cert) throws CertError {
+        var cert = import_cert (tls_cert);
         return new CertInfo (
-            expiration_date (tls_cert),
-            compute_fingerprint (tls_cert),
-            domain_hash,
-            domain
+            uri.host,
+            extract_active_from (cert),
+            extract_expires_at (cert),
+            extract_hostname_check (cert, uri),
+            calculate_fingerprint (cert),
+            print_cert (cert),
+            read_dn (cert, "2.5.4.3"),
+            read_dn (cert, "2.5.4.6"),
+            read_dn (cert, "2.5.4.10")
         );
     }
 
-    private static GnuTLS.X509.Certificate to_tls_cert (TlsCertificate cert) throws CertError {
-        var pem = cert.certificate_pem;
-        var data = GnuTLS.Datum() {
-            data = pem,
-            size = pem.length
-        };
-
-        var tls_cert = GnuTLS.X509.Certificate.create();
-        var res_code = tls_cert.import (ref data, GnuTLS.X509.CertificateFormat.PEM);
-        if (res_code != 0) {
-            throw new CertError.PARSING_ERROR ("Error parsing TLS certificate, GnuTLS returned status code %d".printf (res_code));
-        }
-
-        return tls_cert;
+    public bool is_inactive () {
+        var now = new DateTime.now_utc ();
+        return now.compare (this.active_from) < 0;
     }
 
-    private static DateTime expiration_date (GnuTLS.X509.Certificate cert) {
-        var exp_date = Date();
-        exp_date.set_time_t (cert.get_expiration_time ());
-        Time exp_time;
-        exp_date.to_time (out exp_time);
-        return new DateTime.utc (
-            exp_time.year + 1900,
-            exp_time.month + 1,
-            exp_time.day,
-            exp_time.hour,
-            exp_time.minute,
-            exp_time.second
-        );
+    public bool is_expired () {
+        var now = new DateTime.now_utc ();
+        return now.compare (this.expires_at) >= 0;
     }
 
-    private static string compute_fingerprint (GnuTLS.X509.Certificate cert) throws CertError {
+    public bool is_not_applicable_to_uri () {
+        return hostname_check;
+    }
+
+    private static DateTime extract_active_from (
+        GnuTLS.X509.Certificate cert
+    ) {
+        var utc_time = (int64) cert.get_activation_time ();
+        return new DateTime.from_unix_utc (utc_time);
+    }
+
+    private static DateTime extract_expires_at (
+        GnuTLS.X509.Certificate cert
+    ) {
+        var utc_time = (int64) cert.get_expiration_time ();
+        return new DateTime.from_unix_utc (utc_time);
+    }
+
+    private static bool extract_hostname_check (
+        GnuTLS.X509.Certificate cert,
+        Uri requested_uri
+    ) {
+        return !cert.check_hostname (requested_uri.host);
+    }
+
+    // Can throw FINGERPRINTING_ERROR
+    private static string calculate_fingerprint (
+        GnuTLS.X509.Certificate cert
+    ) throws CertError {
         uint8[] buff = new uint8[20];
         size_t buf_size = 20;
         var res_code = cert.get_fingerprint (GnuTLS.DigestAlgorithm.SHA1, buff, ref buf_size);
-        if (res_code != 0) {
-            throw new CertError.FINGERPRINTING_ERROR ("Error fingerprinting TLS certificate, GnuTLS returned status code %d".printf (res_code));
+        if (res_code != GnuTLS.ErrorCode.SUCCESS) {
+            throw new CertError.FINGERPRINTING_ERROR (
+                "Error fingerprinting TLS certificate, GnuTLS returned status code %d".printf (res_code)
+            );
         }
 
         var sha1 = "";
@@ -73,12 +106,44 @@ public class Starfish.Core.CertInfo : Object {
         return sha1;
     }
 
-    public string to_string () {
-        return "CertInfo{ domain: %s, expires_at: %s, fingerprint: %s }".printf (
-            domain,
-            expires_at.format ("%X %d-%m-%Y"),
-            fingerprint
-        );
+    // Can throw PRINTING_ERROR
+    private static string print_cert (
+        GnuTLS.X509.Certificate cert
+    ) throws CertError {
+        GnuTLS.Datum data;
+        var res_code = cert.print (GnuTLS.CertificatePrintFormats.FULL, out data);
+        if (res_code != GnuTLS.ErrorCode.SUCCESS) {
+            throw new CertError.PRINTING_ERROR (
+                "Error printing TLS certificate, GnuTLS returned status code %d".printf (res_code)
+            );
+        }
+
+        return (string) data.data;
+    }
+
+    private static GnuTLS.X509.Certificate import_cert (TlsCertificate tls_cert) throws CertError {
+        var pem = tls_cert.certificate_pem;
+        var data = GnuTLS.Datum() { data = pem, size = pem.length };
+        var cert = GnuTLS.X509.Certificate.create();
+        var res_code = cert.import (ref data, GnuTLS.X509.CertificateFormat.PEM);
+        if (res_code != GnuTLS.ErrorCode.SUCCESS) {
+            throw new CertError.PARSING_ERROR (
+                "Error parsing TLS certificate, GnuTLS returned status code %d".printf (res_code)
+            );
+        }
+
+        return cert;
+    }
+
+    private static string? read_dn (GnuTLS.X509.Certificate cert, string key) {
+        uint8[] buffer = new uint8[4096];
+        size_t buffer_len = buffer.length;
+        var res_code = cert.get_dn_by_oid (key, 0, 0, buffer, ref buffer_len);
+        if (res_code != GnuTLS.ErrorCode.SUCCESS) {
+            return null;
+        }
+
+        return (string) buffer;
     }
 }
 

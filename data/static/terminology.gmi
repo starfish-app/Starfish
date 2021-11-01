@@ -36,6 +36,10 @@ A podcast published over Gemini protocol. (Yes, audio files can be served over G
 
 A small, self-published magazine. A popular format in Geminispace.
 
+## Tinylog
+
+A single Gemtext page with frequent and short updates from its author. Each update is tagged with date and time. They are like Twitter reimagined for Geminispace. Tinylogs are sometimes also called minilogs or micrologs.
+
 ## Smol / small net
 
 Communities on the internet, and the technology that powers them, intentionally designed not to scale. The goal is to stay small in terms of number of users, hardware needed to support them, software complexity, etc. Opposite to Big Internet, with websites such as Facebook, Youtube, Amazon, etc.

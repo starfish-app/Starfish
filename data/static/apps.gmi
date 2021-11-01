@@ -1,4 +1,4 @@
-# 🛠️ Find new and familiar tools
+# 🚀️ Find new and familiar apps
 
 Gemini is more limited than the WWW content on the Big Internet. Despite this, you can find both useful and fun interactive sites on Gemini too.
 
@@ -9,6 +9,19 @@ Gemini capsules aren't indexed by Google or Bing. Instead, there are search engi
 
 => gemini://geminispace.info/ Geminispace.info search engine
 
+## 🗣️ Social networks
+
+While light on interactions, Geminispace still has sites that facilitate social interaction. They range from comment based forums to Twitter-like microblogging sites. Here are examples of both:
+
+=> gemini://midnight.pub/ The Midnight Pub; site for blogging, reading and commenting
+=> gemini://station.martinrue.com Station; microblogging social network
+
+## 🎲️ Games
+
+Games written for Gemini tend to mix writing and interactivity. There are a few choose your own adventure style examples out there. Some of them include social components as well. If like that sort of thing, here are a few:
+
+=> gemini://astrobotany.mozz.us Astrobotany; gardening meets tamagotchi
+=> gemini://transjovian.org/ijiraq/ Ijiraq; a multiplayer text adventure
 
 ## 🎭️ Mirrors
 
@@ -20,13 +33,13 @@ There are Gemini mirrors of some popular WWW Internet sites. These capsules allo
 => gemini://gempaper.strangled.net/mirrorlist/ List of other mirrors
 
 
-## 🤖️ Interactive apps
+## 🛠️ Interactive utilities
 
 Lastly, there are some applications built specifically for the Gemini protocol. They usually offer highly focused utility, and are limited by short (one line) input that Gemini supports. Nonetheless, it can be nice to have them available inside the Geminispace, saving you the need to switch context. Here are a couple of such apps:
 
 => gemini://dictionary.gluonspace.com/ English dictionary
 => gemini://weather.gluonspace.com/ Weather service
-=> gemini://going-flying.com/cgi-bin/converter/ Converters and encoders
+=> gemini://going-flying.com/cgi-bin/converter/ Unit converters and encoders
 
 
 ---

@@ -30,7 +30,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         address_style_provider.load_from_resource ("hr/from/josipantolis/starfish/AddressEntry.css");
     }
 
-    private unowned ActionMap actions;
+    private unowned Window window;
 
     private Gtk.Grid title_widget;
     private Gtk.Entry address;
@@ -44,6 +44,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Button home_button;
     private Gtk.Button bookmarks_button;
     private Gtk.Button reset_zoom_button;
+    private CertPopover cert_popover;
 
     private uint? timeout_id = null;
 
@@ -51,8 +52,8 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         get { return address.text; }
     }
 
-    public HeaderBar (ActionMap actions, Core.Session session) {
-        this.actions = actions;
+    public HeaderBar (Window window, Core.Session session) {
+        this.window = window;
         this.session = session;
         hook_reset_zoom_button_to_settings (session.settings);
     }
@@ -74,6 +75,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         bookmarks_button = setup_button ("user-bookmarks", _("Open bookmarks"), Window.ACTION_OPEN_BOOKMARKS);
 
         address = setup_address ();
+        cert_popover = new CertPopover (address);
         title_widget = new Gtk.Grid () {
             column_spacing = 8,
             hexpand = true
@@ -106,6 +108,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         }
 
         address.text = _session.current_uri.to_string ();
+        address.primary_icon_name = icon_name_for (_session);
     }
 
     private void disable_buttons () {
@@ -172,6 +175,8 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
     private Gtk.Entry setup_address () {
         var address = new Gtk.Entry () {
+            primary_icon_activatable = true,
+            primary_icon_tooltip_text = _("Check identity"),
             hexpand = true,
             secondary_icon_activatable = true,
             secondary_icon_name = "non-starred",
@@ -182,22 +187,24 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         style_ctx.add_provider (address_style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
         address.activate.connect ((a) => {
-            var action = actions.lookup_action (Window.ACTION_RELOAD);
-            action.activate (null);
+            window.activate_action (Window.ACTION_RELOAD, null);
         });
 
         address.icon_release.connect ((pos, event) => {
-            if (pos == Gtk.EntryIconPosition.SECONDARY) {
+            if (pos == Gtk.EntryIconPosition.PRIMARY) {
+                cert_popover.set_session (session);
+                cert_popover.window = window;
+                cert_popover.pointing_to = address.get_icon_area (Gtk.EntryIconPosition.PRIMARY);
+                cert_popover.show_all ();
+            } else if (pos == Gtk.EntryIconPosition.SECONDARY) {
                 var manager = _session.bookmarks_manager;
                 var uri = _session.current_uri;
                 if (manager.is_bookmarked (uri)) {
-                    var action = actions.lookup_action (Window.ACTION_REMOVE_BOOKMARK);
-                    action.activate (null);
+                    window.activate_action (Window.ACTION_REMOVE_BOOKMARK, null);
                     address.secondary_icon_name = "non-starred";
                     address.secondary_icon_tooltip_text = _("Bookmark this page");
                 } else {
-                    var action = actions.lookup_action (Window.ACTION_ADD_BOOKMARK);
-                    action.activate (null);
+                    window.activate_action (Window.ACTION_ADD_BOOKMARK, null);
                     address.secondary_icon_name = "starred";
                     address.secondary_icon_tooltip_text = _("Remove this page rom bookmarks");
                 }
@@ -259,8 +266,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
                 new Variant.boolean (true)
             });
 
-            var action = actions.lookup_action (Window.ACTION_LOAD_URI_IN_NEW_TAB);
-            action.activate (action_args);
+            window.activate_action (Window.ACTION_LOAD_URI_IN_NEW_TAB, action_args);
         });
 
         var menu_grid = new Gtk.Grid () {
@@ -313,6 +319,29 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var default_zoom = settings.get_default_value ("font-size").get_double ();
         var zoom_percent = (settings.get_double ("font-size") / default_zoom) * 100;
         return "%.0f%%".printf (zoom_percent);
+    }
+
+    private string? icon_name_for (Core.Session session) {
+        var uri = session.current_uri;
+        var server_cert = session.cert_info;
+        var client_cert = session.client_cert_info;
+        if (uri.scheme == "file") {
+            return null;
+        }
+
+        if (server_cert == null || server_cert.is_not_applicable_to_uri ()) {
+            return "security-low";
+        }
+
+        if (server_cert.is_inactive () || server_cert.is_expired ()) {
+            return "security-medium";
+        }
+
+        if (client_cert == null) {
+            return "security-high";
+        }
+
+        return "avatar-default";
     }
 }
 
