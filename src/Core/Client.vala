@@ -171,6 +171,11 @@ public class Starfish.Core.Client : Object {
                     return new InternalErrorResponse.redirect_to_non_gemini_link (cert_info, uri, new_uri);
                 }
                 if (redirect_count <= max_redirects) {
+                    var is_same_domain = new_uri.host == uri.host;
+                    if (is_same_domain) {
+                        return yield load_gemini (new_uri, cancel, redirect_count + 1, follow_redirects, accept_mismatched_cert, true);
+                    }
+
                     return yield load_gemini (new_uri, cancel, redirect_count + 1, follow_redirects);
                 } else {
                     return new InternalErrorResponse.redirect_limit_reached (cert_info, uri, new_uri);

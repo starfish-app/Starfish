@@ -97,12 +97,16 @@ public class Starfish.Core.ClientCertRepo : Object {
         out File? private_key_file,
         out File? certificate_file
     ) {
-        var str_uri = uri.to_string ();
         string? cert_name = null;
         foreach (var entry in uri_to_cert.entries) {
-            if (str_uri.has_prefix (entry.key)) {
-                cert_name = entry.value;
-                break;
+            try {
+                var root_uri = Core.Uri.parse (entry.key);
+                if (uri.is_subresource_of (root_uri)) {
+                    cert_name = entry.value;
+                    break;
+                }
+            } catch (Core.UriError error) {
+                warning ("Detected malformed URI in client certs file: %s, error: %s".printf (entry.key, error.message));
             }
         }
         if (cert_name == null) {
