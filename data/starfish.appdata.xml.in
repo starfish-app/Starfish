@@ -11,6 +11,15 @@
     <p>Starfish is a begginer-friendly desktop client for Gemini protol. It supports all core features of Gemini, such as beautiful rendering of text based content and encrypted communication with servers. On top of those Starfish offers comforts of modern browsers, like local browsing history, tabs and favorites.</p>
   </description>
   <releases>
+    <release version="1.1.0" date="2021-11-01">
+      <description>
+        <p>This release focuses on improving certificate handling. In particular:</p>
+        <ul>
+          <li>Information about server certificates is now prominently shown in the address bar, similar to how other web browsers are usually doing it.</li>
+          <li>Client certificates are now fully supported. This allows you access to sites that require user identification, like Astrobotany or Station.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2021-10-03">
       <description>
         <p>Initial release, bringing you features such as:</p>
