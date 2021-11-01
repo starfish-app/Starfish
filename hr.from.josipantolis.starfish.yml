@@ -10,7 +10,6 @@ finish-args:
   # Needed for accessing Gemini sites over Internet
   - '--share=network'
   # Needed for opening local files with files:// URI scheme
-  - '--filesystem=host:ro'
   - '--filesystem=home:ro'
   # Nedded for perfer-color-scheme
   - '--system-talk-name=org.freedesktop.Accounts'
