@@ -5,9 +5,9 @@ A [Gemini](https://gemini.circumlunar.space/) browser made for [elementary OS](h
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYING)
 
-|![Default style Screenshot](https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style.png)|![Dark style Screenshot](https://raw.githubusercontent.com/starfish-app/starfish/main/data/dark-style.png)|
+|![Default style](https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style.png)|![Dark style](https://raw.githubusercontent.com/starfish-app/starfish/main/data/dark-style.png)|
 |----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| Starfish browser rendering an introduction to Gemini page | Starfish client with the dark theme rendering its own project page on Gemini |
+|![Image rendering](https://raw.githubusercontent.com/starfish-app/starfish/main/data/image-rendering.png)|![Dyslexia-friendly text](https://raw.githubusercontent.com/starfish-app/starfish/main/data/dyslexia-friendly-text.png)|
 
 ## About
 
@@ -15,7 +15,7 @@ Starfish is a graphical client for the Gemini protocol built with GTK and Vala. 
 
 ### Status
 
-Starfish is in active development. It currently supports core of the Gemini specification, including gemtext rendering, and can be used to view images and download other file types. There are still some missing features, such as client certificates, or support for subscribing to gemlogs. There are also UI features that could use improvements, such as adding search for gemtext pages, or improving the image viewing.
+Starfish is in active development. It currently supports the prerelease version of the Gemini specification, including gemtext rendering and cleint certificates. Starfish can be used to view images and download other file types. There are still some missing features, such as support for subscribing to gemlogs. There are also UI features that could use improvements, such as adding search for gemtext pages, or improving the image viewing.
 
 ## Build
 
