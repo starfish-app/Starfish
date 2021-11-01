@@ -163,7 +163,7 @@ foreach i : icon_sizes
 endforeach
 
 # Install docs
-doc_files = ['index.gmi', 'discover.gmi', 'tools.gmi', 'terminology.gmi']
+doc_files = ['index.gmi', 'discover.gmi', 'apps.gmi', 'terminology.gmi']
 
 foreach doc_file : doc_files
     install_data(

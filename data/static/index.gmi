@@ -32,7 +32,7 @@ Since there are no ads, and interactivity is limited, Gemini is not interesting 
 ## 🏄‍♂️️ Get surfing!
 
 => ./discover.gmi Discover Gemini content
-=> ./tools.gmi Find new and familiar tools
+=> ./apps.gmi Find new and familiar apps
 => ./terminology.gmi Learn the terminology
 
 If you are interested in alternative Gemini browsers, publishing your own content and more check out:
