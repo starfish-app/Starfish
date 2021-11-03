@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-01 18:27+0100\n"
+"POT-Creation-Date: 2021-11-03 02:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -267,22 +267,6 @@ msgstr ""
 
 #: src/UI/PageClientCertPickerView.vala:63
 msgid "Create New Identity"
-msgstr ""
-
-#: src/UI/PageTextView.vala:199
-msgid "Open link"
-msgstr ""
-
-#: src/UI/PageTextView.vala:207
-msgid "Open link in a new tab"
-msgstr ""
-
-#: src/UI/PageTextView.vala:221
-msgid "Copy link"
-msgstr ""
-
-#: src/UI/PageTextView.vala:228
-msgid "Copy description"
 msgstr ""
 
 #: src/UI/PageDownloadView.vala:66 src/UI/PageDownloadView.vala:153
@@ -735,33 +719,49 @@ msgid ""
 msgstr ""
 
 #: data/starfish.appdata.xml.in:16
-msgid "Initial release, bringing you features such as:"
+msgid "This release focuses on improving certificate handling. In particular:"
 msgstr ""
 
 #: data/starfish.appdata.xml.in:18
+msgid ""
+"Information about server certificates is now prominently shown in the "
+"address bar, similar to how other web browsers are usually doing it."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:19
+msgid ""
+"Client certificates are now fully supported. This allows you access to sites "
+"that require user identification, like Astrobotany or Station."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:25
+msgid "Initial release, bringing you features such as:"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:27
 msgid ""
 "Beautiful rendering of gemtext content, both served over the network via "
 "Gemini protocol and read from local files."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:19
+#: data/starfish.appdata.xml.in:28
 msgid ""
 "In-app rendering of images and a download option for other file types that "
 "you might encounter in the Geminispace."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:20
+#: data/starfish.appdata.xml.in:29
 msgid ""
 "A gentle introduction to Gemini, with pointers on how to get around and "
 "discover more content."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:21
+#: data/starfish.appdata.xml.in:30
 msgid ""
 "Stuff you'd normally expect from a browser, like tabs, favorites, history-"
 "based navigation, etc."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:31
+#: data/starfish.appdata.xml.in:40
 msgid "Josip Antoliš"
 msgstr ""

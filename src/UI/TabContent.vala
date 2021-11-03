@@ -62,6 +62,7 @@ public class Starfish.UI.TabContent : Gtk.Box {
 
     private void on_link_event (PageTextView page, LinkEvent event) {
         switch (event.event_type) {
+            // TODO: move pointer stuff into GemtextView itself
             case LinkEventType.HOVER_ENTER:
                 var gdk_window = page.get_window (Gtk.TextWindowType.TEXT);
                 if (gdk_window != null) {
