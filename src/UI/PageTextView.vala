@@ -1,4 +1,4 @@
-public class Starfish.UI.PageTextView : Gtk.Overlay, ResponseView {
+public class Starfish.UI.PageTextView : Gtk.Bin, ResponseView {
 
     public Core.Session session { get; construct; }
     private Cancellable cancel;
@@ -16,7 +16,7 @@ public class Starfish.UI.PageTextView : Gtk.Overlay, ResponseView {
             cancel.cancel ();
         });
 
-        gemtext_view = new GemtextView (session) {
+        gemtext_view = new GemtextView (session.theme, session.current_uri) {
             top_margin = 16,
             left_margin = 24,
             right_margin = 24
@@ -47,6 +47,7 @@ public class Starfish.UI.PageTextView : Gtk.Overlay, ResponseView {
         cancel.reset ();
         var body = response.text_body ();
         clear ();
+        gemtext_view.current_uri = session.current_uri;
         body.foreach_line.begin (gemtext_view.display_line, cancel, (obj, res) => {
             body.foreach_line.end (res);
             session.loading = false;
@@ -59,10 +60,6 @@ public class Starfish.UI.PageTextView : Gtk.Overlay, ResponseView {
     // and then remove this method:
     public void display_line (Core.Line line) {
         gemtext_view.display_line (line);
-    }
-
-    public unowned Gdk.Window? get_window (Gtk.TextWindowType win) {
-        return gemtext_view.get_window (win);
     }
 }
 

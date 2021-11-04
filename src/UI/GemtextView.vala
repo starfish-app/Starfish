@@ -1,6 +1,7 @@
 public class Starfish.UI.GemtextView : Gtk.TextView {
 
-    public Core.Session session { get; construct; }
+    public Core.Theme theme { get; construct; }
+    public Core.Uri current_uri { get; set; }
 
     private Gtk.TextTag h1_tag;
     private Gtk.TextTag h2_tag;
@@ -14,9 +15,10 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
 
     public signal void link_event (LinkEvent event);
 
-    public GemtextView (Core.Session session) {
+    public GemtextView (Core.Theme theme, Core.Uri current_uri) {
         Object (
-            session: session,
+            theme: theme,
+            current_uri: current_uri,
             editable: false,
             cursor_visible: false,
             wrap_mode: Gtk.WrapMode.WORD_CHAR
@@ -59,7 +61,7 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
             text = "▏" + text;
         } else if (line.line_type == Core.LineType.LINK) {
             try {
-                var uri = Core.Uri.parse (line.get_url (), session.current_uri);
+                var uri = Core.Uri.parse (line.get_url (), current_uri);
                 if (uri.scheme != "gemini" && uri.scheme != "file") {
                     text = text + " 🌐️";
                 }
@@ -86,9 +88,9 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
                 return list_item_tag;
             case Core.LineType.LINK:
                 try {
-                    var uri = Core.Uri.parse (line.get_url (), session.current_uri);
+                    var uri = Core.Uri.parse (line.get_url (), current_uri);
                     var tag = new LinkTextTag (
-                        session.theme,
+                        theme,
                         uri,
                         line.get_url_desc ()
                     );
@@ -101,15 +103,15 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
                 }
             case Core.LineType.PREFORMATTED_START:
                 last_alt_text = line.get_alt_text ();
-                var tag = new PreformattedTextTag (session.theme, last_alt_text);
+                var tag = new PreformattedTextTag (theme, last_alt_text);
                 buffer.tag_table.add (tag);
                 return tag;
             case Core.LineType.PREFORMATTED:
-                var tag = new PreformattedTextTag (session.theme, last_alt_text);
+                var tag = new PreformattedTextTag (theme, last_alt_text);
                 buffer.tag_table.add (tag);
                 return tag;
             case Core.LineType.PREFORMATTED_END:
-                var tag = new PreformattedTextTag (session.theme, last_alt_text);
+                var tag = new PreformattedTextTag (theme, last_alt_text);
                 last_alt_text = null;
                 buffer.tag_table.add (tag);
                 return tag;
@@ -121,12 +123,11 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
 
     private void setup_theme () {
         get_style_context ().add_provider (
-            session.theme.get_gemtext_css(),
+            theme.get_gemtext_css(),
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );
 
-        session.theme.notify.connect (() => {
-            var theme = session.theme;
+        theme.notify.connect (() => {
             quote_tag.paragraph_background_rgba = theme.block_background_color;
             buffer.tag_table.foreach (tag => {
                 if (tag is LinkTextTag) {
@@ -168,7 +169,7 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
             left_margin: 36,
             pixels_above_lines: 16,
             pixels_below_lines: 16,
-            paragraph_background_rgba: session.theme.block_background_color
+            paragraph_background_rgba: theme.block_background_color
         );
 
         text_tag = buffer.create_tag (
@@ -228,6 +229,8 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
                 old_link_tag.desc,
                 LinkEventType.HOVER_EXIT
             ));
+            set_cursor_to ("text");
+            de_highlight (old_link_tag);
         }
 
         if (new_link_tag != null) {
@@ -236,7 +239,31 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
                 new_link_tag.desc,
                 LinkEventType.HOVER_ENTER
             ));
+            set_cursor_to ("pointer");
+            highlight (new_link_tag);
         }
+    }
+
+    private void set_cursor_to (string cursor_name) {
+        var gdk_window = get_window (Gtk.TextWindowType.TEXT);
+        if (gdk_window != null) {
+            gdk_window.set_cursor (new Gdk.Cursor.from_name (
+                gdk_window.get_display (),
+                cursor_name
+            ));
+        }
+    }
+
+    private void de_highlight (LinkTextTag link_tag) {
+        var transparent = Gdk.RGBA ();
+        transparent.parse ("rgba(0, 0, 0, 0)");
+        link_tag.paragraph_background_rgba = transparent;
+    }
+
+    private void highlight (LinkTextTag link_tag) {
+        var background_color = theme.link_color.copy ();
+        background_color.alpha = 0.07;
+        link_tag.paragraph_background_rgba = background_color;
     }
 
     private bool on_button_release (Gdk.EventButton event) {

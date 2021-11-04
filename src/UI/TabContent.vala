@@ -1,6 +1,7 @@
-public class Starfish.UI.TabContent : Gtk.Box {
+public class Starfish.UI.TabContent : Gtk.Overlay {
 
     private ContentStack content;
+    private Granite.Widgets.OverlayBar? link_overlay;
 
     public Window window { get; construct; }
     public Core.Tab tab_model { get; construct; }
@@ -62,30 +63,17 @@ public class Starfish.UI.TabContent : Gtk.Box {
 
     private void on_link_event (PageTextView page, LinkEvent event) {
         switch (event.event_type) {
-            // TODO: move pointer stuff into GemtextView itself
             case LinkEventType.HOVER_ENTER:
-                var gdk_window = page.get_window (Gtk.TextWindowType.TEXT);
-                if (gdk_window != null) {
-                    var pointer = new Gdk.Cursor.from_name (
-                        gdk_window.get_display (),
-                        "pointer"
-                    );
-
-                    gdk_window.set_cursor (pointer);
+                if (link_overlay == null) {
+                    link_overlay = new Granite.Widgets.OverlayBar (this);
                 }
 
+                link_overlay.label = event.link_url;
+                link_overlay.show_all ();
                 return;
             case LinkEventType.HOVER_EXIT:
-                var gdk_window = page.get_window (Gtk.TextWindowType.TEXT);
-                if (gdk_window != null) {
-                    var text = new Gdk.Cursor.from_name (
-                        gdk_window.get_display (),
-                        "text"
-                    );
-
-                    gdk_window.set_cursor (text);
-                }
-
+                link_overlay.label = null;
+                link_overlay.hide ();
                 return;
             case LinkEventType.LEFT_MOUSE_CLICK:
                 var action_arg = new Variant.string (event.link_url);
