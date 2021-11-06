@@ -1,7 +1,6 @@
-public class Starfish.UI.TabContent : Gtk.Overlay {
+public class Starfish.UI.TabContent : Gtk.Box {
 
     private ContentStack content;
-    private Granite.Widgets.OverlayBar? link_overlay;
 
     public Window window { get; construct; }
     public Core.Tab tab_model { get; construct; }
@@ -63,18 +62,6 @@ public class Starfish.UI.TabContent : Gtk.Overlay {
 
     private void on_link_event (PageTextView page, LinkEvent event) {
         switch (event.event_type) {
-            case LinkEventType.HOVER_ENTER:
-                if (link_overlay == null) {
-                    link_overlay = new Granite.Widgets.OverlayBar (this);
-                }
-
-                link_overlay.label = event.link_url;
-                link_overlay.show_all ();
-                return;
-            case LinkEventType.HOVER_EXIT:
-                link_overlay.label = null;
-                link_overlay.hide ();
-                return;
             case LinkEventType.LEFT_MOUSE_CLICK:
                 var action_arg = new Variant.string (event.link_url);
                 window.activate_action (Window.ACTION_LOAD_URI, action_arg);

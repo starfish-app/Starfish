@@ -25,14 +25,7 @@ public class Starfish.UI.ContentStack : Gtk.Stack {
 
     construct {
         foreach (var entry in response_views) {
-            var scrollable = new Gtk.ScrolledWindow (null, null) {
-                hexpand = true,
-                vexpand = true
-            };
-
-            scrollable.add (entry.value);
-            scrollable.show ();
-            add_named (scrollable, entry.key);
+            add_named (entry.value, entry.key);
         }
         set_visible_child_name (default_view);
     }

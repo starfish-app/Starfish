@@ -11,6 +11,7 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
     private Gtk.TextTag list_item_tag;
 
     private string? last_alt_text = null;
+    private GemtextRef last_inserted_ref = new GemtextRef ();
     private Gtk.TextTag? hovered_over_tag = null;
 
     public signal void link_event (LinkEvent event);
@@ -33,6 +34,10 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
 
     public void clear () {
         buffer.text = "";
+        last_alt_text = null;
+        last_inserted_ref = new GemtextRef ();
+        hovered_over_tag = null;
+        set_cursor_to ("text");
         var tags_to_remove = new Gee.ArrayList<unowned Gtk.TextTag> ();
         buffer.tag_table.foreach (tag => {
             if (tag is LinkTextTag || tag is PreformattedTextTag) {
@@ -45,20 +50,35 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         }
     }
 
-    public void display_line (Core.Line line) {
+    public GemtextRef? display_line (Core.Line line) {
         Gtk.TextIter end;
         buffer.get_end_iter (out end);
         var text = displayable_text_for (line);
         var tag = tag_for (line);
         buffer.insert_with_tags (ref end, text, -1, tag);
+        var line_ref = gemtext_ref_for (line);
+        if (line_ref != last_inserted_ref) {
+            last_inserted_ref = line_ref;
+            buffer.create_mark (line_ref.to_string (), end, true);
+            return line_ref;
+        }
+
+        return null;
+    }
+
+    public void scroll_to (GemtextRef line_ref) {
+        var mark = buffer.get_mark (line_ref.to_string ());
+        if (mark == null) {
+            return;
+        }
+
+        scroll_to_mark  (mark, 0.1, true, 0.1, 0.1);
     }
 
     private string displayable_text_for (Core.Line line) {
         var text = line.get_display_content ();
         if (line.line_type == Core.LineType.LIST_ITEM) {
             text = "• " + text;
-        } else if (line.line_type == Core.LineType.QUOTE) {
-            text = "▏" + text;
         } else if (line.line_type == Core.LineType.LINK) {
             try {
                 var uri = Core.Uri.parse (line.get_url (), current_uri);
@@ -121,6 +141,19 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         }
     }
 
+    private GemtextRef gemtext_ref_for (Core.Line line) {
+        switch (line.line_type) {
+            case Core.LineType.HEADING_1:
+                return last_inserted_ref.next_h1 ();
+            case Core.LineType.HEADING_2:
+                return last_inserted_ref.next_h2 ();
+            case Core.LineType.HEADING_3:
+                return last_inserted_ref.next_h3 ();
+            default:
+                return last_inserted_ref;
+        }
+    }
+
     private void setup_theme () {
         get_style_context ().add_provider (
             theme.get_gemtext_css(),
@@ -166,6 +199,7 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         quote_tag = buffer.create_tag (
             "QUOTE",
             style: Pango.Style.ITALIC,
+            indent: 8,
             left_margin: 36,
             pixels_above_lines: 16,
             pixels_below_lines: 16,
