@@ -155,8 +155,10 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
     }
 
     private void setup_theme () {
-        get_style_context ().add_provider (
-            theme.get_gemtext_css(),
+        var style_ctx = get_style_context ();
+        var previous_provider = theme.get_gemtext_css();
+        style_ctx.add_provider (
+            previous_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );
 
@@ -170,10 +172,14 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
                 }
             });
 
-            get_style_context ().add_provider (
-                theme.get_gemtext_css(),
+            var next_provider = theme.get_gemtext_css();
+            style_ctx.add_provider (
+                next_provider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             );
+
+            style_ctx.remove_provider (previous_provider);
+            previous_provider = next_provider;
         });
     }
 
