@@ -44,6 +44,7 @@ sources = gresource + files(
     'src/UI/PageDownloadView.vala',
     'src/UI/GemtextRef.vala',
     'src/UI/GemtextView.vala',
+    'src/UI/GemtextSearchBar.vala',
     'src/UI/TableOfContent.vala',
     'src/UI/LinkEventType.vala',
     'src/UI/LinkEvent.vala',

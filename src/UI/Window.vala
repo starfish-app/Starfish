@@ -28,6 +28,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
     public const string ACTION_REMOVE_BOOKMARK = "remove-bookmark";
     public const string ACTION_LOAD_URI = "load-uri";
     public const string ACTION_LOAD_URI_IN_NEW_TAB = "load-uri-in-new-tab";
+    public const string ACTION_SEARCH = "search";
 
     public static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> ();
 
@@ -48,6 +49,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         {ACTION_REMOVE_BOOKMARK, on_remove_bookmark},
         {ACTION_LOAD_URI, on_load_uri, "s"},
         {ACTION_LOAD_URI_IN_NEW_TAB, on_load_uri_in_new_tab, "(sb)"},
+        {ACTION_SEARCH, on_search},
     };
 
     static construct {
@@ -61,6 +63,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         action_accelerators[ACTION_RESET_ZOOM] = "<Control>0";
         action_accelerators[ACTION_ZOOM_IN] = "<Control>plus";
         action_accelerators[ACTION_ZOOM_IN] = "<Control>equal";
+        action_accelerators[ACTION_SEARCH] = "<Control>f";
     }
 
     public Window (Starfish.UI.Application application, Core.TabManager tab_manager) {
@@ -372,6 +375,11 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
         } catch (Core.UriError err) {
             warning ("Received invalid Uri in load uri in new tab callback: `%s`, will skip opening new tab. Error: %s`", raw_relative_uri, err.message);
         }
+    }
+
+    private void on_search () {
+        var session = focused_tab_session ();
+        session.show_search ();
     }
 
     private bool on_mouse_click_event (Gtk.Widget self, Gdk.EventButton event) {
