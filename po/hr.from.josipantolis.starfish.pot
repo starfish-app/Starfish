@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-07 02:51+0100\n"
+"POT-Creation-Date: 2021-11-12 01:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/UI/Window.vala:71 data/starfish.desktop.in:3
+#: src/UI/Window.vala:74 data/starfish.desktop.in:3
 #: data/starfish.appdata.xml.in:7
 msgid "Starfish"
 msgstr ""

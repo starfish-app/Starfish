@@ -22,7 +22,8 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
             current_uri: current_uri,
             editable: false,
             cursor_visible: false,
-            wrap_mode: Gtk.WrapMode.WORD_CHAR
+            wrap_mode: Gtk.WrapMode.WORD_CHAR,
+            has_tooltip: true
         );
     }
 
@@ -224,13 +225,30 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
     }
 
     private void connect_to_events () {
+        query_tooltip.connect (on_query_tooltip);
         motion_notify_event.connect ((view, event) => on_motion_notify (event));
         button_release_event.connect ((view, event) => on_button_release (event));
         populate_popup.connect ((view, menu) => on_populate_popup (menu));
     }
 
+    private bool on_query_tooltip (int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip) {
+        var tag = tag_for_event (x, y);
+        if (tag != null && tag is PreformattedTextTag) {
+            var pref_tag = (PreformattedTextTag) tag;
+            string tooltip_text = pref_tag.alt_text;
+            if (tooltip_text == null || tooltip_text == "") {
+                tooltip_text = _("Preformatted text without description.");
+            }
+
+            tooltip.set_text (tooltip_text);
+            return true;
+        }
+
+        return false;
+    }
+
     private bool on_motion_notify (Gdk.EventMotion event) {
-        var tag = tag_for_event (event.x, event.y);
+        var tag = tag_for_event ((int) event.x, (int) event.y);
         if (tag != hovered_over_tag) {
             handle_hover_change (tag);
         }
@@ -239,16 +257,17 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         return false;
     }
 
-    private Gtk.TextTag? tag_for_event (double event_x, double event_y) {
+    private Gtk.TextTag? tag_for_event (int event_x, int event_y) {
         int buffer_x;
         int buffer_y;
         window_to_buffer_coords (
             Gtk.TextWindowType.TEXT,
-            (int) event_x,
-            (int) event_y,
+            event_x,
+            event_y,
             out buffer_x,
             out buffer_y
         );
+
         Gtk.TextIter iter;
         get_iter_at_location (out iter, buffer_x, buffer_y);
         var all_tags = iter.get_tags ();
