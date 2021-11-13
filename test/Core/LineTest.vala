@@ -98,7 +98,7 @@ public class Starfish.Core.LineTest : Starfish.TestBase, Object {
 
     private static void should_handle_preformatted_start_with_desc () {
         var actual = new Line ("```Descrption!", LineType.PREFORMATTED_START);
-        assert_line (actual, "Descrption!", null, null, "Descrption!");
+        assert_line (actual, "", null, null, "Descrption!");
     }
 
     private static void should_handle_preformatted_end () {
