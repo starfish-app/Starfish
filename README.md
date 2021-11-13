@@ -1,4 +1,4 @@
-<img align="left" width="64" height="64" src="https://raw.githubusercontent.com/starfish-app/starfish/main/data/icons/64.png">
+<img align="left" width="64" height="64" src="https://raw.githubusercontent.com/starfish-app/starfish/main/data/icons/64.svg">
 <h1>Starfish</h1>
 
 A [Gemini](https://gemini.circumlunar.space/) browser made for [elementary OS](https://elementary.io/).
