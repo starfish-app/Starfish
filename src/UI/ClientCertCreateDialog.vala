@@ -36,7 +36,7 @@ public class Starfish.UI.ClientCertCreateDialog : Granite.Dialog {
 
         var name_entry = new Gtk.Entry () {
             hexpand = true,
-            text = uri.host
+            text = default_name_for (uri.host)
         };
 
         grid.attach (name_entry, 1, 1, 2);
@@ -156,6 +156,15 @@ public class Starfish.UI.ClientCertCreateDialog : Granite.Dialog {
                 destroy ();
             }
         });
+    }
+
+    private string default_name_for (string name_candidate) {
+        var existing_names = repo.existing_certificate_names ();
+        if (!existing_names.contains (name_candidate)) {
+            return name_candidate;
+        }
+
+        return name_candidate + "-new";
     }
 }
 

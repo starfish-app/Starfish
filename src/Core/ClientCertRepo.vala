@@ -32,7 +32,11 @@ public class Starfish.Core.ClientCertRepo : Object {
         try {
             dir.make_directory_with_parents ();
         } catch (Error err) {
-            if (!(err is IOError.EXISTS)) {
+            if (err is IOError.EXISTS) {
+                throw new CertError.CLIENT_CERT_GENERATION_ERROR (
+                    "Certificate named %s already exists. Try creating a certificate with a different name.".printf (name)
+                );
+            } else {
                 throw new CertError.CLIENT_CERT_GENERATION_ERROR (
                     "Failed to crate client certificate directory %s, error: %s.".printf (dir.get_path (), err.message)
                 );
