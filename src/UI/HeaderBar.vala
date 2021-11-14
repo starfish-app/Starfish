@@ -42,6 +42,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Button up_button;
     private Gtk.Button root_button;
     private Gtk.Button home_button;
+    private Gtk.Button search_button;
     private Gtk.Button bookmarks_button;
     private Gtk.Button reset_zoom_button;
     private CertPopover cert_popover;
@@ -72,6 +73,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         up_button = setup_button ("go-up", _("Go up"), Window.ACTION_GO_UP);
         root_button = setup_button ("go-top", _("Go to root"), Window.ACTION_GO_TO_ROOT);
         home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
+        search_button = setup_button ("system-search", _("Find..."), Window.ACTION_SEARCH);
         bookmarks_button = setup_button ("user-bookmarks", _("Open bookmarks"), Window.ACTION_OPEN_BOOKMARKS);
 
         address = setup_address ();
@@ -82,7 +84,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         };
         title_widget.attach (address, 0, 0);
         title_widget.attach (stop_reload_button, 1, 0);
-        title_widget.attach (home_button, 2, 0);
+        title_widget.attach (search_button, 2, 0);
         custom_title = title_widget;
 
         pack_start (up_button);
@@ -93,6 +95,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var menu_button = setup_menu ();
         pack_end (menu_button);
         pack_end (bookmarks_button);
+        pack_end (home_button);
     }
 
     private void on_session_change () {
@@ -119,6 +122,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         root_button.sensitive = false;
         address.sensitive = false;
         bookmarks_button.sensitive = false;
+        search_button.sensitive = false;
     }
 
     private void enable_buttons () {
@@ -129,6 +133,8 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var is_gemini_site = session.current_uri.scheme == "gemini";
         up_button.sensitive = is_gemini_site;
         root_button.sensitive = is_gemini_site;
+        var is_text = session.mime != null && session.mime.is_text;
+        search_button.sensitive = is_text;
         bookmarks_button.sensitive = true;
     }
 

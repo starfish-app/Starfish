@@ -47,8 +47,8 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
         attach (overlay, 0, 0);
 
         search_bar = new GemtextSearchBar (gemtext_view);
-        session.show_search.connect (() => {
-            search_bar.search_mode_enabled = true;
+        session.toggle_search.connect (() => {
+            search_bar.search_mode_enabled = !search_bar.search_mode_enabled;
         });
         attach (search_bar, 0, 1);
     }
@@ -69,6 +69,7 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
     public virtual void clear () {
         on_hover_exit ();
         search_bar.clear ();
+        search_bar.search_mode_enabled = false;
         gemtext_view.clear ();
         toc.clear ();
     }

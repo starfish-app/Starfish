@@ -3,7 +3,7 @@ public class Starfish.UI.TableOfContent : Gtk.MenuButton {
     private OnRefClick ref_click_delegate;
     private Gtk.Grid line_links;
 
-    public TableOfContent (OnRefClick ref_click_delegate) {
+    public TableOfContent (owned OnRefClick ref_click_delegate) {
         Object (
             image: new Gtk.Image.from_icon_name (
                 "format-justify-right",
@@ -18,7 +18,7 @@ public class Starfish.UI.TableOfContent : Gtk.MenuButton {
             valign: Gtk.Align.START
         );
 
-        this.ref_click_delegate = ref_click_delegate;
+        this.ref_click_delegate = (owned) ref_click_delegate;
     }
 
     construct {
