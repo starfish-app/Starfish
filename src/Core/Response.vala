@@ -67,6 +67,10 @@ public class Starfish.Core.Response : Object {
             return null;
         }
 
+        if (!is_success) {
+            return null;
+        }
+
         return new Mime (meta);
     }
 
