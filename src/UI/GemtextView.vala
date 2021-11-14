@@ -163,7 +163,7 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );
 
-        theme.notify.connect (() => {
+        theme.changed.connect (() => {
             quote_tag.paragraph_background_rgba = theme.block_background_color;
             buffer.tag_table.foreach (tag => {
                 if (tag is LinkTextTag) {
