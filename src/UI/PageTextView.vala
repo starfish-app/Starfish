@@ -72,6 +72,7 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
         search_bar.search_mode_enabled = false;
         gemtext_view.clear ();
         toc.clear ();
+        toc.hide ();
     }
 
     public virtual void display (Core.Response response) {
@@ -79,6 +80,10 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
         var body = response.text_body ();
         clear ();
         gemtext_view.current_uri = session.current_uri;
+        if (response.mime ().is_gemtext) {
+            toc.show ();
+        }
+
         body.foreach_line.begin (display_line, cancel, (obj, res) => {
             body.foreach_line.end (res);
             session.loading = false;
