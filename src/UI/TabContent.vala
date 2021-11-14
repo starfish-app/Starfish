@@ -20,7 +20,6 @@ public class Starfish.UI.TabContent : Gtk.Box {
         var text_view = new PageTextView (session);
         text_view.link_event.connect (on_link_event);
         var static_error_view = new PageStaticErrorView (session);
-        static_error_view.link_event.connect (on_link_event);
         var cert_error_view = new PageCertErrorView (session);
         var client_cert_picker_view = new PageClientCertPickerView (session, window);
         var image_view = new PageImageView (session);

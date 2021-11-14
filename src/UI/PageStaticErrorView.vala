@@ -1,4 +1,7 @@
-public class Starfish.UI.PageStaticErrorView : PageTextView {
+public class Starfish.UI.PageStaticErrorView : Gtk.Box, ResponseView {
+
+    public Core.Session session { get; construct; }
+    private GemtextView gemtext_view;
 
     private Templates.Template temp_faliue = new Templates.TempFailure ();
     private Templates.Template connection_failed = new Templates.ConnectionFailed ();
@@ -15,10 +18,31 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
     private Templates.Template file_access_denied = new Templates.FileAccessDenied ();
 
     public PageStaticErrorView (Core.Session session) {
-        base (session);
+        Object (
+            session: session,
+            spacing: 0,
+            orientation: Gtk.Orientation.VERTICAL,
+            vexpand: true
+        );
     }
 
-    public override bool can_display (Core.Response response) {
+    construct {
+        gemtext_view = new GemtextView (session.theme, session.current_uri) {
+            top_margin = 16,
+            left_margin = 24,
+            right_margin = 24
+        };
+
+        var scrollable = new Gtk.ScrolledWindow (null, null) {
+            vexpand = true
+        };
+
+        scrollable.add (gemtext_view);
+        scrollable.show ();
+        add (scrollable);
+    }
+
+    public bool can_display (Core.Response response) {
         if (response.is_input) {
             return false;
         }
@@ -30,11 +54,23 @@ public class Starfish.UI.PageStaticErrorView : PageTextView {
         return false;
     }
 
-    public override void display (Core.Response response) {
+    public void clear () {
+        gemtext_view.clear ();
+    }
+
+    public void display (Core.Response response) {
         var error_body = get_error_body_for (response);
         clear ();
-        error_body.foreach_line.begin (display_line, new Cancellable ());
-        session.loading = false;
+        error_body.foreach_line.begin (
+            (line) => {
+                gemtext_view.display_line (line);
+            }, new Cancellable (),
+            (obj, res) => {
+                error_body.foreach_line.end (res);
+                session.loading = false;
+                response.close ();
+            }
+        );
     }
 
     private Core.GeminiBody get_error_body_for (Core.Response response) {

@@ -92,9 +92,7 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
         });
     }
 
-    // TODO: refactor other code to use GemtextView directly
-    // and then make this method private:
-    public void display_line (Core.Line line) {
+    private void display_line (Core.Line line) {
         var line_ref = gemtext_view.display_line (line);
         if (line_ref != null) {
             toc.add_ref (line_ref, line);
