@@ -1,16 +1,18 @@
-public class Starfish.UI.PageImageView : Gtk.Image, ResponseView {
+public class Starfish.UI.PageImageView : Gtk.Grid, ResponseView {
 
     public Core.Session session { get; construct; }
     public Gee.Set<string> supported_mime_types { get; construct; }
 
     private IOStream connection;
+    private Gtk.Image image;
     private Gdk.Pixbuf original_pixbuf;
     private Cancellable cancel;
 
     public PageImageView (Core.Session session) {
         Object (
             session: session,
-            supported_mime_types: find_supported_types ()
+            supported_mime_types: find_supported_types (),
+            orientation: Gtk.Orientation.VERTICAL
         );
     }
 
@@ -19,6 +21,19 @@ public class Starfish.UI.PageImageView : Gtk.Image, ResponseView {
         session.cancel_loading.connect (() => {
             cancel.cancel ();
         });
+
+        image = new Gtk.Image ();
+        var scrollable = new Gtk.ScrolledWindow (null, null) {
+            vexpand = true,
+            hexpand = true
+        };
+
+        scrollable.add (image);
+        attach (scrollable, 0, 0);
+    }
+
+    public void clear () {
+        image.clear ();
     }
 
     public bool can_display (Core.Response response) {
@@ -44,7 +59,7 @@ public class Starfish.UI.PageImageView : Gtk.Image, ResponseView {
             });
 
             loader.area_updated.connect ((l, x, y, w, h) => {
-                set_from_pixbuf (original_pixbuf);
+                image.set_from_pixbuf (original_pixbuf);
             });
 
             connection = response.connection;
