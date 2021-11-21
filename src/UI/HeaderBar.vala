@@ -20,6 +20,17 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             });
 
             on_session_change ();
+
+            if (search_mode_binding != null) {
+                search_mode_binding.unbind ();
+            }
+
+            search_mode_binding = _session.bind_property (
+                "search_is_open",
+                search_button,
+                "active",
+                BindingFlags.BIDIRECTIONAL
+            );
         }
     }
 
@@ -42,10 +53,11 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Button up_button;
     private Gtk.Button root_button;
     private Gtk.Button home_button;
-    private Gtk.Button search_button;
+    private Gtk.ToggleButton search_button;
     private Gtk.Button bookmarks_button;
     private Gtk.Button reset_zoom_button;
     private CertPopover cert_popover;
+    private Binding search_mode_binding;
 
     private uint? timeout_id = null;
 
@@ -73,7 +85,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         up_button = setup_button ("go-up", _("Go up"), Window.ACTION_GO_UP);
         root_button = setup_button ("go-top", _("Go to root"), Window.ACTION_GO_TO_ROOT);
         home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
-        search_button = setup_button ("system-search", _("Find..."), Window.ACTION_SEARCH);
+        search_button = set_up_search_button ();
         bookmarks_button = setup_button ("user-bookmarks", _("Open bookmarks"), Window.ACTION_OPEN_BOOKMARKS);
 
         address = setup_address ();
@@ -304,6 +316,20 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             tooltip_markup = Granite.markup_accel_tooltip (
                 Window.action_accelerators[action].to_array (),
                 name
+            )
+        };
+    }
+
+    private Gtk.ToggleButton set_up_search_button () {
+        return new Gtk.ToggleButton() {
+            image = new Gtk.Image.from_icon_name (
+                "system-search",
+                Gtk.IconSize.LARGE_TOOLBAR
+            ),
+            focus_on_click = false,
+            tooltip_markup = Granite.markup_accel_tooltip (
+                Window.action_accelerators[Window.ACTION_SEARCH].to_array (),
+                _("Find...")
             )
         };
     }

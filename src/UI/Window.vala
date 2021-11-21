@@ -379,7 +379,7 @@ public class Starfish.UI.Window : Hdy.ApplicationWindow {
 
     private void on_search () {
         var session = focused_tab_session ();
-        session.toggle_search ();
+        session.search_is_open = !session.search_is_open;
     }
 
     private bool on_mouse_click_event (Gtk.Widget self, Gdk.EventButton event) {

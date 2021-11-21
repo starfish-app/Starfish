@@ -39,6 +39,7 @@ public class Starfish.Core.Session : Object {
         get { return _history[_history_index]; }
         private set { _history[_history_index] = value; }
     }
+    public bool search_is_open { get; set; default = false; }
 
     public Session (
         string name,
@@ -54,7 +55,10 @@ public class Starfish.Core.Session : Object {
 
     public signal void response_received (Response response);
     public signal void cancel_loading ();
-    public signal void toggle_search ();
+
+    public void toggle_search () {
+        search_is_open = !search_is_open;
+    }
 
     public void push_uri_onto_history_before_init (Uri uri) {
         update_history_with_uri (uri);

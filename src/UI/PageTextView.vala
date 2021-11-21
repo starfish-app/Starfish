@@ -7,12 +7,17 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
     private GemtextSearchBar search_bar;
     private Granite.Widgets.OverlayBar? link_overlay;
     private TableOfContent toc;
+    private Binding search_mode_binding;
 
     public PageTextView (Core.Session session) {
         Object (
             session: session,
             orientation: Gtk.Orientation.VERTICAL
         );
+    }
+
+    ~PageTextView () {
+        search_mode_binding.unbind ();
     }
 
     public signal void link_event (LinkEvent event);
@@ -47,9 +52,13 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
         attach (overlay, 0, 0);
 
         search_bar = new GemtextSearchBar (gemtext_view);
-        session.toggle_search.connect (() => {
-            search_bar.search_mode_enabled = !search_bar.search_mode_enabled;
-        });
+        search_mode_binding = session.bind_property (
+            "search_is_open",
+            search_bar,
+            "search_mode_enabled",
+            BindingFlags.BIDIRECTIONAL
+        );
+
         attach (search_bar, 0, 1);
     }
 
