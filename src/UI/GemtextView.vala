@@ -208,8 +208,8 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
             style: Pango.Style.ITALIC,
             indent: 8,
             left_margin: 36,
-            pixels_above_lines: 16,
-            pixels_below_lines: 16,
+            pixels_above_lines: 4,
+            pixels_below_lines: 4,
             paragraph_background_rgba: theme.block_background_color
         );
 
@@ -429,6 +429,7 @@ private class Starfish.UI.LinkTextTag : Gtk.TextTag {
             uri: uri,
             desc: desc,
             underline: Pango.Underline.LOW,
+            pixels_above_lines: 4,
             pixels_below_lines: 4,
             foreground_rgba: theme.link_color,
             foreground_set: true
