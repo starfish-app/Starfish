@@ -41,6 +41,7 @@ public class Starfish.UI.TableOfContent : Gtk.MenuButton {
     }
 
     public void clear () {
+        sensitive = false;
         popover.popdown ();
         foreach (var link in line_links.get_children ()) {
             line_links.remove (link);
@@ -65,6 +66,7 @@ public class Starfish.UI.TableOfContent : Gtk.MenuButton {
 
         line_links.add (button);
         line_links.show_all ();
+        sensitive = true;
     }
 }
 

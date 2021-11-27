@@ -76,7 +76,7 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
     }
 
     public virtual void clear () {
-        on_hover_exit ();
+        on_link_hover_exit ();
         search_bar.clear ();
         search_bar.search_mode_enabled = false;
         gemtext_view.clear ();
@@ -111,17 +111,17 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
     private void on_link_event (GemtextView view, LinkEvent event) {
         switch (event.event_type) {
             case LinkEventType.HOVER_ENTER:
-                on_hover_enter (event.link_url);
+                on_link_hover_enter (event.link_url);
                 break;
             case LinkEventType.HOVER_EXIT:
-                on_hover_exit ();
+                on_link_hover_exit ();
                 break;
         }
 
         link_event (event);
     }
 
-    private void on_hover_enter (string link_url) {
+    private void on_link_hover_enter (string link_url) {
         if (link_overlay == null) {
             link_overlay = new Granite.Widgets.OverlayBar (overlay);
         }
@@ -130,7 +130,7 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
         link_overlay.show_all ();
     }
 
-    private void on_hover_exit () {
+    private void on_link_hover_exit () {
         if (link_overlay == null) {
             return;
         }
