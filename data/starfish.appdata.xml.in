@@ -11,6 +11,17 @@
     <p>Starfish is a begginer-friendly desktop client for Gemini protol. It supports all core features of Gemini, such as beautiful rendering of text based content and encrypted communication with servers. On top of those Starfish offers comforts of modern browsers, like local browsing history, tabs and favorites.</p>
   </description>
   <releases>
+    <release version="1.2.0" date="2021-11-28">
+      <description>
+        <p>This update is all about making gemtext more beautiful and functional:</p>
+        <ul>
+          <li>Links style now matches your OS-level accent color.</li>
+          <li>You can see where a link leads without opening it.</li>
+          <li>A table of contents makes navigating to a specific heading on a gemtext page easy.</li>
+          <li>A text search of gemtext pages helps you quickly find any term you are looking for.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.1.1" date="2021-11-13">
       <description>
         <p>A smaller release with two improvements:</p>
