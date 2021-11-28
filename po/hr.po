@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-01 18:27+0100\n"
+"POT-Creation-Date: 2021-11-21 16:46+0100\n"
 "PO-Revision-Date: 2021-08-15 02:42+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,79 +18,83 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/UI/Window.vala:71 data/starfish.desktop.in:3
+#: src/UI/Window.vala:74 data/starfish.desktop.in:3
 #: data/starfish.appdata.xml.in:7
 msgid "Starfish"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:68 src/UI/HeaderBar.vala:140
+#: src/UI/HeaderBar.vala:81 src/UI/HeaderBar.vala:158
 msgid "Reload"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:70 src/UI/PageCertErrorView.vala:49
+#: src/UI/HeaderBar.vala:83 src/UI/PageCertErrorView.vala:49
 #: src/UI/PageDownloadView.vala:56
 msgid "Go back"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:71
+#: src/UI/HeaderBar.vala:84
 msgid "Go forward"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:72
+#: src/UI/HeaderBar.vala:85
 msgid "Go up"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:73
+#: src/UI/HeaderBar.vala:86
 msgid "Go to root"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:74
+#: src/UI/HeaderBar.vala:87
 msgid "Go home"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:75
+#: src/UI/HeaderBar.vala:89
 msgid "Open bookmarks"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:149
+#: src/UI/HeaderBar.vala:167
 msgid "Stop"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:179
+#: src/UI/HeaderBar.vala:197
 msgid "Check identity"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:183 src/UI/HeaderBar.vala:205
-#: src/UI/HeaderBar.vala:225
+#: src/UI/HeaderBar.vala:201 src/UI/HeaderBar.vala:223
+#: src/UI/HeaderBar.vala:243
 msgid "Bookmark this page"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:209 src/UI/HeaderBar.vala:222
+#: src/UI/HeaderBar.vala:227 src/UI/HeaderBar.vala:240
 msgid "Remove this page rom bookmarks"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:230
+#: src/UI/HeaderBar.vala:248
 msgid "Zoom out"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:231
+#: src/UI/HeaderBar.vala:249
 msgid "Zoom in"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:236
+#: src/UI/HeaderBar.vala:254
 msgid "Reset zoom level"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:254 src/UI/PreferencesDialog.vala:10
+#: src/UI/HeaderBar.vala:272 src/UI/PreferencesDialog.vala:10
 msgid "Preferences"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:259
+#: src/UI/HeaderBar.vala:277
 msgid "Introduction to Gemini"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:289
+#: src/UI/HeaderBar.vala:307
 msgid "Menu"
+msgstr ""
+
+#: src/UI/HeaderBar.vala:332
+msgid "Find..."
 msgstr ""
 
 #: src/UI/CertPopover.vala:56
@@ -268,22 +272,6 @@ msgstr ""
 
 #: src/UI/PageClientCertPickerView.vala:63
 msgid "Create New Identity"
-msgstr ""
-
-#: src/UI/PageTextView.vala:199
-msgid "Open link"
-msgstr ""
-
-#: src/UI/PageTextView.vala:207
-msgid "Open link in a new tab"
-msgstr ""
-
-#: src/UI/PageTextView.vala:221
-msgid "Copy link"
-msgstr ""
-
-#: src/UI/PageTextView.vala:228
-msgid "Copy description"
 msgstr ""
 
 #: src/UI/PageDownloadView.vala:66 src/UI/PageDownloadView.vala:153
@@ -736,33 +724,65 @@ msgid ""
 msgstr ""
 
 #: data/starfish.appdata.xml.in:16
-msgid "Initial release, bringing you features such as:"
+msgid "A smaller release with two improvements:"
 msgstr ""
 
 #: data/starfish.appdata.xml.in:18
+msgid ""
+"A redesigned app icon now fits better with the rest of your system and "
+"remains sharp at lower resolutions."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:19
+msgid ""
+"There's no longer a danger of overriding an existing client certificate when "
+"creating a new one."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:25
+msgid "This release focuses on improving certificate handling. In particular:"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:27
+msgid ""
+"Information about server certificates is now prominently shown in the "
+"address bar, similar to how other web browsers are usually doing it."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:28
+msgid ""
+"Client certificates are now fully supported. This allows you access to sites "
+"that require user identification, like Astrobotany or Station."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:34
+msgid "Initial release, bringing you features such as:"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:36
 msgid ""
 "Beautiful rendering of gemtext content, both served over the network via "
 "Gemini protocol and read from local files."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:19
+#: data/starfish.appdata.xml.in:37
 msgid ""
 "In-app rendering of images and a download option for other file types that "
 "you might encounter in the Geminispace."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:20
+#: data/starfish.appdata.xml.in:38
 msgid ""
 "A gentle introduction to Gemini, with pointers on how to get around and "
 "discover more content."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:21
+#: data/starfish.appdata.xml.in:39
 msgid ""
 "Stuff you'd normally expect from a browser, like tabs, favorites, history-"
 "based navigation, etc."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:31
+#: data/starfish.appdata.xml.in:49
 msgid "Josip Antoliš"
 msgstr ""

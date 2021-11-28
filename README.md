@@ -5,9 +5,11 @@ A [Gemini](https://gemini.circumlunar.space/) browser made for [elementary OS](h
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYING)
 
-|![Default style](https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style.png)|![Dark style](https://raw.githubusercontent.com/starfish-app/starfish/main/data/dark-style.png)|
+|![Gemini pages are displayed with your chosen accent color and light or dark style](data/screenshots/styling.png)|![gentle introduction to Gemini is provided to help you find your bearings](data/screenshots/intro-to-gemini.png)|
 |----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-|![Image rendering](https://raw.githubusercontent.com/starfish-app/starfish/main/data/image-rendering.png)|![Dyslexia-friendly text](https://raw.githubusercontent.com/starfish-app/starfish/main/data/dyslexia-friendly-text.png)|
+|![page search and table of contents help you navigate larger gemtext pages](data/screenshots/search-and-toc.png)|![connection to Gemini sites is secured by both server and client certificates](data/screenshots/certificates.png)|
+
+For more screenshots check out the [screenshots directory](data/screenshots).
 
 ## About
 
@@ -15,15 +17,17 @@ Starfish is a graphical client for the Gemini protocol built with GTK and Vala. 
 
 ### Status
 
-Starfish is in active development. It currently supports the prerelease version of the Gemini specification, including gemtext rendering and cleint certificates. Starfish can be used to view images and download other file types. There are still some missing features, such as support for subscribing to gemlogs. There are also UI features that could use improvements, such as adding search for gemtext pages, or improving the image viewing.
+Starfish is in active development. It currently supports the prerelease version of the Gemini specification, including gemtext rendering and client certificates. Starfish can be used to view images and download other file types. There are still many improvements and new features that could be added to the app. For a list of current development plans check out [GitHub issues](https://github.com/starfish-app/Starfish/issues).
 
 ## Build
 
-Starfish is built for elementary OS 6. All prerequisites can be met by installing `elementary-sdk` and `libgnutls28-dev`:
+Starfish is built for elementary OS 6. All prerequisites can be met by installing `elementary-sdk`:
 
 ```sh
-sudo apt install elementary-sdk libgnutls28-dev
+sudo apt install elementary-sdk
 ```
+
+For a full list of dependencies check out the `dependencies` list in the [meson.build file](meson.build#L11-L20).
 
 To build and install the app execute (from project's root directory):
 

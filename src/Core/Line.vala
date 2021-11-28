@@ -50,7 +50,7 @@ public class Starfish.Core.Line : Object {
             case LineType.LINK:
                 return get_url_desc ();
             case LineType.PREFORMATTED_START:
-                return get_alt_text ();
+                return "";
             case LineType.PREFORMATTED_END:
                 return "";
             case LineType.LIST_ITEM:

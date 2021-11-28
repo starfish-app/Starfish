@@ -20,7 +20,6 @@ public class Starfish.UI.TabContent : Gtk.Box {
         var text_view = new PageTextView (session);
         text_view.link_event.connect (on_link_event);
         var static_error_view = new PageStaticErrorView (session);
-        static_error_view.link_event.connect (on_link_event);
         var cert_error_view = new PageCertErrorView (session);
         var client_cert_picker_view = new PageClientCertPickerView (session, window);
         var image_view = new PageImageView (session);
@@ -62,30 +61,6 @@ public class Starfish.UI.TabContent : Gtk.Box {
 
     private void on_link_event (PageTextView page, LinkEvent event) {
         switch (event.event_type) {
-            case LinkEventType.HOVER_ENTER:
-                var gdk_window = page.get_window (Gtk.TextWindowType.TEXT);
-                if (gdk_window != null) {
-                    var pointer = new Gdk.Cursor.from_name (
-                        gdk_window.get_display (),
-                        "pointer"
-                    );
-
-                    gdk_window.set_cursor (pointer);
-                }
-
-                return;
-            case LinkEventType.HOVER_EXIT:
-                var gdk_window = page.get_window (Gtk.TextWindowType.TEXT);
-                if (gdk_window != null) {
-                    var text = new Gdk.Cursor.from_name (
-                        gdk_window.get_display (),
-                        "text"
-                    );
-
-                    gdk_window.set_cursor (text);
-                }
-
-                return;
             case LinkEventType.LEFT_MOUSE_CLICK:
                 var action_arg = new Variant.string (event.link_url);
                 window.activate_action (Window.ACTION_LOAD_URI, action_arg);

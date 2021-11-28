@@ -9,6 +9,7 @@ public class Starfish.Core.Session : Object {
     public string name { get { return _name; } }
     public Core.CertInfo? cert_info { get; set; default = null; }
     public Core.CertInfo? client_cert_info { get; set; default = null; }
+    public Mime? mime { get; set; default = null; }
     public Gee.List<Uri> history {
         owned get { return new Gee.ArrayList<Uri>.wrap (_history); }
     }
@@ -38,6 +39,7 @@ public class Starfish.Core.Session : Object {
         get { return _history[_history_index]; }
         private set { _history[_history_index] = value; }
     }
+    public bool search_is_open { get; set; default = false; }
 
     public Session (
         string name,
@@ -54,6 +56,10 @@ public class Starfish.Core.Session : Object {
     public signal void response_received (Response response);
     public signal void cancel_loading ();
 
+    public void toggle_search () {
+        search_is_open = !search_is_open;
+    }
+
     public void push_uri_onto_history_before_init (Uri uri) {
         update_history_with_uri (uri);
     }
@@ -69,8 +75,7 @@ public class Starfish.Core.Session : Object {
             var starting_uri = current_uri;
             manager.client.load.begin (starting_uri, null, true, false, true, (obj, res) => {
                 var response = manager.client.load.end (res);
-                cert_info = response.cert_info;
-                client_cert_info = response.client_cert_info;
+                capture_response_info (response);
                 var loaded_uri = response.uri;
                 if (current_uri.to_string() != loaded_uri.to_string ()) {
                     _history[_history_index] = loaded_uri;
@@ -101,8 +106,7 @@ public class Starfish.Core.Session : Object {
             var uri = _history[_history_index - 1];
             manager.client.load.begin (uri, null, true, false, should_use_client_cert(uri), (obj, res) => {
                 var response = manager.client.load.end (res);
-                cert_info = response.cert_info;
-                client_cert_info = response.client_cert_info;
+                capture_response_info (response);
                 var loaded_uri = response.uri;
                 _history_index--;
                 if (current_uri.to_string() != loaded_uri.to_string ()) {
@@ -134,8 +138,7 @@ public class Starfish.Core.Session : Object {
             var uri = _history[_history_index + 1];
             manager.client.load.begin (uri, null, true, false, should_use_client_cert(uri), (obj, res) => {
                 var response = manager.client.load.end (res);
-                cert_info = response.cert_info;
-                client_cert_info = response.client_cert_info;
+                capture_response_info (response);
                 var loaded_uri = response.uri;
                 _history_index++;
                 manager.save (this);
@@ -175,8 +178,7 @@ public class Starfish.Core.Session : Object {
 
                     manager.client.load.begin (new_uri, null, true, accept_mismatched_cert, should_use_client_cert(new_uri), (obj, res) => {
                         var response = manager.client.load.end (res);
-                        cert_info = response.cert_info;
-                        client_cert_info = response.client_cert_info;
+                        capture_response_info (response);
                         update_history_on_response (response);
                         response_received (response);
                     });
@@ -228,8 +230,7 @@ public class Starfish.Core.Session : Object {
         manager.client.load.begin (uri, null, false, false, true, (obj, res) => {
             var response = manager.client.load.end (res);
             if (response.is_success) {
-                cert_info = response.cert_info;
-                client_cert_info = response.client_cert_info;
+                capture_response_info (response);
                 update_history_on_response (response);
                 response_received (response);
             } else {
@@ -241,14 +242,12 @@ public class Starfish.Core.Session : Object {
                             new_uri = Uri.parse (response.meta, uri);
                             navigate_one_level_up_from (new_uri);
                         } catch (Core.UriError err) {
-                            cert_info = response.cert_info;
-                            client_cert_info = response.client_cert_info;
+                            capture_response_info (response);
                             update_history_on_response (response);
                             response_received (response);
                         }
                     } else {
-                        cert_info = response.cert_info;
-                        client_cert_info = response.client_cert_info;
+                        capture_response_info (response);
                         update_history_on_response (response);
                         response_received (response);
                     }
@@ -286,6 +285,12 @@ public class Starfish.Core.Session : Object {
             _history_index = _history.length - 1;
             manager.save (this);
         }
+    }
+
+    private void capture_response_info (Response response) {
+        cert_info = response.cert_info;
+        client_cert_info = response.client_cert_info;
+        mime = response.mime ();
     }
 
     private int max_history () {

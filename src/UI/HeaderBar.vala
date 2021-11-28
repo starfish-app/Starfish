@@ -20,6 +20,18 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             });
 
             on_session_change ();
+
+            if (search_mode_binding != null) {
+                search_mode_binding.unbind ();
+            }
+
+            search_button.active = _session.search_is_open;
+            search_mode_binding = _session.bind_property (
+                "search_is_open",
+                search_button,
+                "active",
+                BindingFlags.BIDIRECTIONAL
+            );
         }
     }
 
@@ -42,9 +54,11 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
     private Gtk.Button up_button;
     private Gtk.Button root_button;
     private Gtk.Button home_button;
+    private Gtk.ToggleButton search_button;
     private Gtk.Button bookmarks_button;
     private Gtk.Button reset_zoom_button;
     private CertPopover cert_popover;
+    private Binding search_mode_binding;
 
     private uint? timeout_id = null;
 
@@ -72,6 +86,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         up_button = setup_button ("go-up", _("Go up"), Window.ACTION_GO_UP);
         root_button = setup_button ("go-top", _("Go to root"), Window.ACTION_GO_TO_ROOT);
         home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
+        search_button = set_up_search_button ();
         bookmarks_button = setup_button ("user-bookmarks", _("Open bookmarks"), Window.ACTION_OPEN_BOOKMARKS);
 
         address = setup_address ();
@@ -82,7 +97,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         };
         title_widget.attach (address, 0, 0);
         title_widget.attach (stop_reload_button, 1, 0);
-        title_widget.attach (home_button, 2, 0);
+        title_widget.attach (search_button, 2, 0);
         custom_title = title_widget;
 
         pack_start (up_button);
@@ -93,6 +108,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var menu_button = setup_menu ();
         pack_end (menu_button);
         pack_end (bookmarks_button);
+        pack_end (home_button);
     }
 
     private void on_session_change () {
@@ -119,6 +135,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         root_button.sensitive = false;
         address.sensitive = false;
         bookmarks_button.sensitive = false;
+        search_button.sensitive = false;
     }
 
     private void enable_buttons () {
@@ -129,6 +146,8 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var is_gemini_site = session.current_uri.scheme == "gemini";
         up_button.sensitive = is_gemini_site;
         root_button.sensitive = is_gemini_site;
+        var is_text = session.mime != null && session.mime.is_text;
+        search_button.sensitive = is_text;
         bookmarks_button.sensitive = true;
     }
 
@@ -298,6 +317,20 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             tooltip_markup = Granite.markup_accel_tooltip (
                 Window.action_accelerators[action].to_array (),
                 name
+            )
+        };
+    }
+
+    private Gtk.ToggleButton set_up_search_button () {
+        return new Gtk.ToggleButton() {
+            image = new Gtk.Image.from_icon_name (
+                "system-search",
+                Gtk.IconSize.LARGE_TOOLBAR
+            ),
+            focus_on_click = false,
+            tooltip_markup = Granite.markup_accel_tooltip (
+                Window.action_accelerators[Window.ACTION_SEARCH].to_array (),
+                _("Find...")
             )
         };
     }
