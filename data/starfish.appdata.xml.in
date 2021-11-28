@@ -51,19 +51,36 @@
   <url type="bugtracker">https://github.com/starfish-app/starfish/issues</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/default-style.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/styling.png</image>
+      <caption>Gemini pages are displayed with your chosen accent color and light or dark style</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/dark-style.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/intro-to-gemini.png</image>
+      <caption>gentle introduction to Gemini is provided to help you find your bearings</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/image-rendering.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/search-and-toc.png</image>
+      <caption>page search and table of contents help you navigate larger gemtext pages</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/dyslexia-friendly-text.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/certificates.png</image>
+      <caption>connection to Gemini sites is secured by both server and client certificates</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/client-certificate-management.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/cert-picker.png</image>
+      <caption>using multiple client certificates you can create as many online identities as you wish</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/image.png</image>
+      <caption>images, in addition to gemtext pages, are displayed inside the app</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/download.png</image>
+      <caption>files that cannot be displayed directly, like podcast episodes, can be downloaded and opened by dedicated apps</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/dyslexia-font.png</image>
+      <caption>Gemini pages can be displayed using the dyslexia friendly font and varying text size</caption>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1">
