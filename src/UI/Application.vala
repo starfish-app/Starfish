@@ -52,9 +52,21 @@ public class Starfish.UI.Application : Gtk.Application {
         }
 
         var window = new Window (this, manager);
+        foce_elementary_style ();
         link_dark_mode_settings ();
         window.show_all ();
         return window;
+    }
+
+    private void foce_elementary_style () {
+        var settings = Gtk.Settings.get_default();
+        if (!settings.gtk_theme_name.has_prefix ("io.elementary.stylesheet")) {
+            settings.gtk_theme_name = "io.elementary.stylesheet.blueberry";
+        }
+
+        if (settings.gtk_icon_theme_name != "elementary") {
+            settings.gtk_icon_theme_name = "elementary";
+        }
     }
 
     private void link_dark_mode_settings () {
