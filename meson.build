@@ -16,6 +16,7 @@ dependencies = [
     dependency('granite'),
     dependency('libhandy-1'),
     dependency('gnutls'),
+    dependency('gtkspell3-3.0'),
     meson.get_compiler('vala').find_library('posix'),
 ]
 
