@@ -50,6 +50,7 @@ sources = gresource + files(
     'src/UI/LinkEventType.vala',
     'src/UI/LinkEvent.vala',
     'src/UI/TabContent.vala',
+    'src/UI/TextViewHighlighter.vala',
     'src/Templates/Template.vala',
     'src/Templates/Bookmarks.vala',
     'src/Templates/TempFailure.vala',

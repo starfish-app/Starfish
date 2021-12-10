@@ -1,0 +1,35 @@
+.highlighter {
+    background-color: @base_color;
+    background-clip: padding-box;
+    border: 1px solid alpha(black, 0.3);
+    /*border-radius: calc(100%/3 - 2*1em - 2*1px);*/
+    border-radius: calc(((3/96) / (9/72)) * 1rem + 0.000000001rem);
+    /*border-radius: calc(3px / 9pt * 1rem);*/
+    box-shadow: 0 1px 0 0 alpha(@highlight_color, 0.3),
+                inset 0 1px 1px alpha(black, 0.05),
+                inset 0 0 1px 1px alpha(black, 0.05);
+    margin: calc(((4/96) / (9/72)) * 1rem + 0.000000001rem);
+}
+
+.highlighter.light {
+    border: 1px solid alpha(black, 0.2);
+}
+
+.highlighter.focus {
+   box-shadow: 0 0 0 calc(((2/96) / (9/72)) * 1rem + 0.000000001rem) alpha(@accent_color, 0.3),
+               0 1px 0 0 alpha(@highlight_color, 0.3),
+               inset 0 1px 1px alpha(black, 0.05),
+               inset 0 0 1px 1px alpha(black, 0.05);
+}
+
+.highlighter.focus.light {
+    border-color: @accent_color;
+}
+
+.highlighter textview {
+    background-color: transparent;
+}
+
+.highlighter.error :first-child :first-child {
+    color: @error_color
+}

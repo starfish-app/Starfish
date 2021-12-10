@@ -3,6 +3,7 @@ public class Starfish.UI.InputView : Gtk.Grid, ResponseView {
     public Core.Session session { get; construct; }
     private Gtk.Label prompt;
     private Gtk.TextView input;
+    private TextViewHighlighter highlighter;
     private GtkSpell.Checker spell;
     private Gtk.Button send;
 
@@ -39,7 +40,9 @@ public class Starfish.UI.InputView : Gtk.Grid, ResponseView {
         input = new Gtk.TextView () {
             editable = true,
             cursor_visible = true,
+            wrap_mode = Gtk.WrapMode.WORD_CHAR,
             hexpand = true,
+            vexpand = true,
             bottom_margin = 8,
             left_margin = 8,
             right_margin = 8,
@@ -47,10 +50,10 @@ public class Starfish.UI.InputView : Gtk.Grid, ResponseView {
         };
 
         input.buffer.changed.connect (on_input_change);
-        attach_next_to (input, prompt, Gtk.PositionType.BOTTOM, 2, 8);
-
         spell = new GtkSpell.Checker ();
         spell.attach (input);
+        highlighter = new TextViewHighlighter (input);
+        attach_next_to (highlighter, prompt, Gtk.PositionType.BOTTOM, 2, 5);
 
         send = new Gtk.Button.with_label (_("Send")) {
             sensitive = false,
@@ -58,7 +61,7 @@ public class Starfish.UI.InputView : Gtk.Grid, ResponseView {
         };
 
         send.clicked.connect (on_submit);
-        attach_next_to (send, input, Gtk.PositionType.BOTTOM, 2, 1);
+        attach_next_to (send, highlighter, Gtk.PositionType.BOTTOM, 2, 1);
     }
 
     public signal void submit (string input);
@@ -90,8 +93,10 @@ public class Starfish.UI.InputView : Gtk.Grid, ResponseView {
         var txt = input.buffer.text;
         if (txt != null && txt.length > 0) {
             send.sensitive = true;
+            highlighter.error = false;
         } else {
             send.sensitive = false;
+            highlighter.error = true;
         }
     }
 }

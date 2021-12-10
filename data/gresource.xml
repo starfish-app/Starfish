@@ -3,4 +3,7 @@
   <gresource prefix="/hr/from/josipantolis/starfish">
     <file compressed="true">AddressEntry.css</file>
   </gresource>
+  <gresource prefix="/hr/from/josipantolis/starfish">
+    <file compressed="true">TextViewHighlighter.css</file>
+  </gresource>
 </gresources>
