@@ -54,9 +54,8 @@ public class Starfish.UI.TabContent : Gtk.Box {
         session.init ();
     }
 
-    private void on_input_submit (InputView view, string input) {
-        var query = "?" + Core.Uri.encode (input);
-        tab_model.session.navigate_to (query);
+    private void on_input_submit (InputView view, string uri_str) {
+        tab_model.session.navigate_to (uri_str);
     }
 
     private void on_link_event (PageTextView page, LinkEvent event) {

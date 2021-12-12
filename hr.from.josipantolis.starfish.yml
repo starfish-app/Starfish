@@ -14,6 +14,23 @@ finish-args:
   # Nedded for perfer-color-scheme
   - '--system-talk-name=org.freedesktop.Accounts'
 modules:
+  - name: gtkspell
+    config-opts:
+      - '--disable-gtk-doc-html'
+    cleanup:
+      - '/share/gtk-doc' # for some reason, it still install the html folder.
+    sources:
+      - type: archive
+        url: https://downloads.sourceforge.net/gtkspell/gtkspell3-3.0.10.tar.xz
+        sha256: b040f63836b347eb344f5542443dc254621805072f7141d49c067ecb5a375732
+    modules:
+      - name: intltool
+        cleanup:
+          - '*'
+        sources:
+          - type: archive
+            url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+            md5: 12e517cac2b57a0121cda351570f1e63
   - name: starfish
     buildsystem: meson
     sources:

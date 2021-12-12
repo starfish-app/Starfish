@@ -16,6 +16,7 @@ dependencies = [
     dependency('granite'),
     dependency('libhandy-1'),
     dependency('gnutls'),
+    dependency('gtkspell3-3.0'),
     meson.get_compiler('vala').find_library('posix'),
 ]
 
@@ -49,6 +50,7 @@ sources = gresource + files(
     'src/UI/LinkEventType.vala',
     'src/UI/LinkEvent.vala',
     'src/UI/TabContent.vala',
+    'src/UI/TextViewHighlighter.vala',
     'src/Templates/Template.vala',
     'src/Templates/Bookmarks.vala',
     'src/Templates/TempFailure.vala',

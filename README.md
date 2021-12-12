@@ -21,10 +21,11 @@ Starfish is in active development. It currently supports the prerelease version 
 
 ## Build
 
-Starfish is built for elementary OS 6. All prerequisites can be met by installing `elementary-sdk`:
+Starfish is built for elementary OS 6. All prerequisites can be met by installing `elementary-sdk` and `gtkspell`:
 
 ```sh
 sudo apt install elementary-sdk
+sudo apt install libgtkspell3-3-dev
 ```
 
 For a full list of dependencies check out the `dependencies` list in the [meson.build file](meson.build#L11-L20).

@@ -118,6 +118,13 @@ public class Starfish.Core.UriTest : Starfish.TestBase, Object {
         assert_str_eq (Uri.encode ("abcdefghijklmnopqrstuvwxyz"), "abcdefghijklmnopqrstuvwxyz");
         assert_str_eq (Uri.encode ("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         assert_str_eq (Uri.encode ("0123456789"), "0123456789");
+        assert_str_eq (Uri.encode ("Starfish: ⭐️!"), "Starfish%3a%20%e2%ad%90%ef%b8%8f%21");
+        assert_str_eq (Uri.encode (" \t\n\r"), "%20%09%0a%0d");
+        assert_str_eq (Uri.encode ("Здравствуйте, Россия!"), "%d0%97%d0%b4%d1%80%d0%b0%d0%b2%d1%81%d1%82%d0%b2%d1%83%d0%b9%d1%82%d0%b5%2c%20%d0%a0%d0%be%d1%81%d1%81%d0%b8%d1%8f%21");
+        assert_str_eq (Uri.encode ("안녕하세요 코리아!"), "%ec%95%88%eb%85%95%ed%95%98%ec%84%b8%ec%9a%94%20%ec%bd%94%eb%a6%ac%ec%95%84%21");
+        assert_str_eq (Uri.encode ("こんにちは日本!"), "%e3%81%93%e3%82%93%e3%81%ab%e3%81%a1%e3%81%af%e6%97%a5%e6%9c%ac%21");
+        assert_str_eq (Uri.encode ("नमस्ते भारत!"), "%e0%a4%a8%e0%a4%ae%e0%a4%b8%e0%a5%8d%e0%a4%a4%e0%a5%87%20%e0%a4%ad%e0%a4%be%e0%a4%b0%e0%a4%a4%21");
+        assert_str_eq (Uri.encode ("čćđšž"), "%c4%8d%c4%87%c4%91%c5%a1%c5%be");
     }
 
     public static void should_go_up_in_path () {
