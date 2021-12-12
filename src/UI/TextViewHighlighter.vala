@@ -11,11 +11,11 @@ public class Starfish.UI.TextViewHighlighter : Gtk.Box {
         settings = Granite.Settings.get_default ();
     }
 
-    public TextViewHighlighter (Gtk.TextView text_view) {
+    public TextViewHighlighter (Gtk.Widget child) {
         Object (
             orientation: Gtk.Orientation.VERTICAL,
             spacing: 1,
-            child: text_view,
+            child: child,
             hexpand: true,
             vexpand: false
         );
@@ -41,7 +41,7 @@ public class Starfish.UI.TextViewHighlighter : Gtk.Box {
     }
 
     private void set_up_focus_tracking () {
-        var child = first_child ();
+        var child = find_child ();
         child.focus_in_event.connect (() => {
             get_style_context ().add_class ("focus");
             return false;
@@ -70,14 +70,24 @@ public class Starfish.UI.TextViewHighlighter : Gtk.Box {
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );
 
-        first_child ().get_style_context ().add_provider (
+        find_child ().get_style_context ().add_provider (
             style_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );
     }
 
-    private Gtk.Widget first_child () {
-        return get_children ().nth_data (0);
+    private Gtk.Widget find_child () {
+        Gtk.Widget view = this;
+        while (view != null && view is Gtk.Container) {
+            var children = ((Gtk.Container) view).get_children ();
+            if (children == null || children.length() == 0) {
+                return view;
+            }
+
+            view = children.nth_data (0);
+        }
+
+        return view;
     }
 }
 

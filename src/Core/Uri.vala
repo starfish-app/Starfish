@@ -243,12 +243,13 @@ public class Starfish.Core.Uri : Object {
         }
 
         var builder = new StringBuilder ();
-        unichar c;
-        for (int i = 0; raw.get_next_char (ref i, out c);) {
+        for (int i = 0; i < raw.length; i++) {
+            var c = raw[i];
             if (c.isalnum () || c == '-' || c == '.' || c == '_' || c == '~') {
                 builder.append_unichar (c);
             } else {
-                builder.append ("%%%.2x".printf (c));
+                var ec = "%02x".printf (c);
+                builder.append ("%"+ec[ec.length-2:ec.length]);
             }
         }
 
