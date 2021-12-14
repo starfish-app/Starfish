@@ -88,19 +88,32 @@ public class Starfish.Core.Client : Object {
         int redirect_count = 0,
         bool follow_redirects = true,
         bool accept_mismatched_cert = false,
-        bool should_use_cleint_cert = false
+        bool should_use_cleint_cert = false,
+        int tls_retry_count = 0
     ) {
         SocketConnection conn;
         CertError? cert_error = null;
         CertInfo? cert_info = null;
         CertInfo? client_cert_info = null;
+        bool is_retryable_tls_issue = false;
         try {
             var socket_client = new SocketClient () {
                 tls = true,
                 tls_validation_flags = TlsCertificateFlags.VALIDATE_ALL,
                 timeout = 100000000
             };
+            SocketClientEvent? previous_event = null;
             socket_client.event.connect ((event, connectable, conn) => {
+                if (previous_event == SocketClientEvent.TLS_HANDSHAKING
+                    && event == SocketClientEvent.RESOLVING
+                    && tls_retry_count < 3
+                ) {
+                    warning ("Detected issue in TLS handshake, will attempt to retry it.");
+                    is_retryable_tls_issue = true;
+                } else {
+                    previous_event = event;
+                }
+
                 if (event == SocketClientEvent.TLS_HANDSHAKING) {
                     var tls_conn = (TlsClientConnection) conn;
                     if (should_use_cleint_cert) {
@@ -139,6 +152,9 @@ public class Starfish.Core.Client : Object {
             var request = (uri.to_string () + "\r\n").data;
             yield conn.output_stream.write_async (request, Priority.DEFAULT, cancel);
         } catch (Error err) {
+            if (is_retryable_tls_issue) {
+                return yield load_gemini (uri, cancel, redirect_count, follow_redirects, accept_mismatched_cert, should_use_cleint_cert, tls_retry_count + 1);
+            }
             if (cert_error != null) {
                 if (cert_error is CertError.PARSING_ERROR || cert_error is CertError.FINGERPRINTING_ERROR) {
                     return new InternalErrorResponse.server_certificate_invalid (cert_info, uri, cert_error.message);
