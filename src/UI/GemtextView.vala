@@ -8,6 +8,7 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
     private Gtk.TextTag h3_tag;
     private Gtk.TextTag quote_tag;
     private Gtk.TextTag text_tag;
+    private Gtk.TextTag empty_line_tag;
     private Gtk.TextTag list_item_tag;
 
     private string? last_alt_text = null;
@@ -56,6 +57,10 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         buffer.get_end_iter (out end);
         var text = displayable_text_for (line);
         var tag = tag_for (line);
+        if (tag == null) {
+            return null;
+        }
+
         buffer.insert_with_tags (ref end, text, -1, tag);
         var line_ref = gemtext_ref_for (line);
         if (line_ref != last_inserted_ref) {
@@ -137,6 +142,11 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
                 buffer.tag_table.add (tag);
                 return tag;
             case Core.LineType.TEXT:
+                if (line.get_display_content ().len () > 0) {
+                    return text_tag;
+                } else {
+                    return empty_line_tag;
+                }
             default:
                 return text_tag;
         }
@@ -188,39 +198,57 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         h1_tag = buffer.create_tag (
             "H1",
             scale: Pango.Scale.XX_LARGE,
-            variant: Pango.Variant.SMALL_CAPS
+            variant: Pango.Variant.SMALL_CAPS,
+            pixels_above_lines: 8,
+            pixels_below_lines: 8
         );
 
         h2_tag = buffer.create_tag (
             "H2",
             scale: Pango.Scale.X_LARGE,
-            variant: Pango.Variant.SMALL_CAPS
+            variant: Pango.Variant.SMALL_CAPS,
+            pixels_above_lines: 4,
+            pixels_below_lines: 4
         );
 
         h3_tag = buffer.create_tag (
             "H3",
             scale: Pango.Scale.LARGE,
-            variant: Pango.Variant.SMALL_CAPS
+            variant: Pango.Variant.SMALL_CAPS,
+            pixels_above_lines: 2,
+            pixels_below_lines: 2
         );
 
         quote_tag = buffer.create_tag (
             "QUOTE",
             style: Pango.Style.ITALIC,
             indent: 8,
-            left_margin: 36,
+            left_margin: 32,
             pixels_above_lines: 4,
             pixels_below_lines: 4,
+            justification: Gtk.Justification.FILL,
             paragraph_background_rgba: theme.block_background_color
         );
 
         text_tag = buffer.create_tag (
             "TEXT",
+            indent: 8,
+            pixels_above_lines: 2,
+            pixels_below_lines: 2,
+            justification: Gtk.Justification.FILL
+        );
+
+        empty_line_tag = buffer.create_tag (
+            "EMPTY_LINE",
+            scale: Pango.Scale.XX_SMALL,
             indent: 8
         );
 
         list_item_tag = buffer.create_tag (
             "LIST",
-            left_margin: 36
+            left_margin: 36,
+            pixels_above_lines: 2,
+            pixels_below_lines: 2
         );
     }
 
@@ -447,7 +475,8 @@ private class Starfish.UI.PreformattedTextTag : Gtk.TextTag {
             family: "Monospace",
             wrap_mode: Gtk.WrapMode.NONE,
             paragraph_background_rgba: theme.block_background_color,
-            paragraph_background_set: true
+            paragraph_background_set: true,
+            indent: 8
         );
     }
 }
