@@ -4,6 +4,9 @@
 A [Gemini](https://gemini.circumlunar.space/) browser made for [elementary OS](https://elementary.io/).
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYING)
+[![Build](https://github.com/starfish-app/Starfish/actions/workflows/main.yml/badge.svg)](https://github.com/starfish-app/Starfish/actions)
+[![GitHub release](https://img.shields.io/github/v/release/starfish-app/Starfish)](https://github.com/starfish-app/Starfish/releases)
+[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/hr.from.josipantolis.starfish)
 
 |![Gemini pages are displayed with your chosen accent color and light or dark style](data/screenshots/styling.png)|![gentle introduction to Gemini is provided to help you find your bearings](data/screenshots/intro-to-gemini.png)|
 |----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
@@ -19,7 +22,15 @@ Starfish is a graphical client for the Gemini protocol built with GTK and Vala. 
 
 Starfish is in active development. It currently supports the prerelease version of the Gemini specification, including gemtext rendering and client certificates. Starfish can be used to view images and download other file types. There are still many improvements and new features that could be added to the app. For a list of current development plans check out [GitHub issues](https://github.com/starfish-app/Starfish/issues).
 
-## Build
+## Install
+
+Starfish is packaged with [Flatpak](https://www.flatpak.org/) and published on elementary OS AppCenter. If you are running some other Linux distribution you can download the `flatpakref` file from [elementary repo](https://flatpak.elementary.io/repo/appstream/hr.from.josipantolis.starfish.flatpakref) and install it either using a graphical package manager, or from terminal with:
+
+```sh
+flatpak install --from ./hr.from.josipantolis.starfish.flatpakref
+```
+
+## Build from source
 
 Starfish is built for elementary OS 6. All prerequisites can be met by installing `elementary-sdk` and `gtkspell`:
 
