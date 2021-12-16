@@ -11,6 +11,22 @@
     <p>Starfish is a beginner-friendly desktop client for Gemini protol. It supports all core features of Gemini, such as beautiful rendering of text based content and encrypted communication with servers. On top of those Starfish offers comforts of modern browsers, like local browsing history, tabs and favorites.</p>
   </description>
   <releases>
+    <release version="1.3.0" date="2021-12-16">
+      <description>
+        <p>Input page received a series of improvements this time around:</p>
+        <ul>
+          <li>You can now input multiple lines, and fill them with all kinds of characters, including emoji 😉️.</li>
+          <li>The input text is spell-checked and its size is validated against the limits of Gemini protocol.</li>
+          <li>There is an obvious distinction between posting input anonymously and with a client identity.</li>
+        </ul>
+        <p>In addition to these new features, there are a few smaller fixes:</p>
+        <ul>
+          <li>Text alignment in gemtext pages is improved.</li>
+          <li>Consistent styling is applied on all Linux distributions.</li>
+          <li>Intermittent issues with loading pages served by the gmnisrv server are fixed.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.2.0" date="2021-11-28">
       <description>
         <p>This update is all about making gemtext more beautiful and functional:</p>
