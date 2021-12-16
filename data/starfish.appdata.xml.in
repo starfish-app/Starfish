@@ -19,7 +19,7 @@
           <li>The input text is spell-checked and its size is validated against the limits of Gemini protocol.</li>
           <li>There is an obvious distinction between posting input anonymously and with a client identity.</li>
         </ul>
-        <p>In addition to these new features, there are a few smaller fixes:</p>
+        <p>In addition to new features, there are a few smaller fixes:</p>
         <ul>
           <li>Text alignment in gemtext pages is improved.</li>
           <li>Consistent styling is applied on all Linux distributions.</li>

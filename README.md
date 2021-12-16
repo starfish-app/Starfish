@@ -3,10 +3,10 @@
 
 A [Gemini](https://gemini.circumlunar.space/) browser made for [elementary OS](https://elementary.io/).
 
+[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/hr.from.josipantolis.starfish)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYING)
 [![Build](https://github.com/starfish-app/Starfish/actions/workflows/main.yml/badge.svg)](https://github.com/starfish-app/Starfish/actions)
 [![GitHub release](https://img.shields.io/github/v/release/starfish-app/Starfish)](https://github.com/starfish-app/Starfish/releases)
-[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg)](https://appcenter.elementary.io/hr.from.josipantolis.starfish)
 
 |![Gemini pages are displayed with your chosen accent color and light or dark style](data/screenshots/styling.png)|![gentle introduction to Gemini is provided to help you find your bearings](data/screenshots/intro-to-gemini.png)|
 |----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
