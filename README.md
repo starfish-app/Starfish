@@ -69,10 +69,22 @@ ninja hr.from.josipantolis.starfish-update-po
 
 ## Package
 
-Starfish is packaged as a Flatpak. You can build and install it locally with:
+Starfish is packaged with Flatpak and based on `io.elementary.Platform` runtime. In order to build it locally you may need to install the runtime first:
+
+```sh
+flatpak install --user io.elementary.Sdk//6.1
+```
+
+After that you can build and install Starfish itself with:
 
 ```sh
 flatpak-builder build hr.from.josipantolis.starfish.yml --user --install --force-clean
+```
+
+And run it with:
+
+```sh
+flatpak run hr.from.josipantolis.starfish
 ```
 
 ## License
