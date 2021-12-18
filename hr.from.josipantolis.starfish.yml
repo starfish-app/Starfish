@@ -1,6 +1,6 @@
 app-id: hr.from.josipantolis.starfish
 runtime: io.elementary.Platform
-runtime-version: '6'
+runtime-version: '6.1'
 sdk: io.elementary.Sdk
 command: hr.from.josipantolis.starfish
 finish-args:
@@ -11,8 +11,6 @@ finish-args:
   - '--share=network'
   # Needed for opening local files with files:// URI scheme
   - '--filesystem=home:ro'
-  # Nedded for perfer-color-scheme
-  - '--system-talk-name=org.freedesktop.Accounts'
 modules:
   - name: gtkspell
     config-opts:
