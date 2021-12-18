@@ -44,7 +44,6 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
     private unowned Window window;
 
-    private Gtk.Grid title_widget;
     private Gtk.Entry address;
     private Gtk.Button stop_reload_button;
     private Gtk.Image reload_icon;
@@ -91,14 +90,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
 
         address = setup_address ();
         cert_popover = new CertPopover (address);
-        title_widget = new Gtk.Grid () {
-            column_spacing = 8,
-            hexpand = true
-        };
-        title_widget.attach (address, 0, 0);
-        title_widget.attach (stop_reload_button, 1, 0);
-        title_widget.attach (search_button, 2, 0);
-        custom_title = title_widget;
+        custom_title = address;
 
         pack_start (up_button);
         pack_start (root_button);
@@ -109,6 +101,9 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         pack_end (menu_button);
         pack_end (bookmarks_button);
         pack_end (home_button);
+        pack_end (new Gtk.Separator (Gtk.Orientation.VERTICAL));
+        pack_end (search_button);
+        pack_end (stop_reload_button);
     }
 
     private void on_session_change () {
