@@ -1,6 +1,7 @@
 public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
 
     public Core.Session session { get; construct; }
+    public string download_dir { get; construct; }
 
     private IOStream? connection;
     private string? file_type;
@@ -22,6 +23,7 @@ public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
     public PageDownloadView (Core.Session session) {
         Object (
             session: session,
+            download_dir: Environment.get_user_special_dir (UserDirectory.DOWNLOAD),
             orientation: Gtk.Orientation.VERTICAL,
             halign: Gtk.Align.CENTER,
             margin_top: 16,
@@ -53,7 +55,7 @@ public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
         subtitle = new Gtk.Label ("");
         attach (subtitle, 0, 1, 2);
 
-        back_button = new Gtk.Button.with_label (_("Go back")) {
+        back_button = new Gtk.Button.with_label (_("Go Back")) {
             hexpand = false,
             halign = Gtk.Align.END
         };
@@ -96,17 +98,20 @@ public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
             halign = Gtk.Align.END
         };
 
-        show_file = new Gtk.LinkButton.with_label ("", "Show file") {
+        show_file = new Gtk.LinkButton.with_label ("", "Show Downloads") {
             hexpand = false,
-            halign = Gtk.Align.START
+            visited = false,
+            halign = Gtk.Align.START,
+            // I can't get to the actual location user picked in the native
+            // file chooser, so offerig a "static" link that always opens
+            // downloads dir is a best effort solution.
+            uri = "file://%s".printf (download_dir)
         };
     }
 
     public void clear () {
         title.label = "";
         subtitle.label = "";
-        show_file.visited = false;
-        show_file.uri = "";
         spinner.stop ();
         remove_row (2);
 
@@ -155,7 +160,7 @@ public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
         );
 
         dialog.do_overwrite_confirmation = true;
-        dialog.set_current_folder (Environment.get_user_special_dir (UserDirectory.DOWNLOAD));
+        dialog.set_current_folder (download_dir);
         dialog.set_current_name (file_name);
         return dialog;
     }
@@ -205,7 +210,6 @@ public class Starfish.UI.PageDownloadView : Gtk.Grid, ResponseView {
         if (dialog.run () == Gtk.ResponseType.ACCEPT) {
             show_spinner ();
             var file = File.new_for_uri (dialog.get_uri ());
-            show_file.uri = file.get_parent ().get_uri ();
             download_into.begin (in_stream, file, (obj, res) => {
                 try {
                     download_into.end (res);
