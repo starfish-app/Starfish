@@ -116,6 +116,11 @@ public class Starfish.UI.PageTextView : Gtk.Grid, ResponseView {
             case LinkEventType.HOVER_EXIT:
                 on_link_hover_exit ();
                 break;
+            case LinkEventType.LEFT_MOUSE_CLICK:
+            case LinkEventType.MIDDLE_MOUSE_CLICK:
+            case LinkEventType.RIGHT_MOUSE_CLICK:
+                // noop
+                break;
         }
 
         link_event (event);

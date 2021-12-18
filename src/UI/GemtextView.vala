@@ -142,7 +142,7 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
                 buffer.tag_table.add (tag);
                 return tag;
             case Core.LineType.TEXT:
-                if (line.get_display_content ().len () > 0) {
+                if (line.get_display_content ().length > 0) {
                     return text_tag;
                 } else {
                     return empty_line_tag;
