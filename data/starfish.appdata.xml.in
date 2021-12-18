@@ -11,6 +11,17 @@
     <p>Starfish is a beginner-friendly desktop client for Gemini protol. It supports all core features of Gemini, such as beautiful rendering of text based content and encrypted communication with servers. On top of those Starfish offers comforts of modern browsers, like local browsing history, tabs and favorites.</p>
   </description>
   <releases>
+    <release version="1.3.1" date="2021-12-18">
+      <description>
+        <p>A smaller release with some housekeeping and a couple of bug fixes:</p>
+        <ul>
+          <li>Deleting client certificates is fixed: you can now send them to trash, and restore them from there if you change your mind.</li>
+          <li>The "Show file" button in the download page is renamed to "Show Downloads" and now opens the Downloads directory.</li>
+          <li>Address bar now stretches to fill more horizontal space making longer Gemini addresses readable.</li>
+          <li>The app is updated to use the new elementary 6.1 runtime.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.3.0" date="2021-12-16">
       <description>
         <p>Input page received a series of improvements this time around:</p>
@@ -78,31 +89,31 @@
   <url type="bugtracker">https://github.com/starfish-app/starfish/issues</url>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/styling.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/1.3.1/data/screenshots/styling.png</image>
       <caption>Gemini pages are displayed with your chosen accent color and light or dark style</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/intro-to-gemini.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/1.3.1/data/screenshots/intro-to-gemini.png</image>
       <caption>gentle introduction to Gemini is provided to help you find your bearings</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/search-and-toc.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/1.3.1/data/screenshots/search-and-toc.png</image>
       <caption>page search and table of contents help you navigate larger gemtext pages</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/certificates.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/1.3.1/data/screenshots/certificates.png</image>
       <caption>connection to Gemini sites is secured by both server and client certificates</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/cert-picker.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/1.3.1/data/screenshots/cert-picker.png</image>
       <caption>using multiple client certificates you can create as many online identities as you wish</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/image.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/1.3.1/data/screenshots/image.png</image>
       <caption>images, in addition to gemtext pages, are displayed inside the app</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/starfish-app/starfish/main/data/screenshots/dyslexia-font.png</image>
+      <image>https://raw.githubusercontent.com/starfish-app/starfish/1.3.1/data/screenshots/dyslexia-font.png</image>
       <caption>Gemini pages can be displayed using the dyslexia friendly font and varying text size</caption>
     </screenshot>
   </screenshots>
