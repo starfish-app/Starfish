@@ -179,7 +179,13 @@ public class Starfish.Core.ClientCertRepo : Object {
 
         var cert_dir = root_cert_dir.get_child (cert_name);
         try {
-            return cert_dir.trash ();
+            // TODO: switch to trashing certificate directory itself after
+            // https://github.com/flatpak/xdg-desktop-portal/issues/518 is fixed
+            bool ok = true;
+            ok = ok && cert_dir.get_child ("pk.pem").trash ();
+            ok = ok && cert_dir.get_child ("cert.pem").trash ();
+            ok = ok &&  cert_dir.delete ();
+            return ok;
         } catch (Error error){
             warning ("Failed to send cert dir %s to trash, error: %s".printf (cert_dir.get_path (), error.message));
             return false;

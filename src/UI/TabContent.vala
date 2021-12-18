@@ -72,6 +72,11 @@ public class Starfish.UI.TabContent : Gtk.Box {
 
                 window.activate_action (Window.ACTION_LOAD_URI_IN_NEW_TAB, action_args);
                 return;
+            case LinkEventType.HOVER_ENTER:
+            case LinkEventType.HOVER_EXIT:
+            case LinkEventType.RIGHT_MOUSE_CLICK:
+                // noop
+                return;
         }
     }
 }
