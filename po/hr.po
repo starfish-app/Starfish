@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hr.from.josipantolis.starfish\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-13 00:15+0100\n"
+"POT-Creation-Date: 2021-12-18 21:37+0100\n"
 "PO-Revision-Date: 2021-08-15 02:42+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -23,77 +23,76 @@ msgstr ""
 msgid "Starfish"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:82 src/UI/HeaderBar.vala:159
+#: src/UI/HeaderBar.vala:81 src/UI/HeaderBar.vala:154
 msgid "Reload"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:84 src/UI/PageCertErrorView.vala:49
-#: src/UI/PageDownloadView.vala:56
+#: src/UI/HeaderBar.vala:83 src/UI/PageCertErrorView.vala:49
 msgid "Go back"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:85
+#: src/UI/HeaderBar.vala:84
 msgid "Go forward"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:86
+#: src/UI/HeaderBar.vala:85
 msgid "Go up"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:87
+#: src/UI/HeaderBar.vala:86
 msgid "Go to root"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:88
+#: src/UI/HeaderBar.vala:87
 msgid "Go home"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:90
+#: src/UI/HeaderBar.vala:89
 msgid "Open bookmarks"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:168
+#: src/UI/HeaderBar.vala:163
 msgid "Stop"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:198
+#: src/UI/HeaderBar.vala:193
 msgid "Check identity"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:202 src/UI/HeaderBar.vala:224
-#: src/UI/HeaderBar.vala:244
+#: src/UI/HeaderBar.vala:197 src/UI/HeaderBar.vala:219
+#: src/UI/HeaderBar.vala:239
 msgid "Bookmark this page"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:228 src/UI/HeaderBar.vala:241
+#: src/UI/HeaderBar.vala:223 src/UI/HeaderBar.vala:236
 msgid "Remove this page rom bookmarks"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:249
+#: src/UI/HeaderBar.vala:244
 msgid "Zoom out"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:250
+#: src/UI/HeaderBar.vala:245
 msgid "Zoom in"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:255
+#: src/UI/HeaderBar.vala:250
 msgid "Reset zoom level"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:273 src/UI/PreferencesDialog.vala:10
+#: src/UI/HeaderBar.vala:268 src/UI/PreferencesDialog.vala:10
 msgid "Preferences"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:278
+#: src/UI/HeaderBar.vala:273
 msgid "Introduction to Gemini"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:308
+#: src/UI/HeaderBar.vala:303
 msgid "Menu"
 msgstr ""
 
-#: src/UI/HeaderBar.vala:333
+#: src/UI/HeaderBar.vala:328
 msgid "Find..."
 msgstr ""
 
@@ -190,7 +189,7 @@ msgstr ""
 msgid "Pick identity"
 msgstr ""
 
-#: src/UI/CertPopover.vala:307 src/UI/PageDownloadView.vala:154
+#: src/UI/CertPopover.vala:307 src/UI/PageDownloadView.vala:159
 msgid "Cancel"
 msgstr ""
 
@@ -312,43 +311,47 @@ msgstr ""
 msgid "Create New Identity"
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:66 src/UI/PageDownloadView.vala:153
+#: src/UI/PageDownloadView.vala:58
+msgid "Go Back"
+msgstr ""
+
+#: src/UI/PageDownloadView.vala:68 src/UI/PageDownloadView.vala:158
 msgid "Download"
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:73
+#: src/UI/PageDownloadView.vala:75
 msgid "Downloading..."
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:83
+#: src/UI/PageDownloadView.vala:85
 msgid "Download aborted."
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:88
+#: src/UI/PageDownloadView.vala:90
 msgid "Retry"
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:94 src/UI/PageDownloadView.vala:191
+#: src/UI/PageDownloadView.vala:96 src/UI/PageDownloadView.vala:196
 msgid "Download finished!"
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:143
+#: src/UI/PageDownloadView.vala:148
 #, c-format
 msgid "Cannot display %s"
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:144
+#: src/UI/PageDownloadView.vala:149
 #, c-format
 msgid ""
 "Starfish does not support %s content.\n"
 "Do you want to download %s instead?"
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:150
+#: src/UI/PageDownloadView.vala:155
 msgid "Save file"
 msgstr ""
 
-#: src/UI/PageDownloadView.vala:192
+#: src/UI/PageDownloadView.vala:197
 #, c-format
 msgid "Finished downloading %s."
 msgstr ""
@@ -761,131 +764,191 @@ msgid ""
 msgstr ""
 
 #: data/starfish.appdata.xml.in:16
-msgid "This update is all about making gemtext more beautiful and functional:"
+msgid "A smaller release with some housekeeping and a couple of bug fixes:"
 msgstr ""
 
 #: data/starfish.appdata.xml.in:18
-msgid "Links style now matches your OS-level accent color."
+msgid ""
+"Deleting client certificates is fixed: you can now send them to trash, and "
+"restore them from there if you change your mind."
 msgstr ""
 
 #: data/starfish.appdata.xml.in:19
-msgid "You can see where a link leads without opening it."
+msgid ""
+"The \"Show file\" button in the download page is renamed to \"Show Downloads"
+"\" and now opens the Downloads directory."
 msgstr ""
 
 #: data/starfish.appdata.xml.in:20
+msgid ""
+"Address bar now stretches to fill more horizontal space making longer Gemini "
+"addresses readable."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:21
+msgid "The app is updated to use the new elementary 6.1 runtime."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:27
+msgid "Input page received a series of improvements this time around:"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:29
+msgid ""
+"You can now input multiple lines, and fill them with all kinds of "
+"characters, including emoji 😉️."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:30
+msgid ""
+"The input text is spell-checked and its size is validated against the limits "
+"of Gemini protocol."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:31
+msgid ""
+"There is an obvious distinction between posting input anonymously and with a "
+"client identity."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:33
+msgid "In addition to new features, there are a few smaller fixes:"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:35
+msgid "Text alignment in gemtext pages is improved."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:36
+msgid "Consistent styling is applied on all Linux distributions."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:37
+msgid ""
+"Intermittent issues with loading pages served by the gmnisrv server are "
+"fixed."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:43
+msgid "This update is all about making gemtext more beautiful and functional:"
+msgstr ""
+
+#: data/starfish.appdata.xml.in:45
+msgid "Links style now matches your OS-level accent color."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:46
+msgid "You can see where a link leads without opening it."
+msgstr ""
+
+#: data/starfish.appdata.xml.in:47
 msgid ""
 "A table of contents makes navigating to a specific heading on a gemtext page "
 "easy."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:21
+#: data/starfish.appdata.xml.in:48
 msgid ""
 "A text search of gemtext pages helps you quickly find any term you are "
 "looking for."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:27
+#: data/starfish.appdata.xml.in:54
 msgid "A smaller release with two improvements:"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:29
+#: data/starfish.appdata.xml.in:56
 msgid ""
 "A redesigned app icon now fits better with the rest of your system and "
 "remains sharp at lower resolutions."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:30
+#: data/starfish.appdata.xml.in:57
 msgid ""
 "There's no longer a danger of overriding an existing client certificate when "
 "creating a new one."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:36
+#: data/starfish.appdata.xml.in:63
 msgid "This release focuses on improving certificate handling. In particular:"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:38
+#: data/starfish.appdata.xml.in:65
 msgid ""
 "Information about server certificates is now prominently shown in the "
 "address bar, similar to how other web browsers are usually doing it."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:39
+#: data/starfish.appdata.xml.in:66
 msgid ""
 "Client certificates are now fully supported. This allows you access to sites "
 "that require user identification, like Astrobotany or Station."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:45
+#: data/starfish.appdata.xml.in:72
 msgid "Initial release, bringing you features such as:"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:47
+#: data/starfish.appdata.xml.in:74
 msgid ""
 "Beautiful rendering of gemtext content, both served over the network via "
 "Gemini protocol and read from local files."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:48
+#: data/starfish.appdata.xml.in:75
 msgid ""
 "In-app rendering of images and a download option for other file types that "
 "you might encounter in the Geminispace."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:49
+#: data/starfish.appdata.xml.in:76
 msgid ""
 "A gentle introduction to Gemini, with pointers on how to get around and "
 "discover more content."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:50
+#: data/starfish.appdata.xml.in:77
 msgid ""
 "Stuff you'd normally expect from a browser, like tabs, favorites, history-"
 "based navigation, etc."
 msgstr ""
 
-#: data/starfish.appdata.xml.in:60
+#: data/starfish.appdata.xml.in:87
 msgid "Josip Antoliš"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:66
+#: data/starfish.appdata.xml.in:93
 msgid ""
 "Gemini pages are displayed with your chosen accent color and light or dark "
 "style"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:70
+#: data/starfish.appdata.xml.in:97
 msgid ""
 "gentle introduction to Gemini is provided to help you find your bearings"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:74
+#: data/starfish.appdata.xml.in:101
 msgid ""
 "page search and table of contents help you navigate larger gemtext pages"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:78
+#: data/starfish.appdata.xml.in:105
 msgid ""
 "connection to Gemini sites is secured by both server and client certificates"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:82
+#: data/starfish.appdata.xml.in:109
 msgid ""
 "using multiple client certificates you can create as many online identities "
 "as you wish"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:86
+#: data/starfish.appdata.xml.in:113
 msgid "images, in addition to gemtext pages, are displayed inside the app"
 msgstr ""
 
-#: data/starfish.appdata.xml.in:90
-msgid ""
-"files that cannot be displayed directly, like podcast episodes, can be "
-"downloaded and opened by dedicated apps"
-msgstr ""
-
-#: data/starfish.appdata.xml.in:94
+#: data/starfish.appdata.xml.in:117
 msgid ""
 "Gemini pages can be displayed using the dyslexia friendly font and varying "
 "text size"
