@@ -10,7 +10,7 @@ finish-args:
   # Needed for accessing Gemini sites over Internet
   - '--share=network'
   # Needed for opening local files with files:// URI scheme
-  - '--filesystem=home'
+  - '--filesystem=home:ro'
 modules:
   - name: gtkspell
     config-opts:

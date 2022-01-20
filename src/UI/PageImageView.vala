@@ -27,7 +27,6 @@ public class Starfish.UI.PageImageView : Gtk.Grid, ResponseView {
         var heading = new Gtk.Label (_("Loading image...")) {
             halign = Gtk.Align.START,
             wrap = true,
-            selectable = true,
             margin_bottom = 8,
         };
 
@@ -53,51 +52,46 @@ public class Starfish.UI.PageImageView : Gtk.Grid, ResponseView {
 
     public void display (Core.Response response) {
         cancel.reset ();
+        download_and_open.begin (response);
+    }
+
+    private async void download_and_open (Core.Response response) {
         try {
             File file;
             var file_out = file_out_stream (response, out file);
 
-            file_out.splice_async.begin (
+            yield file_out.splice_async (
                 response.connection.input_stream,
                 OutputStreamSpliceFlags.CLOSE_SOURCE | OutputStreamSpliceFlags.CLOSE_TARGET,
                 Priority.HIGH,
-                cancel,
-                (obj, res) => {
-                    try {
-                        file_out.splice_async.end (res);
-                    } catch (Error e) {
-                        warning ("Error splicing gemini res stream into temp file stream: %s", e.message);
-                    }
+                cancel
+            );
 
-                    session.loading = false;
-                    cancel.reset ();
-                    response.close ();
-
-                    var ok = AppInfo.launch_default_for_uri (file.get_uri (), null);
-                    if (!ok) {
-                        warning ("Failed to open uri %s", file.get_uri ());
-                    }
-
-                    session.navigate_back ();
-                }
+            var ctx = get_window ().get_display ().get_app_launch_context ();
+            yield AppInfo.launch_default_for_uri_async (
+                file.get_uri (),
+                ctx,
+                cancel
             );
         } catch (Error err) {
+            warning ("Failed to download file from %s, error: %s", response.uri.to_string (), err.message);
+        } finally {
             session.loading = false;
             cancel.reset ();
             response.close ();
-            warning ("Failed to save and open image, error: %s", err.message);
+            session.navigate_back ();
         }
     }
 
     private OutputStream file_out_stream (Core.Response response, out File file) throws Error {
-        var dir = Environment.get_user_special_dir (UserDirectory.DOWNLOAD);
+        var dir = Environment.get_user_cache_dir ();
         var filename = response.uri.file_name ();
         var extension = "." + response.mime ().sub_type;
         if (!filename.has_suffix (extension)) {
             filename += extension;
         }
 
-        file = File.new_build_filename (dir, filename, null);
+        file = File.new_build_filename (dir, "tmp", filename);
         return file.replace (null, false, FileCreateFlags.REPLACE_DESTINATION);
     }
 
