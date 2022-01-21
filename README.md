@@ -1,4 +1,4 @@
-<img align="left" width="64" height="64" src="https://raw.githubusercontent.com/starfish-app/starfish/main/data/icons/64.svg">
+<img align="left" width="64" height="64" src="https://raw.githubusercontent.com/starfish-app/starfish/main/data/icons/64/hr.from.josipantolis.starfish.svg">
 <h1>Starfish</h1>
 
 A [Gemini](https://gemini.circumlunar.space/) browser made for [elementary OS](https://elementary.io/).
@@ -89,7 +89,7 @@ flatpak run hr.from.josipantolis.starfish
 
 ## License
 
-[GNU GPLv3](COPYING)
+[GNU GPLv3](LICENSE)
 
 Copyright © 2021 Josip Antoliš, josip.antolis@protonmail.com.
 
