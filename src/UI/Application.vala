@@ -17,6 +17,7 @@ public class Starfish.UI.Application : Gtk.Application {
     protected override void activate () {
         if (main_window == null) {
             main_window = show_main_window ();
+            set_up_tmp_dir_cleanup.begin ();
         } else {
             main_window.present ();
         }
@@ -97,6 +98,36 @@ public class Starfish.UI.Application : Gtk.Application {
             }
 
             open_uri (uri);
+        }
+    }
+
+    private async void set_up_tmp_dir_cleanup () {
+        var config_path = Path.build_filename (
+            Environment.get_user_config_dir (),
+            "user-tmpfiles.d",
+            "hr.from.josipantolis.starfish.tmp-folder.conf"
+        );
+
+        var config_file = File.new_for_path (config_path);
+        FileIOStream config_stream;
+        try {
+            config_stream = yield config_file.replace_readwrite_async (null, false, FileCreateFlags.NONE);
+        } catch (Error e) {
+            warning ("Unable to open systemd-tmpfiles config file for writng: %s", e.message);
+            return;
+        }
+
+        var tmp_folder = Path.build_filename (
+            Environment.get_user_cache_dir (),
+            "tmp"
+        );
+
+        var config = "e \"%s\" - - - 1d".printf (tmp_folder);
+        var out_stream = config_stream.output_stream as FileOutputStream;
+        try {
+            yield out_stream.write_all_async (config.data, Priority.DEFAULT, null, null);
+        } catch (Error e) {
+            warning ("Unable to write systemd-tmpfiles config: %s", e.message);
         }
     }
 }

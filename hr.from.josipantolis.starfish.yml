@@ -11,6 +11,7 @@ finish-args:
   - '--share=network'
   # Needed for opening local files with files:// URI scheme
   - '--filesystem=home:ro'
+  - '--filesystem=xdg-config/user-tmpfiles.d'
 modules:
   - name: gtkspell
     config-opts:
