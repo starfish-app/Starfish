@@ -11,7 +11,7 @@
 <!--A clear and concise description of what the bug is-->
 
 ## To Reproduce
-<!--Explain the exact steps one would take to experience the issue. If applicable, add screenshots or screen recordings.-->
+<!--Explain the exact steps one would take to experience the issue. If applicable, add screenshots, screen recordings or a link to the suspected page.-->
 1. 
 2. 
 3. 
