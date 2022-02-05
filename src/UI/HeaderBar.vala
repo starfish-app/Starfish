@@ -76,15 +76,15 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         hexpand = true;
         spacing = 1;
 
-        reload_icon = new Gtk.Image.from_icon_name ("go-jump", Gtk.IconSize.LARGE_TOOLBAR);
-        stop_icon = new Gtk.Image.from_icon_name ("media-playback-stop", Gtk.IconSize.LARGE_TOOLBAR);
-        stop_reload_button = setup_button ("go-jump", _("Reload"), Window.ACTION_RELOAD);
+        reload_icon = new Gtk.Image.from_icon_name ("view-refresh-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+        stop_icon = new Gtk.Image.from_icon_name ("process-stop-symbolic", Gtk.IconSize.LARGE_TOOLBAR);
+        stop_reload_button = setup_button ("view-refresh-symbolic", _("Reload"), Window.ACTION_RELOAD);
         stop_reload_button.sensitive = true;
-        back_button = setup_button ("edit-undo", _("Go back"), Window.ACTION_GO_BACK);
-        forward_button = setup_button ("edit-redo", _("Go forward"), Window.ACTION_GO_FORWARD);
+        back_button = setup_button ("go-previous-symbolic", _("Go back"), Window.ACTION_GO_BACK);
+        forward_button = setup_button ("go-next-symbolic", _("Go forward"), Window.ACTION_GO_FORWARD);
         up_button = setup_button ("go-up", _("Go up"), Window.ACTION_GO_UP);
         root_button = setup_button ("go-top", _("Go to root"), Window.ACTION_GO_TO_ROOT);
-        home_button = setup_button ("go-home", _("Go home"), Window.ACTION_GO_HOME);
+        home_button = setup_button ("go-home-symbolic", _("Go home"), Window.ACTION_GO_HOME);
         search_button = set_up_search_button ();
         bookmarks_button = setup_button ("user-bookmarks", _("Open bookmarks"), Window.ACTION_OPEN_BOOKMARKS);
 
@@ -92,18 +92,19 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         cert_popover = new CertPopover (address);
         custom_title = address;
 
-        pack_start (up_button);
-        pack_start (root_button);
-        pack_start (new Gtk.Separator (Gtk.Orientation.VERTICAL));
         pack_start (back_button);
         pack_start (forward_button);
+        pack_start (stop_reload_button);
+        pack_start (home_button);
+        pack_start (new Gtk.Separator (Gtk.Orientation.VERTICAL));
         var menu_button = setup_menu ();
         pack_end (menu_button);
         pack_end (bookmarks_button);
-        pack_end (home_button);
         pack_end (new Gtk.Separator (Gtk.Orientation.VERTICAL));
         pack_end (search_button);
-        pack_end (stop_reload_button);
+        pack_end (new Gtk.Separator (Gtk.Orientation.VERTICAL));
+        pack_end (up_button);
+        pack_end (root_button);
     }
 
     private void on_session_change () {
@@ -193,7 +194,7 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
             primary_icon_tooltip_text = _("Check identity"),
             hexpand = true,
             secondary_icon_activatable = true,
-            secondary_icon_name = "non-starred",
+            secondary_icon_name = "non-starred-symbolic",
             secondary_icon_tooltip_text = _("Bookmark this page")
         };
 
@@ -215,11 +216,11 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
                 var uri = _session.current_uri;
                 if (manager.is_bookmarked (uri)) {
                     window.activate_action (Window.ACTION_REMOVE_BOOKMARK, null);
-                    address.secondary_icon_name = "non-starred";
+                    address.secondary_icon_name = "non-starred-symbolic";
                     address.secondary_icon_tooltip_text = _("Bookmark this page");
                 } else {
                     window.activate_action (Window.ACTION_ADD_BOOKMARK, null);
-                    address.secondary_icon_name = "starred";
+                    address.secondary_icon_name = "starred-symbolic";
                     address.secondary_icon_tooltip_text = _("Remove this page rom bookmarks");
                 }
             }
@@ -232,10 +233,10 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         var manager = _session.bookmarks_manager;
         var uri = _session.current_uri;
         if (manager.is_bookmarked (uri)) {
-            address.secondary_icon_name = "starred";
+            address.secondary_icon_name = "starred-symbolic";
             address.secondary_icon_tooltip_text = _("Remove this page rom bookmarks");
         } else {
-            address.secondary_icon_name = "non-starred";
+            address.secondary_icon_name = "non-starred-symbolic";
             address.secondary_icon_tooltip_text = _("Bookmark this page");
         }
     }
@@ -358,15 +359,15 @@ public class Starfish.UI.HeaderBar : Hdy.HeaderBar {
         }
 
         if (server_cert == null || server_cert.is_not_applicable_to_uri ()) {
-            return "security-low";
+            return "channel-insecure-symbolic";
         }
 
         if (server_cert.is_inactive () || server_cert.is_expired ()) {
-            return "security-medium";
+            return "dialog-warning-symbolic";
         }
 
         if (client_cert == null) {
-            return "security-high";
+            return "channel-secure-symbolic";
         }
 
         return "avatar-default";
