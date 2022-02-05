@@ -1,0 +1,246 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-21 14:46+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/hr.from.josipantolis.starfish.desktop.in:3
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:7
+msgid "Starfish"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.desktop.in:4
+msgid "Starfish Gemini browser"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.desktop.in:5
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:8
+msgid "Surf the Geminispace"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.desktop.in:8
+msgid "hr.from.josipantolis.starfish"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.desktop.in:11
+msgid "gemini;browser;client;gemtext;geminispace;"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:10
+msgid ""
+"Browse Gemini sites on the small internet. Read blogs and fiction, enjoy "
+"text without distractions, keep your browsing private."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:11
+msgid ""
+"Starfish is a beginner-friendly desktop client for Gemini protol. It "
+"supports all core features of Gemini, such as beautiful rendering of text "
+"based content and encrypted communication with servers. On top of those "
+"Starfish offers comforts of modern browsers, like local browsing history, "
+"tabs and favorites."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:16
+msgid "A smaller release with some housekeeping and a couple of bug fixes:"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:18
+msgid ""
+"Deleting client certificates is fixed: you can now send them to trash, and "
+"restore them from there if you change your mind."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:19
+msgid ""
+"The \"Show file\" button in the download page is renamed to \"Show Downloads"
+"\" and now opens the Downloads directory."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:20
+msgid ""
+"Address bar now stretches to fill more horizontal space making longer Gemini "
+"addresses readable."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:21
+msgid "The app is updated to use the new elementary 6.1 runtime."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:27
+msgid "Input page received a series of improvements this time around:"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:29
+msgid ""
+"You can now input multiple lines, and fill them with all kinds of "
+"characters, including emoji 😉️."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:30
+msgid ""
+"The input text is spell-checked and its size is validated against the limits "
+"of Gemini protocol."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:31
+msgid ""
+"There is an obvious distinction between posting input anonymously and with a "
+"client identity."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:33
+msgid "In addition to new features, there are a few smaller fixes:"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:35
+msgid "Text alignment in gemtext pages is improved."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:36
+msgid "Consistent styling is applied on all Linux distributions."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:37
+msgid ""
+"Intermittent issues with loading pages served by the gmnisrv server are "
+"fixed."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:43
+msgid "This update is all about making gemtext more beautiful and functional:"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:45
+msgid "Links style now matches your OS-level accent color."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:46
+msgid "You can see where a link leads without opening it."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:47
+msgid ""
+"A table of contents makes navigating to a specific heading on a gemtext page "
+"easy."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:48
+msgid ""
+"A text search of gemtext pages helps you quickly find any term you are "
+"looking for."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:54
+msgid "A smaller release with two improvements:"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:56
+msgid ""
+"A redesigned app icon now fits better with the rest of your system and "
+"remains sharp at lower resolutions."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:57
+msgid ""
+"There's no longer a danger of overriding an existing client certificate when "
+"creating a new one."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:63
+msgid "This release focuses on improving certificate handling. In particular:"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:65
+msgid ""
+"Information about server certificates is now prominently shown in the "
+"address bar, similar to how other web browsers are usually doing it."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:66
+msgid ""
+"Client certificates are now fully supported. This allows you access to sites "
+"that require user identification, like Astrobotany or Station."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:72
+msgid "Initial release, bringing you features such as:"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:74
+msgid ""
+"Beautiful rendering of gemtext content, both served over the network via "
+"Gemini protocol and read from local files."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:75
+msgid ""
+"In-app rendering of images and a download option for other file types that "
+"you might encounter in the Geminispace."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:76
+msgid ""
+"A gentle introduction to Gemini, with pointers on how to get around and "
+"discover more content."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:77
+msgid ""
+"Stuff you'd normally expect from a browser, like tabs, favorites, history-"
+"based navigation, etc."
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:87
+msgid "Josip Antoliš"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:93
+msgid ""
+"Gemini pages are displayed with your chosen accent color and light or dark "
+"style"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:97
+msgid ""
+"gentle introduction to Gemini is provided to help you find your bearings"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:101
+msgid ""
+"page search and table of contents help you navigate larger gemtext pages"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:105
+msgid ""
+"connection to Gemini sites is secured by both server and client certificates"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:109
+msgid ""
+"using multiple client certificates you can create as many online identities "
+"as you wish"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:113
+msgid "images, in addition to gemtext pages, are displayed inside the app"
+msgstr ""
+
+#: data/hr.from.josipantolis.starfish.appdata.xml.in:117
+msgid ""
+"Gemini pages can be displayed using the dyslexia friendly font and varying "
+"text size"
+msgstr ""
