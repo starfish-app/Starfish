@@ -198,7 +198,6 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         h1_tag = buffer.create_tag (
             "H1",
             scale: Pango.Scale.XX_LARGE,
-            variant: Pango.Variant.SMALL_CAPS,
             pixels_above_lines: 8,
             pixels_below_lines: 8
         );
@@ -206,7 +205,6 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         h2_tag = buffer.create_tag (
             "H2",
             scale: Pango.Scale.X_LARGE,
-            variant: Pango.Variant.SMALL_CAPS,
             pixels_above_lines: 4,
             pixels_below_lines: 4
         );
@@ -214,7 +212,6 @@ public class Starfish.UI.GemtextView : Gtk.TextView {
         h3_tag = buffer.create_tag (
             "H3",
             scale: Pango.Scale.LARGE,
-            variant: Pango.Variant.SMALL_CAPS,
             pixels_above_lines: 2,
             pixels_below_lines: 2
         );
