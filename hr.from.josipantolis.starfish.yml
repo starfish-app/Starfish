@@ -1,6 +1,6 @@
 app-id: hr.from.josipantolis.starfish
 runtime: io.elementary.Platform
-runtime-version: '6.1'
+runtime-version: '7'
 sdk: io.elementary.Sdk
 command: hr.from.josipantolis.starfish
 finish-args:
